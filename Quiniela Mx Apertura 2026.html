@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiniela MX 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* =================== CSS =================== */
+:root{
+  --azul:#0d47a1;
+  --azul2:#1565c0;
+  --fondo:#f3f6fb;
+  --card:#fff;
+  --borde:#d6dbe3;
+  --texto:#1f2937;
+  --verde:#c8e6c9;
+  --verde-text:#0b5d1e;
+  --gris:#e0e0e0;
+  --gris-text:#333;
+  --pendiente:#fff8e1;
+  --rojo:#c62828;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}
+header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;text-align:center;padding:16px}
+header h1{margin:0;font-size:26px}
+.contenedor{max-width:1320px;margin:auto;padding:12px}
+.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.box{background:white;border-radius:12px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.box .num{font-size:22px;font-weight:bold;color:var(--azul)}
+.small{font-size:13px;color:#667085}
+.tabs{display:flex;gap:8px;overflow:auto;margin:12px 0}
+.tabs button{border:0;border-radius:999px;padding:10px 14px;font-weight:bold;background:#e3e8ef;cursor:pointer;white-space:nowrap}
+.tabs button.activo{background:var(--azul);color:white}
+.seccion{display:none}
+.seccion.activa{display:block}
+.card{background:white;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+input,select,button,textarea{font-size:15px}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:8px}
+button{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
+.btn-primary{background:var(--azul);color:white}
+.btn-green{background:#2e7d32;color:white}
+.btn-gray{background:#607d8b;color:white}
+.btn-red{background:var(--rojo);color:white}
+.btn-yellow{background:#fbc02d;color:#222}
+.mensaje{display:none;padding:14px;border-radius:10px;margin:10px 0;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.mensaje.ok{display:block;background:#d7f5dd;color:#145a22}
+.mensaje.error{display:block;background:#ffe0e0;color:#7f0000}
+.mensaje.info{display:block;background:#e3f2fd;color:#0d47a1}
+.estado-guardado{display:none;margin-top:8px;padding:10px;border-radius:10px;background:#d7f5dd;color:#145a22;font-weight:bold}
+.estado-guardado.activo{display:block}
+.tabla-wrap{overflow-x:auto;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+table{width:100%;border-collapse:collapse;min-width:950px}
+th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:center;vertical-align:middle}
+th{background:#eef3fb}
+th.partido-header{font-size:12px;min-width:130px;line-height:1.25}
+td.nombre,th.nombre{position:sticky;left:0;background:white;z-index:2;text-align:left;min-width:170px}
+th.nombre{background:#eef3fb;z-index:3}
+.celda-pronostico{font-weight:bold;border-radius:8px;padding:6px 8px;display:inline-block;min-width:34px}
+.acierto{background:var(--verde);color:var(--verde-text)}
+.fallo{background:var(--gris);color:var(--gris-text)}
+.pendiente{background:var(--pendiente);color:#795548}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.captura-row{background:#f8fafc}
+.captura-row select{min-width:80px}
+.admin-panel{display:none}
+.admin-panel.activo{display:block}
+.login-admin{max-width:420px}
+.pago-pagado{background:var(--verde);color:var(--verde-text);padding:6px 10px;border-radius:999px;font-weight:bold}
+.pago-pendiente{background:var(--gris);color:var(--gris-text);padding:6px 10px;border-radius:999px;font-weight:bold}
+.partidos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.partido-card{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:white}
+.partido-num{font-weight:bold;color:var(--azul);margin-bottom:6px}
+.medalla{font-size:20px}
+.acciones{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.admin-subtabs,.liga-subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.admin-subtabs button,.liga-subtabs button{background:#e3e8ef;color:#111}
+.admin-subtabs button.activo,.liga-subtabs button.activo{background:var(--azul);color:#fff}
+.admin-subseccion,.liga-subseccion{display:none}
+.admin-subseccion.activa,.liga-subseccion.activa{display:block}
+.proximo{
+  border-left:5px solid var(--azul);
+  padding-left:10px;
+}
+.escudo{width:22px;height:22px;object-fit:contain;vertical-align:middle;margin-right:6px}
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#eef3fb;
+  color:var(--azul);
+  font-weight:bold;
+}
+.ultimos span{display:inline-block;margin:1px;padding:3px 6px;border-radius:6px;font-size:12px;font-weight:bold}
+.gana{background:#c8e6c9;color:#0b5d1e}
+.empata{background:#fff8e1;color:#795548}
+.pierde{background:#ffcdd2;color:#7f0000}
+
+/* =================== V7: ESCUDOS, CONTADORES Y VISTA LOCAL/VS/VISITA =================== */
+.equipo-linea{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.equipo-linea .escudo{margin-right:0}
+.vs-linea{font-weight:bold;color:var(--azul);font-size:12px;margin:4px 0}
+.estado-juego{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:bold}
+.estado-proximo{background:#e3f2fd;color:#0d47a1}
+.estado-vivo{background:#ffebee;color:#c62828;animation:pulseVivo 1s infinite}
+.estado-espera{background:#fff8e1;color:#795548}
+.estado-terminado{background:#c8e6c9;color:#0b5d1e}
+@keyframes pulseVivo{0%{opacity:1}50%{opacity:.55}100%{opacity:1}}
+th.partido-header{min-width:150px}
+
+@media(max-width:700px){header h1{font-size:22px}.contenedor{padding:8px}table{min-width:900px}}
+</style>
+</head>
+
+<body>
+<!-- =================== HTML =================== -->
+<header>
+  <h1>🏆 Quiniela MX 2026</h1>
+  <p id="subtitulo">Cargando...</p>
+</header>
+
+<div class="contenedor">
+  <div class="resumen">
+    <div class="box"><div class="small">Jornada</div><div class="num" id="res-jornada">-</div></div>
+    <div class="box"><div class="small">Costo</div><div class="num" id="res-costo">$0</div></div>
+    <div class="box"><div class="small">Participaciones</div><div class="num" id="res-participantes">0</div></div>
+    <div class="box"><div class="small">Bolsa pagada</div><div class="num" id="res-bolsa">$0</div></div>
+    <div class="box"><div class="small">Estado</div><div class="num" id="res-estado">-</div></div>
+    <div class="box"><div class="small">Próximo partido</div><div class="num" id="res-proximo">-</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="activo" onclick="mostrarTab('quiniela',this)">📝 Quiniela</button>
+    <button onclick="mostrarTab('clasificacion',this)">🏆 Clasificación</button>
+    <button onclick="mostrarTab('liga',this)">📊 Liga MX</button>
+    <button onclick="mostrarTab('partidos',this)">⚽ Partidos</button>
+    <button onclick="mostrarTab('admin',this)">🔒 Admin</button>
+  </div>
+
+  <div id="mensaje" class="mensaje"></div>
+
+  <section id="quiniela" class="seccion activa">
+    <div class="card">
+      <h2>Quiniela tradicional</h2>
+      <p class="small">Captura arriba y al guardar se agrega automáticamente abajo. También puedes editar mientras la jornada esté abierta.</p>
+      <div id="estadoGuardado" class="estado-guardado"></div>
+    </div>
+    <div class="tabla-wrap">
+      <table id="tablaQuiniela"></table>
+    </div>
+  </section>
+
+  <section id="clasificacion" class="seccion">
+    <div class="card">
+      <h2>Clasificación de la jornada actual</h2>
+      <p class="small">Empates comparten medalla. Se actualiza con los resultados capturados.</p>
+    </div>
+    <div class="tabla-wrap"><table id="tablaClasificacion"></table></div>
+  </section>
+
+  <section id="liga" class="seccion">
+    <div class="card">
+      <h2>Información Liga MX</h2>
+      <p class="small">Tabla general del torneo, jornadas futuras e historial de resultados.</p>
+    </div>
+
+    <div class="liga-subtabs">
+      <button class="activo" onclick="mostrarLigaSub('ligaTabla',this)">📊 Tabla general</button>
+      <button onclick="mostrarLigaSub('ligaFuturas',this)">📅 Jornadas futuras</button>
+      <button onclick="mostrarLigaSub('ligaHistorial',this)">📚 Historial resultados</button>
+    </div>
+
+    <div id="ligaTabla" class="liga-subseccion activa">
+      <div class="tabla-wrap"><table id="tablaLigaMX"></table></div>
+    </div>
+
+    <div id="ligaFuturas" class="liga-subseccion">
+      <div class="tabla-wrap"><table id="tablaLigaFuturas"></table></div>
+    </div>
+
+    <div id="ligaHistorial" class="liga-subseccion">
+      <div class="tabla-wrap"><table id="tablaLigaHistorial"></table></div>
+    </div>
+  </section>
+
+  <section id="partidos" class="seccion">
+    <div class="card">
+      <h2>Partidos</h2>
+      <div id="listaPartidos" class="partidos-grid"></div>
+    </div>
+  </section>
+
+  <section id="admin" class="seccion">
+    <div class="card login-admin" id="loginAdmin">
+      <h2>Administrador</h2>
+      <label>Usuario</label>
+      <input id="adminUser" placeholder="admin">
+      <br><br>
+      <label>Contraseña</label>
+      <input id="adminPass" type="password" placeholder="Contraseña">
+      <br><br>
+      <button class="btn-primary" onclick="loginAdmin()">Entrar</button>
+    </div>
+
+    <div id="panelAdmin" class="admin-panel">
+      <div class="card">
+        <h2>Panel administrador</h2>
+        <button class="btn-red" onclick="cerrarAdmin()">Cerrar admin</button>
+        <button class="btn-yellow" onclick="toggleBloqueo()">Bloquear / Abrir jornada</button>
+      </div>
+
+      <div class="card">
+        <div class="admin-subtabs">
+          <button class="activo" onclick="mostrarAdminSub('adminJornada',this)">🗓️ Jornada y partidos</button>
+          <button onclick="mostrarAdminSub('adminResultadosBox',this)">⚽ Resultados</button>
+          <button onclick="mostrarAdminSub('adminPagosBox',this)">💰 Pagos</button>
+          <button onclick="mostrarAdminSub('adminLigaBox',this)">📊 Liga MX</button>
+        </div>
+
+        <div id="adminJornada" class="admin-subseccion activa">
+          <h3>Crear nueva jornada</h3>
+          <p class="small">Al crear una nueva jornada, se desactivan las demás y esta queda como jornada activa.</p>
+
+          <div class="form-grid">
+            <div>
+              <label>Nombre de jornada</label>
+              <input id="nuevaJornadaNombre" placeholder="Ej. Jornada 2">
+            </div>
+            <div>
+              <label>Costo</label>
+              <input id="nuevaJornadaCosto" type="number" min="0" value="20">
+            </div>
+            <div>
+              <label>Fecha de inicio</label>
+              <input id="nuevaJornadaInicio" type="datetime-local">
+            </div>
+            <div>
+              <label>Fecha de cierre</label>
+              <input id="nuevaJornadaCierre" type="datetime-local">
+            </div>
+          </div>
+
+          <h3>9 partidos de la jornada</h3>
+          <div id="formNuevaJornadaPartidos" class="partidos-grid"></div>
+          <br>
+          <button id="btnCrearJornada" class="btn-primary" onclick="crearNuevaJornada()">Crear jornada con 9 partidos</button>
+          <div id="estadoJornada" class="estado-guardado"></div>
+
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0">
+
+          <h3>Editar partidos de jornada actual</h3>
+          <div id="formEditarPartidosActuales" class="partidos-grid"></div>
+          <br>
+          <button id="btnGuardarPartidosActuales" class="btn-green" onclick="guardarPartidosActuales()">Guardar cambios de partidos</button>
+        </div>
+
+        <div id="adminResultadosBox" class="admin-subseccion">
+          <h3>Capturar resultados</h3>
+          <div id="adminResultados" class="partidos-grid"></div>
+          <br>
+          <button id="btnGuardarResultados" class="btn-green" onclick="guardarResultados()">Guardar resultados</button>
+          <div id="estadoResultados" class="estado-guardado"></div>
+        </div>
+
+        <div id="adminPagosBox" class="admin-subseccion">
+          <h3>Pagos privados</h3>
+          <p class="small">Esto solo lo ves tú con contraseña.</p>
+          <div class="tabla-wrap"><table id="tablaPagos"></table></div>
+        </div>
+
+        <div id="adminLigaBox" class="admin-subseccion">
+          <h3>Actualizar tabla general Liga MX</h3>
+          <p class="small">En Últimos 5 escribe letras separadas por coma. Ejemplo: G,E,P,G,G</p>
+          <div class="tabla-wrap"><table id="adminTablaLiga"></table></div>
+          <br>
+          <button id="btnGuardarTablaLiga" class="btn-green" onclick="guardarTablaLiga()">Guardar tabla Liga MX</button>
+
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0">
+
+          <h3>Agregar partido al calendario Liga MX</h3>
+          <div class="form-grid">
+            <div><label>Jornada</label><input id="calJornada" placeholder="Jornada 1"></div>
+            <div><label>Número jornada</label><input id="calNumero" type="number"></div>
+            <div><label>Local</label><input id="calLocal"></div>
+            <div><label>Visitante</label><input id="calVisitante"></div>
+            <div><label>Fecha y hora</label><input id="calFecha" type="datetime-local"></div>
+            <div><label>Estadio</label><input id="calEstadio"></div>
+            <div><label>Goles local</label><input id="calGL" type="number" min="0"></div>
+            <div><label>Goles visitante</label><input id="calGV" type="number" min="0"></div>
+          </div>
+          <br>
+          <button id="btnAgregarCalendario" class="btn-primary" onclick="agregarCalendarioLiga()">Agregar partido Liga MX</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// =================== CONFIGURACIÓN ===================
+const SUPABASE_URL = "https://pijlscldaveqmcxlcebz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
+
+const ADMIN_USUARIO_TEMP = "admin";
+const ADMIN_PASSWORD_TEMP = "QuinielaMx2026";
+
+let esAdmin = false;
+let configuracion = null;
+let jornadaActiva = null;
+let partidos = [];
+let usuarios = [];
+let pronosticos = [];
+let pagos = [];
+let todasJornadas = [];
+let todosPronosticos = [];
+let todosUsuarios = [];
+let todosPartidos = [];
+let usuarioEditandoId = null;
+let tablaLiga = [];
+let calendarioLiga = [];
+let equipos = [];
+
+// =================== SUPABASE ===================
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// =================== UTILIDADES ===================
+function mostrarMensaje(texto,tipo="info"){
+  const msg=document.getElementById("mensaje");
+  msg.textContent=texto;
+  msg.className="mensaje "+tipo;
+  msg.scrollIntoView({behavior:"smooth",block:"nearest"});
+  setTimeout(()=>msg.className="mensaje",6000);
+}
+function mostrarEstado(id,texto){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=texto;
+  el.classList.add("activo");
+  setTimeout(()=>el.classList.remove("activo"),7000);
+}
+function mostrarTab(id,btn){
+  document.querySelectorAll(".seccion").forEach(s=>s.classList.remove("activa"));
+  document.getElementById(id).classList.add("activa");
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("activo"));
+  btn.classList.add("activo");
+  if(id==="liga") cargarLigaMX();
+}
+function mostrarAdminSub(id,btn){
+  document.querySelectorAll(".admin-subseccion").forEach(s=>s.classList.remove("activa"));
+  document.getElementById(id).classList.add("activa");
+  document.querySelectorAll(".admin-subtabs button").forEach(b=>b.classList.remove("activo"));
+  btn.classList.add("activo");
+  if(id==="adminLigaBox") cargarLigaMX();
+}
+function mostrarLigaSub(id,btn){
+  document.querySelectorAll(".liga-subseccion").forEach(s=>s.classList.remove("activa"));
+  document.getElementById(id).classList.add("activa");
+  document.querySelectorAll(".liga-subtabs button").forEach(b=>b.classList.remove("activo"));
+  btn.classList.add("activo");
+}
+function dinero(n){return "$"+Number(n||0).toLocaleString("es-MX")}
+function equipoInfo(nombre){return equipos.find(e=>normalizarEquipo(e.nombre)===normalizarEquipo(nombre))||null}
+function escudoEquipo(nombre){const e=equipoInfo(nombre);return e?.escudo_url?`<img class="escudo" src="${e.escudo_url}" alt="">`:""}
+function normalizarEquipo(n){return String(n||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace("fc juarez","juarez").replace("atl. san luis","atletico san luis").trim()}
+function opcionesEquipos(valor=""){return `<option value="">Seleccionar</option>`+equipos.map(e=>`<option value="${e.nombre}" ${e.nombre===valor?"selected":""}>${e.nombre}</option>`).join("")}
+function actualizarSelectsEquipos(){
+  const selects=[...document.querySelectorAll(".select-equipo-jornada")];
+  const elegidos=selects.map(s=>s.value).filter(Boolean);
+  selects.forEach(sel=>{
+    [...sel.options].forEach(op=>{
+      if(!op.value){op.disabled=false;return;}
+      op.disabled=elegidos.includes(op.value)&&op.value!==sel.value;
+    });
+  });
+}
+function ultimosHTML(txt){
+  return String(txt||"").split(",").map(x=>x.trim()).filter(Boolean).map(x=>`<span class="${x==="G"?"gana":x==="E"?"empata":"pierde"}">${x}</span>`).join("");
+}
+function resultadoDesdeGoles(gl,gv){
+  gl=Number(gl); gv=Number(gv);
+  if(Number.isNaN(gl)||Number.isNaN(gv))return null;
+  if(gl>gv)return "L";
+  if(gl<gv)return "V";
+  return "E";
+}
+function textoPartido(p){return `${p.local||"Local"} vs ${p.visitante||"Visita"}`}
+
+function formatoPartidoVertical(p){
+  return `<div class="equipo-linea"><span>${escudoEquipo(p.local)}</span><strong>${p.local||"Local"}</strong></div><div class="vs-linea">VS</div><div class="equipo-linea"><span>${escudoEquipo(p.visitante)}</span><strong>${p.visitante||"Visita"}</strong></div>`;
+}
+function cuentaRegresivaTexto(ms){
+  if(ms<=0)return "0m";
+  const totalMin=Math.floor(ms/60000);
+  const dias=Math.floor(totalMin/1440);
+  const horas=Math.floor((totalMin%1440)/60);
+  const mins=totalMin%60;
+  const partes=[];
+  if(dias)partes.push(dias+"d");
+  if(horas)partes.push(horas+"h");
+  partes.push(mins+"m");
+  return partes.join(" ");
+}
+function estadoPartido(p){
+  if(p.resultado && p.finalizado)return {txt:"Terminado",cls:"estado-terminado"};
+  if(!p.fecha_partido)return {txt:"Sin fecha",cls:"estado-proximo"};
+  const ahora=new Date();
+  const inicio=new Date(p.fecha_partido);
+  if(isNaN(inicio))return {txt:"Sin fecha",cls:"estado-proximo"};
+  const finEstimado=new Date(inicio.getTime()+120*60*1000);
+  if(ahora<inicio)return {txt:"Inicia en "+cuentaRegresivaTexto(inicio-ahora),cls:"estado-proximo"};
+  if(ahora>=inicio && ahora<=finEstimado)return {txt:"🔴 En vivo",cls:"estado-vivo"};
+  return {txt:"Terminó, esperando actualización",cls:"estado-espera"};
+}
+function iniciarRelojPartidos(){
+  setInterval(()=>{
+    try{dibujarResumen();dibujarTablaQuiniela();dibujarPartidos();}catch(e){}
+  },60000);
+}
+
+function medallaPorLugar(lugar){
+  if(lugar===1)return "🥇";
+  if(lugar===2)return "🥈";
+  if(lugar===3)return "🥉";
+  return lugar;
+}
+function formatoFecha(fecha){
+  if(!fecha)return "-";
+  const d=new Date(fecha);
+  if(isNaN(d))return "-";
+  return d.toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"});
+}
+function valorDatetimeLocal(fecha){
+  if(!fecha)return "";
+  const d=new Date(fecha);
+  if(isNaN(d))return "";
+  const pad=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function aISODesdeDatetimeLocal(valor){
+  if(!valor)return null;
+  return new Date(valor).toISOString();
+}
+function bloquearBoton(id,texto){
+  const b=document.getElementById(id);
+  if(!b)return;
+  b.disabled=true;
+  b.dataset.textoOriginal=b.textContent;
+  b.textContent=texto;
+}
+function desbloquearBoton(id){
+  const b=document.getElementById(id);
+  if(!b)return;
+  b.disabled=false;
+  b.textContent=b.dataset.textoOriginal||b.textContent;
+}
+
+// =================== INICIO ===================
+document.addEventListener("DOMContentLoaded", iniciarApp);
+
+async function iniciarApp(){
+  try{
+    await cargarConfiguracion();
+    await cargarJornadaActiva();
+    await cargarTodo();
+    dibujarTodo();
+    iniciarRelojPartidos();
+    activarRealtime();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al iniciar: "+e.message,"error");
+  }
+  actualizarSelectsEquipos();
+}
+
+async function cargarConfiguracion(){
+  const {data,error}=await db.from("configuracion").select("*").limit(1).maybeSingle();
+  if(error)throw error;
+  configuracion=data;
+}
+async function cargarJornadaActiva(){
+  const {data,error}=await db.from("jornadas").select("*").eq("activa",true).limit(1).maybeSingle();
+  if(error)throw error;
+  jornadaActiva=data;
+}
+async function cargarTodo(){
+  if(!jornadaActiva)return;
+  const [pRes,uRes,prRes,paRes,jRes,eRes]=await Promise.all([
+    db.from("partidos").select("*").eq("jornada_id",jornadaActiva.id).order("numero_partido"),
+    db.from("usuarios").select("*").eq("activo",true).order("fecha_registro"),
+    db.from("pronosticos").select("*").eq("jornada_id",jornadaActiva.id),
+    db.from("pagos").select("*").eq("jornada_id",jornadaActiva.id),
+    db.from("jornadas").select("*").order("fecha_creacion",{ascending:false}),
+    db.from("equipos").select("*").eq("activo",true).order("nombre")
+  ]);
+  if(pRes.error)throw pRes.error;
+  if(uRes.error)throw uRes.error;
+  if(prRes.error)throw prRes.error;
+  if(paRes.error)throw paRes.error;
+  if(jRes.error)throw jRes.error;
+  if(eRes.error)throw eRes.error;
+  partidos=pRes.data||[];
+  usuarios=uRes.data||[];
+  pronosticos=prRes.data||[];
+  pagos=paRes.data||[];
+  todasJornadas=jRes.data||[];
+  equipos=eRes.data||[];
+}
+
+// =================== DIBUJADO ===================
+function dibujarTodo(){
+  dibujarResumen();
+  dibujarTablaQuiniela();
+  dibujarClasificacion();
+  dibujarPartidos();
+  if(esAdmin){
+    dibujarAdminResultados();
+    dibujarPagos();
+    dibujarFormNuevaJornada();
+    dibujarEditarPartidosActuales();
+  }
+}
+
+function obtenerProximoPartido(){
+  const ahora=new Date();
+  return [...partidos]
+    .filter(p=>p.fecha_partido && !p.finalizado && new Date(p.fecha_partido)>=ahora)
+    .sort((a,b)=>new Date(a.fecha_partido)-new Date(b.fecha_partido))[0] || null;
+}
+
+function dibujarResumen(){
+  const costo=jornadaActiva?.costo||configuracion?.costo_default||0;
+  const pagados=pagos.filter(p=>p.pagado).length;
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+  const proximo=obtenerProximoPartido();
+  const est=proximo?estadoPartido(proximo):null;
+
+  document.getElementById("subtitulo").textContent=`${jornadaActiva?.nombre||"Sin jornada"} · ${bloqueada?"Quiniela cerrada":"Quiniela abierta"}`;
+  document.getElementById("res-jornada").textContent=jornadaActiva?.nombre||"-";
+  document.getElementById("res-costo").textContent=dinero(costo);
+  document.getElementById("res-participantes").textContent=usuarios.length;
+  document.getElementById("res-bolsa").textContent=dinero(pagados*Number(costo));
+  document.getElementById("res-estado").textContent=bloqueada?"Cerrada":"Abierta";
+  document.getElementById("res-proximo").textContent=proximo ? `P${proximo.numero_partido} ${est?est.txt:""}` : "-";
+}
+
+function dibujarTablaQuiniela(){
+  const tabla=document.getElementById("tablaQuiniela");
+
+  let html=`<thead><tr><th class="nombre">Nombre</th>`;
+  partidos.forEach(p=>{
+    const est=estadoPartido(p);
+    html+=`<th class="partido-header">${formatoPartidoVertical(p)}<span class="estado-juego ${est.cls}">${est.txt}</span></th>`;
+  });
+  html+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  if(!bloqueada){
+    html+=`<tr class="captura-row">
+      <td class="nombre">
+        <input id="nuevoNombre" placeholder="Ej. Jesús 1">
+        <input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px">
+        <div class="small" id="modoEdicionTexto">Nueva quiniela</div>
+      </td>`;
+    partidos.forEach(p=>{
+      html+=`<td>
+        <select id="nuevo-${p.id}">
+          <option value="">-</option>
+          <option value="L">L</option>
+          <option value="E">E</option>
+          <option value="V">V</option>
+        </select>
+      </td>`;
+    });
+    html+=`<td>-</td><td>
+      <div class="acciones">
+        <button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button>
+        <button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button>
+      </div>
+    </td></tr>`;
+  }else{
+    html+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
+  }
+
+  usuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    html+=`<tr><td class="nombre"><strong>${u.nombre}</strong><div class="small">${u.dispositivo_id||""}</div></td>`;
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html+=`<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+    html+=`<td><strong>${stats.aciertos}</strong> / ${stats.calificados}</td><td>`;
+    if(!bloqueada){
+      html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
+      if(esAdmin){ html+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`; }
+    }else{
+      html+=`<span class="small">Cerrada</span>`;
+    }
+    html+=`</td></tr>`;
+  });
+
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+}
+
+function obtenerPronostico(usuarioId,partidoId){
+  return pronosticos.find(p=>p.usuario_id===usuarioId && p.partido_id===partidoId);
+}
+function clasePronostico(pr,partido){
+  if(!pr)return "pendiente";
+  if(!partido.resultado)return "pendiente";
+  return pr.pronostico===partido.resultado?"acierto":"fallo";
+}
+function calcularAciertosUsuario(usuarioId,listaPartidos=partidos,listaPronosticos=pronosticos){
+  let aciertos=0,calificados=0;
+  listaPartidos.forEach(p=>{
+    if(!p.resultado)return;
+    const pr=listaPronosticos.find(x=>x.usuario_id===usuarioId && x.partido_id===p.id);
+    if(!pr)return;
+    calificados++;
+    if(pr.pronostico===p.resultado)aciertos++;
+  });
+  return {aciertos,calificados};
+}
+
+function dibujarClasificacion(){
+  const tabla=document.getElementById("tablaClasificacion");
+  const filas=usuarios.map(u=>{
+    const st=calcularAciertosUsuario(u.id);
+    return {usuario:u,aciertos:st.aciertos,calificados:st.calificados};
+  }).sort((a,b)=>b.aciertos-a.aciertos || a.usuario.nombre.localeCompare(b.usuario.nombre));
+
+  let html=`<thead><tr><th>Lugar</th><th class="nombre">Participante</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>`;
+  let lugarReal=0,pos=0,anterior=null;
+  filas.forEach(f=>{
+    pos++;
+    if(anterior===null || f.aciertos<anterior)lugarReal=pos;
+    anterior=f.aciertos;
+    html+=`<tr><td class="medalla">${medallaPorLugar(lugarReal)}</td><td class="nombre"><strong>${f.usuario.nombre}</strong></td><td><strong>${f.aciertos}</strong></td><td>${f.calificados}</td></tr>`;
+  });
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+}
+
+function dibujarPartidos(){
+  const cont=document.getElementById("listaPartidos");
+  cont.innerHTML="";
+  partidos.forEach(p=>{
+    const marcador=(p.goles_local!==null && p.goles_visitante!==null)?`${p.goles_local} - ${p.goles_visitante}`:"Sin marcador";
+    const est=estadoPartido(p);
+    const div=document.createElement("div");
+    div.className="partido-card";
+    div.innerHTML=`<div class="partido-num">Partido ${p.numero_partido}</div>
+      ${formatoPartidoVertical(p)}
+      <div class="small">Fecha: ${formatoFecha(p.fecha_partido)}</div>
+      <div class="small">${marcador}</div>
+      <span class="estado-juego ${est.cls}">${est.txt}</span>`;
+    cont.appendChild(div);
+  });
+}
+
+// =================== HISTÓRICO ===================
+async function cargarHistoricoCompleto(){
+  try{
+    const [uRes,prRes,pRes,jRes]=await Promise.all([
+      db.from("usuarios").select("*").eq("activo",true),
+      db.from("pronosticos").select("*"),
+      db.from("partidos").select("*"),
+      db.from("jornadas").select("*").order("fecha_creacion",{ascending:false})
+    ]);
+    if(uRes.error)throw uRes.error;
+    if(prRes.error)throw prRes.error;
+    if(pRes.error)throw pRes.error;
+    if(jRes.error)throw jRes.error;
+    todosUsuarios=uRes.data||[];
+    todosPronosticos=prRes.data||[];
+    todosPartidos=pRes.data||[];
+    todasJornadas=jRes.data||[];
+    dibujarTablaGeneralHistorica();
+    dibujarHistorialJornadas();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al cargar historial: "+e.message,"error");
+  }
+}
+
+function dibujarTablaGeneralHistorica(){
+  const tabla=document.getElementById("tablaGeneralHistorica");
+  const acumulado=todosUsuarios.map(u=>{
+    const partidosDelUsuario=todosPartidos.filter(p=>todosPronosticos.some(pr=>pr.usuario_id===u.id && pr.partido_id===p.id));
+    const st=calcularAciertosUsuario(u.id,partidosDelUsuario,todosPronosticos);
+    const jornadasJugadas=new Set(todosPronosticos.filter(pr=>pr.usuario_id===u.id).map(pr=>pr.jornada_id)).size;
+    return {u,aciertos:st.aciertos,calificados:st.calificados,jornadas:jornadasJugadas};
+  }).sort((a,b)=>b.aciertos-a.aciertos || a.u.nombre.localeCompare(b.u.nombre));
+
+  let html=`<thead><tr><th>Lugar</th><th class="nombre">Participante</th><th>Aciertos totales</th><th>Jornadas jugadas</th><th>Partidos calificados</th></tr></thead><tbody>`;
+  let lugar=0,pos=0,ant=null;
+  acumulado.forEach(f=>{
+    pos++;
+    if(ant===null || f.aciertos<ant)lugar=pos;
+    ant=f.aciertos;
+    html+=`<tr><td class="medalla">${medallaPorLugar(lugar)}</td><td class="nombre"><strong>${f.u.nombre}</strong></td><td><strong>${f.aciertos}</strong></td><td>${f.jornadas}</td><td>${f.calificados}</td></tr>`;
+  });
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+}
+
+function dibujarHistorialJornadas(){
+  const tabla=document.getElementById("tablaHistorialJornadas");
+  let html=`<thead><tr><th>Jornada</th><th>Costo</th><th>Estado</th><th>Inicio</th><th>Cierre</th><th>Partidos</th><th>Participaciones</th></tr></thead><tbody>`;
+  todasJornadas.forEach(j=>{
+    const ps=todosPartidos.filter(p=>p.jornada_id===j.id);
+    const participantes=new Set(todosPronosticos.filter(pr=>pr.jornada_id===j.id).map(pr=>pr.usuario_id)).size;
+    html+=`<tr>
+      <td><strong>${j.nombre}</strong>${j.activa?' <span class="badge">Activa</span>':''}</td>
+      <td>${dinero(j.costo)}</td>
+      <td>${j.bloqueada?'Cerrada':'Abierta'}</td>
+      <td>${formatoFecha(j.fecha_inicio)}</td>
+      <td>${formatoFecha(j.fecha_cierre)}</td>
+      <td>${ps.length}</td>
+      <td>${participantes}</td>
+    </tr>`;
+  });
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+}
+
+
+// =================== LIGA MX OFICIAL ===================
+async function cargarLigaMX(){
+  try{
+    const [tRes,cRes] = await Promise.all([
+      db.from("tabla_liga_mx").select("*").order("posicion"),
+      db.from("calendario_liga_mx").select("*").order("numero_jornada").order("fecha_partido")
+    ]);
+    if(tRes.error) throw tRes.error;
+    if(cRes.error) throw cRes.error;
+    tablaLiga = tRes.data || [];
+    calendarioLiga = cRes.data || [];
+    dibujarLigaMX();
+    if(esAdmin) dibujarAdminTablaLiga();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al cargar Liga MX: "+e.message,"error");
+  }
+}
+
+function dibujarLigaMX(){
+  dibujarTablaLigaMX();
+  dibujarCalendarioLiga(false);
+  dibujarCalendarioLiga(true);
+}
+
+function dibujarTablaLigaMX(){
+  const tabla=document.getElementById("tablaLigaMX");
+  let html=`<thead><tr><th>#</th><th class="nombre">Club</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Últimos 5</th><th>Fase</th></tr></thead><tbody>`;
+  tablaLiga.forEach(r=>{
+    html += `<tr><td>${r.posicion||""}</td><td class="nombre">${escudoEquipo(r.club)}<strong>${r.club||""}</strong></td><td>${r.pj||0}</td><td>${r.g||0}</td><td>${r.e||0}</td><td>${r.p||0}</td><td>${r.gf||0}</td><td>${r.gc||0}</td><td>${r.dg||0}</td><td><strong>${r.pts||0}</strong></td><td class="ultimos">${ultimosHTML(r.ultimos5)}</td><td>${r.fase||""}</td></tr>`;
+  });
+  tabla.innerHTML=html+`</tbody>`;
+}
+
+function dibujarCalendarioLiga(jugado){
+  const tabla = document.getElementById(jugado ? "tablaLigaHistorial" : "tablaLigaFuturas");
+  if(!tabla) return;
+  const lista = calendarioLiga.filter(x=>!!x.jugado === jugado);
+  let html = `<thead><tr><th>Jornada</th><th>Fecha</th><th class="nombre">Partido</th><th>Estadio</th><th>Marcador</th><th>Resultado</th></tr></thead><tbody>`;
+  lista.forEach(p=>{
+    const marcador = p.goles_local!==null && p.goles_visitante!==null ? `${p.goles_local} - ${p.goles_visitante}` : "-";
+    html += `<tr><td>${p.jornada||""}</td><td>${formatoFecha(p.fecha_partido)}</td><td class="nombre"><strong>${p.local||""}</strong> vs <strong>${p.visitante||""}</strong></td><td>${p.estadio||""}</td><td>${marcador}</td><td>${p.resultado||""}</td></tr>`;
+  });
+  tabla.innerHTML = html + `</tbody>`;
+}
+
+function dibujarAdminTablaLiga(){
+  const tabla = document.getElementById("adminTablaLiga");
+  if(!tabla) return;
+  let html = `<thead><tr><th>#</th><th class="nombre">Club</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Últimos 5</th><th>Fase</th></tr></thead><tbody>`;
+  tablaLiga.forEach(r=>{
+    html += `<tr>
+      <td><input id="tl-pos-${r.id}" type="number" value="${r.posicion||0}"></td>
+      <td class="nombre"><input id="tl-club-${r.id}" value="${r.club||""}"></td>
+      <td><input id="tl-pj-${r.id}" type="number" value="${r.pj||0}"></td>
+      <td><input id="tl-g-${r.id}" type="number" value="${r.g||0}"></td>
+      <td><input id="tl-e-${r.id}" type="number" value="${r.e||0}"></td>
+      <td><input id="tl-p-${r.id}" type="number" value="${r.p||0}"></td>
+      <td><input id="tl-gf-${r.id}" type="number" value="${r.gf||0}"></td>
+      <td><input id="tl-gc-${r.id}" type="number" value="${r.gc||0}"></td>
+      <td><input id="tl-dg-${r.id}" type="number" value="${r.dg||0}"></td>
+      <td><input id="tl-pts-${r.id}" type="number" value="${r.pts||0}"></td>
+      <td><input id="tl-u5-${r.id}" value="${r.ultimos5||""}"></td>
+      <td><input id="tl-fase-${r.id}" value="${r.fase||""}"></td>
+    </tr>`;
+  });
+  tabla.innerHTML = html + `</tbody>`;
+}
+
+async function guardarTablaLiga(){
+  bloquearBoton("btnGuardarTablaLiga","Guardando...");
+  try{
+    for(const r of tablaLiga){
+      const upd = {
+        posicion:+document.getElementById(`tl-pos-${r.id}`).value||0,
+        club:document.getElementById(`tl-club-${r.id}`).value,
+        pj:+document.getElementById(`tl-pj-${r.id}`).value||0,
+        g:+document.getElementById(`tl-g-${r.id}`).value||0,
+        e:+document.getElementById(`tl-e-${r.id}`).value||0,
+        p:+document.getElementById(`tl-p-${r.id}`).value||0,
+        gf:+document.getElementById(`tl-gf-${r.id}`).value||0,
+        gc:+document.getElementById(`tl-gc-${r.id}`).value||0,
+        dg:+document.getElementById(`tl-dg-${r.id}`).value||0,
+        pts:+document.getElementById(`tl-pts-${r.id}`).value||0,
+        ultimos5:document.getElementById(`tl-u5-${r.id}`).value,
+        fase:document.getElementById(`tl-fase-${r.id}`).value,
+        actualizado:new Date().toISOString()
+      };
+      const {error}=await db.from("tabla_liga_mx").update(upd).eq("id",r.id);
+      if(error) throw error;
+    }
+    mostrarMensaje("Tabla Liga MX actualizada.","ok");
+    await cargarLigaMX();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al guardar tabla Liga MX: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnGuardarTablaLiga");
+  }
+}
+
+async function recalcularTablaLigaDesdeCalendario(){
+  bloquearBoton("btnRecalcularLiga","Recalculando...");
+  try{
+    const {data:cal,error}=await db.from("calendario_liga_mx").select("*").eq("jugado",true);
+    if(error)throw error;
+    const mapa={};
+    equipos.forEach(e=>{mapa[e.nombre]={club:e.nombre,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,ultimos:[]}});
+    (cal||[]).sort((a,b)=>new Date(a.fecha_partido||0)-new Date(b.fecha_partido||0)).forEach(m=>{
+      if(m.goles_local===null||m.goles_visitante===null)return;
+      const loc=equipoInfo(m.local)?.nombre||m.local;
+      const vis=equipoInfo(m.visitante)?.nombre||m.visitante;
+      if(!mapa[loc])mapa[loc]={club:loc,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,ultimos:[]};
+      if(!mapa[vis])mapa[vis]={club:vis,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,ultimos:[]};
+      const gl=Number(m.goles_local), gv=Number(m.goles_visitante);
+      mapa[loc].pj++; mapa[vis].pj++;
+      mapa[loc].gf+=gl; mapa[loc].gc+=gv; mapa[vis].gf+=gv; mapa[vis].gc+=gl;
+      if(gl>gv){mapa[loc].g++; mapa[loc].pts+=3; mapa[vis].p++; mapa[loc].ultimos.push("G"); mapa[vis].ultimos.push("P");}
+      else if(gl<gv){mapa[vis].g++; mapa[vis].pts+=3; mapa[loc].p++; mapa[vis].ultimos.push("G"); mapa[loc].ultimos.push("P");}
+      else {mapa[loc].e++; mapa[vis].e++; mapa[loc].pts++; mapa[vis].pts++; mapa[loc].ultimos.push("E"); mapa[vis].ultimos.push("E");}
+    });
+    const filas=Object.values(mapa).map(x=>({...x,dg:x.gf-x.gc,ultimos5:x.ultimos.slice(-5).join(",")}))
+      .sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||a.club.localeCompare(b.club))
+      .map((x,i)=>({...x,posicion:i+1,fase:i<8?"Eliminatorias":""}));
+    await db.from("tabla_liga_mx").delete().neq("id","00000000-0000-0000-0000-000000000000");
+    const insert=filas.map(f=>({posicion:f.posicion,club:f.club,pj:f.pj,g:f.g,e:f.e,p:f.p,gf:f.gf,gc:f.gc,dg:f.dg,pts:f.pts,ultimos5:f.ultimos5,fase:f.fase,actualizado:new Date().toISOString()}));
+    const {error:insError}=await db.from("tabla_liga_mx").insert(insert);
+    if(insError)throw insError;
+    mostrarMensaje("Tabla Liga MX recalculada automáticamente.","ok");
+    await cargarLigaMX();
+  }catch(e){console.error(e);mostrarMensaje("Error al recalcular tabla: "+e.message,"error");}
+  finally{desbloquearBoton("btnRecalcularLiga");}
+}
+
+async function agregarCalendarioLiga(){
+  bloquearBoton("btnAgregarCalendario","Guardando...");
+  try{
+    const gl=document.getElementById("calGL").value;
+    const gv=document.getElementById("calGV").value;
+    const hayMarcador = gl!=="" && gv!=="";
+    const resultado = hayMarcador ? resultadoDesdeGoles(gl,gv) : null;
+    const reg = {
+      jornada:document.getElementById("calJornada").value,
+      numero_jornada:+document.getElementById("calNumero").value||0,
+      local:document.getElementById("calLocal").value,
+      visitante:document.getElementById("calVisitante").value,
+      fecha_partido:aISODesdeDatetimeLocal(document.getElementById("calFecha").value),
+      estadio:document.getElementById("calEstadio").value,
+      goles_local:hayMarcador?+gl:null,
+      goles_visitante:hayMarcador?+gv:null,
+      resultado,
+      jugado:!!resultado,
+      actualizado:new Date().toISOString()
+    };
+    if(!reg.local || !reg.visitante){mostrarMensaje("Falta local o visitante.","error");return;}
+    const {error}=await db.from("calendario_liga_mx").insert(reg);
+    if(error) throw error;
+    ["calJornada","calNumero","calLocal","calVisitante","calFecha","calEstadio","calGL","calGV"].forEach(id=>document.getElementById(id).value="");
+    mostrarMensaje("Partido de Liga MX agregado.","ok");
+    await cargarLigaMX();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al agregar calendario: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnAgregarCalendario");
+  }
+}
+
+// =================== GUARDAR / EDITAR QUINIELA ===================
+async function guardarParticipacion(){
+  if(!jornadaActiva){mostrarMensaje("No hay jornada activa.","error");return;}
+  if(jornadaActiva.bloqueada || configuracion?.quiniela_bloqueada){mostrarMensaje("La quiniela está bloqueada.","error");return;}
+  if(partidos.length!==9){mostrarMensaje("La jornada debe tener 9 partidos.","error");return;}
+
+  const nombre=document.getElementById("nuevoNombre").value.trim();
+  const telefono=document.getElementById("nuevoTelefono").value.trim();
+
+  if(!nombre){mostrarMensaje("Escribe el nombre o apodo.","error");return;}
+
+  const elecciones=[];
+  for(const p of partidos){
+    const val=document.getElementById(`nuevo-${p.id}`).value;
+    if(!val){mostrarMensaje(`Falta elegir pronóstico para: ${textoPartido(p)}`,"error");return;}
+    elecciones.push({partido:p,pronostico:val});
+  }
+
+  bloquearBoton("btnGuardarQuiniela", usuarioEditandoId ? "Actualizando..." : "Guardando...");
+
+  try{
+    if(usuarioEditandoId){
+      await actualizarQuinielaExistente(usuarioEditandoId,nombre,telefono,elecciones);
+      mostrarMensaje("Quiniela actualizada correctamente.","ok");
+      mostrarEstado("estadoGuardado","✅ Quiniela actualizada correctamente.");
+    }else{
+      await crearQuinielaNueva(nombre,telefono,elecciones);
+      mostrarMensaje("Quiniela guardada correctamente.","ok");
+      mostrarEstado("estadoGuardado","✅ Quiniela guardada correctamente y agregada a la tabla.");
+    }
+
+    cancelarEdicion(false);
+    await cargarTodo();
+    dibujarTodo();
+
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al guardar: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnGuardarQuiniela");
+  }
+}
+
+async function crearQuinielaNueva(nombre,telefono,elecciones){
+  const codigo="MX26-"+Math.random().toString(36).substring(2,6).toUpperCase();
+
+  const {data:usuario,error:uError}=await db.from("usuarios").insert({
+    nombre, telefono, activo:true, dispositivo_id:codigo, ultima_actividad:new Date().toISOString()
+  }).select().single();
+  if(uError)throw uError;
+
+  const registros=elecciones.map(e=>({
+    usuario_id:usuario.id, jornada_id:jornadaActiva.id, partido_id:e.partido.id,
+    pronostico:e.pronostico, acierto:null, fecha_registro:new Date().toISOString()
+  }));
+
+  const {error:prError}=await db.from("pronosticos").insert(registros);
+  if(prError)throw prError;
+
+  const {error:paError}=await db.from("pagos").insert({
+    usuario_id:usuario.id, jornada_id:jornadaActiva.id,
+    monto:jornadaActiva.costo||configuracion?.costo_default||20,
+    pagado:false, metodo_pago:"efectivo", observaciones:""
+  });
+  if(paError)console.warn("Pago no creado:",paError);
+
+  await registrarAuditoria(usuario.id,`Registró quiniela: ${nombre}`);
+}
+
+async function actualizarQuinielaExistente(usuarioId,nombre,telefono,elecciones){
+  const {error:uError}=await db.from("usuarios").update({
+    nombre, telefono, ultima_actividad:new Date().toISOString()
+  }).eq("id",usuarioId);
+  if(uError)throw uError;
+
+  for(const e of elecciones){
+    const pr=obtenerPronostico(usuarioId,e.partido.id);
+    if(pr){
+      const {error}=await db.from("pronosticos").update({
+        pronostico:e.pronostico, fecha_registro:new Date().toISOString()
+      }).eq("id",pr.id);
+      if(error)throw error;
+    }else{
+      const {error}=await db.from("pronosticos").insert({
+        usuario_id:usuarioId, jornada_id:jornadaActiva.id, partido_id:e.partido.id,
+        pronostico:e.pronostico, acierto:null, fecha_registro:new Date().toISOString()
+      });
+      if(error)throw error;
+    }
+  }
+  await registrarAuditoria(usuarioId,`Modificó quiniela: ${nombre}`);
+}
+
+function editarQuiniela(usuarioId){
+  if(jornadaActiva?.bloqueada || configuracion?.quiniela_bloqueada){
+    mostrarMensaje("La jornada está bloqueada. Ya no se puede editar.","error");
+    return;
+  }
+  const u=usuarios.find(x=>x.id===usuarioId);
+  if(!u)return;
+  usuarioEditandoId=usuarioId;
+  document.getElementById("nuevoNombre").value=u.nombre||"";
+  document.getElementById("nuevoTelefono").value=u.telefono||"";
+  partidos.forEach(p=>{
+    const pr=obtenerPronostico(usuarioId,p.id);
+    const sel=document.getElementById(`nuevo-${p.id}`);
+    if(sel)sel.value=pr?.pronostico||"";
+  });
+  const texto=document.getElementById("modoEdicionTexto");
+  if(texto)texto.textContent="Editando: "+u.nombre;
+  const btn=document.getElementById("btnGuardarQuiniela");
+  if(btn)btn.textContent="Actualizar";
+  mostrarMensaje("Modo edición activo. Cambia el pronóstico y presiona Actualizar.","info");
+  document.getElementById("quiniela").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function cancelarEdicion(redibujar=true){
+  usuarioEditandoId=null;
+  const n=document.getElementById("nuevoNombre");
+  const t=document.getElementById("nuevoTelefono");
+  if(n)n.value="";
+  if(t)t.value="";
+  partidos.forEach(p=>{
+    const sel=document.getElementById(`nuevo-${p.id}`);
+    if(sel)sel.value="";
+  });
+  const texto=document.getElementById("modoEdicionTexto");
+  if(texto)texto.textContent="Nueva quiniela";
+  const btn=document.getElementById("btnGuardarQuiniela");
+  if(btn)btn.textContent="Guardar";
+  if(redibujar)dibujarTodo();
+}
+
+async function eliminarQuinielaAdmin(usuarioId){
+  if(!esAdmin){mostrarMensaje("Solo administrador puede eliminar quinielas.","error");return;}
+  const u=usuarios.find(x=>x.id===usuarioId);
+  if(!u)return;
+  if(!confirm(`¿Eliminar/desactivar la quiniela de ${u.nombre}?`))return;
+  try{
+    await db.from("usuarios").update({activo:false, ultima_actividad:new Date().toISOString()}).eq("id",usuarioId);
+    await registrarAuditoria(usuarioId,`Administrador eliminó/desactivó quiniela: ${u.nombre}`);
+    await cargarTodo();
+    dibujarTodo();
+    mostrarMensaje("Quiniela eliminada de la vista pública.","ok");
+  }catch(e){console.error(e);mostrarMensaje("Error al eliminar: "+e.message,"error");}
+}
+
+async function registrarAuditoria(usuarioId,detalle){
+  try{
+    await db.from("auditoria").insert({usuario_id:usuarioId||null,jornada_id:jornadaActiva?.id||null,detalle});
+  }catch(e){console.warn("Auditoría no guardada:",e);}
+}
+
+// =================== ADMIN ===================
+function loginAdmin(){
+  const user=document.getElementById("adminUser").value.trim();
+  const pass=document.getElementById("adminPass").value;
+  if(user===ADMIN_USUARIO_TEMP && pass===ADMIN_PASSWORD_TEMP){
+    esAdmin=true;
+    document.getElementById("loginAdmin").style.display="none";
+    document.getElementById("panelAdmin").classList.add("activo");
+    dibujarAdminResultados();
+    dibujarPagos();
+    dibujarFormNuevaJornada();
+    dibujarEditarPartidosActuales();
+    cargarLigaMX();
+    mostrarMensaje("Modo administrador activo.","ok");
+  }else mostrarMensaje("Usuario o contraseña incorrectos.","error");
+}
+function cerrarAdmin(){
+  esAdmin=false;
+  document.getElementById("loginAdmin").style.display="block";
+  document.getElementById("panelAdmin").classList.remove("activo");
+}
+
+// =================== ADMIN JORNADA Y PARTIDOS ===================
+function dibujarFormNuevaJornada(){
+  document.getElementById("nuevaJornadaNombre").value = "";
+  document.getElementById("nuevaJornadaCosto").value = jornadaActiva?.costo || configuracion?.costo_default || 20;
+  const cont=document.getElementById("formNuevaJornadaPartidos");
+  cont.innerHTML="";
+  for(let i=1;i<=9;i++){
+    const div=document.createElement("div");
+    div.className="partido-card";
+    div.innerHTML=`<div class="partido-num">Partido ${i}</div>
+      <label>Local</label><select class="select-equipo-jornada" id="nj-local-${i}" onchange="actualizarSelectsEquipos()">${opcionesEquipos()}</select>
+      <br><br>
+      <label>Visitante</label><select class="select-equipo-jornada" id="nj-visitante-${i}" onchange="actualizarSelectsEquipos()">${opcionesEquipos()}</select>
+      <br><br>
+      <label>Fecha y hora</label><input id="nj-fecha-${i}" type="datetime-local">`;
+    cont.appendChild(div);
+  }
+}
+
+function dibujarEditarPartidosActuales(){
+  const cont=document.getElementById("formEditarPartidosActuales");
+  cont.innerHTML="";
+  partidos.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="partido-card";
+    div.innerHTML=`<div class="partido-num">Partido ${p.numero_partido}</div>
+      <label>Local</label><select id="edit-local-${p.id}">${opcionesEquipos(p.local||"")}</select>
+      <br><br>
+      <label>Visitante</label><select id="edit-visitante-${p.id}">${opcionesEquipos(p.visitante||"")}</select>
+      <br><br>
+      <label>Fecha y hora</label><input id="edit-fecha-${p.id}" type="datetime-local" value="${valorDatetimeLocal(p.fecha_partido)}">`;
+    cont.appendChild(div);
+  });
+}
+
+async function crearNuevaJornada(){
+  const nombre=document.getElementById("nuevaJornadaNombre").value.trim();
+  const costo=Number(document.getElementById("nuevaJornadaCosto").value||20);
+  const inicio=aISODesdeDatetimeLocal(document.getElementById("nuevaJornadaInicio").value);
+  const cierre=aISODesdeDatetimeLocal(document.getElementById("nuevaJornadaCierre").value);
+
+  if(!nombre){mostrarMensaje("Escribe el nombre de la jornada.","error");return;}
+
+  const nuevosPartidos=[];
+  for(let i=1;i<=9;i++){
+    const local=document.getElementById(`nj-local-${i}`).value.trim();
+    const visitante=document.getElementById(`nj-visitante-${i}`).value.trim();
+    const fecha=aISODesdeDatetimeLocal(document.getElementById(`nj-fecha-${i}`).value);
+    if(!local || !visitante){
+      mostrarMensaje(`Falta local o visitante en el Partido ${i}.`,"error");
+      return;
+    }
+    nuevosPartidos.push({numero_partido:i,local,visitante,fecha_partido:fecha});
+  }
+
+  bloquearBoton("btnCrearJornada","Creando jornada...");
+
+  try{
+    await db.from("jornadas").update({activa:false}).eq("activa",true);
+
+    const {data:jornada,error:jError}=await db.from("jornadas").insert({
+      nombre,costo,fecha_inicio:inicio,fecha_cierre:cierre,bloqueada:false,activa:true,bolsa_jornada:0,participantes:0,fecha_creacion:new Date().toISOString()
+    }).select().single();
+    if(jError)throw jError;
+
+    const registros=nuevosPartidos.map(p=>({
+      jornada_id:jornada.id,
+      numero_partido:p.numero_partido,
+      local:p.local,
+      visitante:p.visitante,
+      fecha_partido:p.fecha_partido,
+      finalizado:false
+    }));
+
+    const {error:pError}=await db.from("partidos").insert(registros);
+    if(pError)throw pError;
+
+    await registrarAuditoria(null,`Administrador creó ${nombre}`);
+
+    mostrarMensaje("Nueva jornada creada y activada correctamente.","ok");
+    mostrarEstado("estadoJornada","✅ Nueva jornada creada y activada correctamente.");
+
+    await cargarJornadaActiva();
+    await cargarTodo();
+    dibujarTodo();
+
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al crear jornada: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnCrearJornada");
+  }
+}
+
+async function guardarPartidosActuales(){
+  bloquearBoton("btnGuardarPartidosActuales","Guardando partidos...");
+  try{
+    for(const p of partidos){
+      const local=document.getElementById(`edit-local-${p.id}`).value.trim();
+      const visitante=document.getElementById(`edit-visitante-${p.id}`).value.trim();
+      const fecha=aISODesdeDatetimeLocal(document.getElementById(`edit-fecha-${p.id}`).value);
+      const {error}=await db.from("partidos").update({local,visitante,fecha_partido:fecha}).eq("id",p.id);
+      if(error)throw error;
+    }
+    await registrarAuditoria(null,"Administrador editó partidos de jornada actual");
+    mostrarMensaje("Partidos actualizados correctamente.","ok");
+    await cargarTodo();
+    dibujarTodo();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al guardar partidos: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnGuardarPartidosActuales");
+  }
+}
+
+// =================== ADMIN RESULTADOS ===================
+function dibujarAdminResultados(){
+  const cont=document.getElementById("adminResultados");
+  cont.innerHTML="";
+  partidos.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="partido-card";
+    div.innerHTML=`<div class="partido-num">${textoPartido(p)}</div>
+      <label>Goles ${p.local}</label>
+      <input type="number" min="0" id="gl-${p.id}" value="${p.goles_local??""}">
+      <br><br>
+      <label>Goles ${p.visitante}</label>
+      <input type="number" min="0" id="gv-${p.id}" value="${p.goles_visitante??""}">
+      <p class="small">Resultado: ${p.resultado||"Pendiente"}</p>`;
+    cont.appendChild(div);
+  });
+}
+
+async function guardarResultados(){
+  bloquearBoton("btnGuardarResultados","Guardando resultados...");
+  try{
+    let capturados=0;
+    for(const p of partidos){
+      const glTxt=document.getElementById(`gl-${p.id}`).value;
+      const gvTxt=document.getElementById(`gv-${p.id}`).value;
+      const gl=glTxt===""?null:Number(glTxt);
+      const gv=gvTxt===""?null:Number(gvTxt);
+      const resultado=(gl===null||gv===null)?null:resultadoDesdeGoles(gl,gv);
+      if(resultado)capturados++;
+      const {error}=await db.from("partidos").update({
+        goles_local:gl,goles_visitante:gv,resultado,finalizado:resultado!==null
+      }).eq("id",p.id);
+      if(error)throw error;
+    }
+    await registrarAuditoria(null,`Administrador guardó resultados. Partidos capturados: ${capturados}`);
+    mostrarMensaje("Resultados guardados correctamente.","ok");
+    mostrarEstado("estadoResultados",`✅ Resultados guardados. Partidos capturados: ${capturados}.`);
+    await cargarTodo();
+    dibujarTodo();
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al guardar resultados: "+e.message,"error");
+  }finally{
+    desbloquearBoton("btnGuardarResultados");
+  }
+}
+
+// =================== ADMIN PAGOS ===================
+function dibujarPagos(){
+  const tabla=document.getElementById("tablaPagos");
+  let html=`<thead><tr><th class="nombre">Participante</th><th>Monto</th><th>Estado</th><th>Observación privada</th><th>Acción</th></tr></thead><tbody>`;
+  usuarios.forEach(u=>{
+    const pago=pagos.find(p=>p.usuario_id===u.id);
+    html+=`<tr>
+      <td class="nombre"><strong>${u.nombre}</strong></td>
+      <td>${dinero(pago?.monto||jornadaActiva?.costo||0)}</td>
+      <td>${pago?.pagado?'<span class="pago-pagado">🟢 Pagado</span>':'<span class="pago-pendiente">⚪ Pendiente</span>'}</td>
+      <td><input id="obs-${u.id}" value="${pago?.observaciones||""}" placeholder="Ej. paga jueves"></td>
+      <td><button id="btnPago-${u.id}" class="btn-gray" onclick="cambiarPago('${u.id}')">Cambiar</button></td>
+    </tr>`;
+  });
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+}
+
+async function cambiarPago(usuarioId){
+  const btn=document.getElementById(`btnPago-${usuarioId}`);
+  if(btn){btn.disabled=true;btn.textContent="Guardando...";}
+  try{
+    const pago=pagos.find(p=>p.usuario_id===usuarioId);
+    const usuario=usuarios.find(u=>u.id===usuarioId);
+    const obs=document.getElementById(`obs-${usuarioId}`).value||"";
+    if(pago){
+      const {error}=await db.from("pagos").update({
+        pagado:!pago.pagado,observaciones:obs,fecha_pago:new Date().toISOString()
+      }).eq("id",pago.id);
+      if(error)throw error;
+    }else{
+      const {error}=await db.from("pagos").insert({
+        usuario_id:usuarioId,jornada_id:jornadaActiva.id,monto:jornadaActiva.costo||configuracion?.costo_default||20,
+        pagado:true,metodo_pago:"efectivo",observaciones:obs,fecha_pago:new Date().toISOString()
+      });
+      if(error)throw error;
+    }
+    await registrarAuditoria(usuarioId,`Administrador cambió pago de ${usuario?.nombre||"participante"}`);
+    await cargarTodo();
+    dibujarTodo();
+    mostrarMensaje("Pago actualizado correctamente.","ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al cambiar pago: "+e.message,"error");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="Cambiar";}
+  }
+}
+
+async function toggleBloqueo(){
+  try{
+    if(!jornadaActiva)return;
+    const nuevo=!jornadaActiva.bloqueada;
+    const {error}=await db.from("jornadas").update({bloqueada:nuevo}).eq("id",jornadaActiva.id);
+    if(error)throw error;
+    await registrarAuditoria(null,nuevo?"Jornada bloqueada":"Jornada abierta");
+    await cargarJornadaActiva();
+    await cargarTodo();
+    dibujarTodo();
+    mostrarMensaje(nuevo?"Jornada bloqueada.":"Jornada abierta.","ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al cambiar estado: "+e.message,"error");
+  }
+}
+
+// =================== REALTIME ===================
+function activarRealtime(){
+  db.channel("quiniela-v4")
+    .on("postgres_changes",{event:"*",schema:"public",table:"usuarios"},recargarPorCambio)
+    .on("postgres_changes",{event:"*",schema:"public",table:"pronosticos"},recargarPorCambio)
+    .on("postgres_changes",{event:"*",schema:"public",table:"partidos"},recargarPorCambio)
+    .on("postgres_changes",{event:"*",schema:"public",table:"pagos"},recargarPorCambio)
+    .on("postgres_changes",{event:"*",schema:"public",table:"jornadas"},recargarPorCambio)
+    .subscribe();
+}
+let recargando=false;
+async function recargarPorCambio(){
+  if(recargando)return;
+  recargando=true;
+  setTimeout(async()=>{
+    try{
+      await cargarJornadaActiva();
+      await cargarTodo();
+      dibujarTodo();
+    }catch(e){console.error(e)}
+    recargando=false;
+  },800);
+}
+</script>
+</body>
+</html>
