@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026 v8</title>
+<title>Quiniela MX 2026 v9</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -146,6 +146,24 @@ th.partido-header{min-width:150px}
 .dueno-no{
   color:#667085;
 }
+
+
+/* =================== V9: CONTADOR SEGUNDO A SEGUNDO, ESCUDOS Y CLUBES =================== */
+.contador-segundos{
+  display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;
+  background:#e3f2fd;color:#0d47a1;font-weight:bold;font-size:12px;
+}
+.contador-vivo{background:#ffebee;color:#c62828;animation:pulse 1s infinite;}
+.contador-espera{background:#fff8e1;color:#795548;}
+.contador-terminado{background:#c8e6c9;color:#0b5d1e;}
+.escudo-mini,.escudo-tabla{background:white;border-radius:50%;}
+.admin-danger-zone{border:2px dashed #c62828;background:#fff5f5;}
+.club-card{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin:6px 0;background:#fff;
+}
+.club-card.inactivo{opacity:.55;background:#f3f4f6;}
+.club-info{display:flex;align-items:center;gap:8px;}
 
 </style>
 </head>
@@ -1581,6 +1599,324 @@ if(typeof dibujarPartidos === "function"){
       cont.appendChild(div);
     });
   }
+}
+
+
+
+// =================== V9: CONTADOR SEGUNDO A SEGUNDO, ESCUDOS, ELIMINAR PARTIDOS Y CLUBES ===================
+let intervaloV9 = null;
+
+function cuentaRegresivaCompleta(ms){
+  if(ms <= 0) return "00d 00h 00m 00s";
+  const total = Math.floor(ms / 1000);
+  const dias = Math.floor(total / 86400);
+  const horas = Math.floor((total % 86400) / 3600);
+  const mins = Math.floor((total % 3600) / 60);
+  const segs = total % 60;
+  const pad = n => String(n).padStart(2,"0");
+  return `${pad(dias)}d ${pad(horas)}h ${pad(mins)}m ${pad(segs)}s`;
+}
+
+function estadoPartidoV9(p){
+  if(p.resultado && p.finalizado) return {txt:"🟢 Terminado", cls:"contador-segundos contador-terminado"};
+  const ahora = new Date();
+  if(!p.fecha_partido) return {txt:"Sin fecha", cls:"contador-segundos"};
+  const inicio = new Date(p.fecha_partido);
+  if(isNaN(inicio)) return {txt:"Sin fecha", cls:"contador-segundos"};
+  const finEstimado = new Date(inicio.getTime() + 120 * 60 * 1000);
+  if(ahora < inicio) return {txt:"⏳ Inicia en " + cuentaRegresivaCompleta(inicio - ahora), cls:"contador-segundos"};
+  if(ahora >= inicio && ahora <= finEstimado) return {txt:"🔴 En vivo", cls:"contador-segundos contador-vivo"};
+  return {txt:"🟡 Terminó, esperando actualización", cls:"contador-segundos contador-espera"};
+}
+
+async function cargarEquiposCacheV9(){
+  try{
+    const {data,error}=await db.from("equipos").select("*").order("nombre");
+    if(error) throw error;
+    equiposCache=data||[];
+  }catch(e){
+    console.warn("No se pudieron cargar equipos:",e);
+    equiposCache=[];
+  }
+}
+
+function escudoEquipoV9(nombre, clase="escudo-mini"){
+  const lista = typeof equiposCache !== "undefined" ? equiposCache : [];
+  const eq = lista.find(e => String(e.nombre||"").toLowerCase().trim() === String(nombre||"").toLowerCase().trim());
+  if(eq && eq.escudo_url){
+    return `<img class="${clase}" src="${eq.escudo_url}" alt="${nombre}" onerror="this.style.display='none'">`;
+  }
+  return `<span class="${clase}" style="display:inline-flex;align-items:center;justify-content:center;border:1px solid #ddd;font-size:11px;">⚽</span>`;
+}
+
+function formatoPartidoVerticalV9(p){
+  return `
+    <div class="equipo-linea equipo-local">${escudoEquipoV9(p.local)}<span>${p.local||"Local"}</span></div>
+    <div class="vs-linea">VS</div>
+    <div class="equipo-linea equipo-visita">${escudoEquipoV9(p.visitante)}<span>${p.visitante||"Visita"}</span></div>
+  `;
+}
+
+dibujarTablaQuiniela = function(){
+  const tabla=document.getElementById("tablaQuiniela");
+  if(!tabla) return;
+  let html=`<thead><tr><th class="nombre">Nombre</th>`;
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible === "function" ? numeroPartidoVisible(p,index) : (index+1);
+    const est = estadoPartidoV9(p);
+    html+=`
+      <th class="partido-header">
+        <div class="small">Partido ${numero}</div>
+        ${formatoPartidoVerticalV9(p)}
+        <span class="${est.cls}">${est.txt}</span>
+        ${typeof resultadoVisiblePartido === "function" ? resultadoVisiblePartido(p) : ""}
+      </th>`;
+  });
+  html+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+  if(!bloqueada){
+    html+=`<tr class="captura-row">
+      <td class="nombre">
+        <input id="nuevoNombre" placeholder="Ej. Jesús 1">
+        <input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px">
+        <div class="small" id="modoEdicionTexto">Nueva quiniela</div>
+      </td>`;
+    partidos.forEach(p=>{
+      html+=`<td><select id="nuevo-${p.id}">
+        <option value="">-</option><option value="L">L</option><option value="E">E</option><option value="V">V</option>
+      </select></td>`;
+    });
+    html+=`<td>-</td><td>
+      <div class="acciones">
+        <button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button>
+        <button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button>
+      </div>
+    </td></tr>`;
+  }else{
+    html+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
+  }
+  usuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno = typeof puedeEditarUsuario === "function" ? puedeEditarUsuario(u) : true;
+    html+=`<tr>
+      <td class="nombre">
+        <strong>${u.nombre}</strong>
+        <div class="small ${esDueno ? "dueno-ok" : "dueno-no"}">${esDueno ? "Editable en este dispositivo" : "Solo lectura"}</div>
+      </td>`;
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html+=`<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+    html+=`<td><strong>${stats.aciertos}</strong> / ${stats.calificados}</td><td>`;
+    if(!bloqueada && esDueno) html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
+    else if(!bloqueada && !esDueno) html+=`<span class="small">No editable aquí</span>`;
+    else html+=`<span class="small">Cerrada</span>`;
+    if(esAdmin && typeof eliminarQuinielaAdmin === "function"){
+      html+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+    html+=`</td></tr>`;
+  });
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+};
+
+dibujarPartidos = function(){
+  const cont=document.getElementById("listaPartidos");
+  if(!cont) return;
+  cont.innerHTML="";
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible === "function" ? numeroPartidoVisible(p,index) : (index+1);
+    const marcador=(p.goles_local!==null && p.goles_visitante!==null)?`${p.goles_local} - ${p.goles_visitante}`:"Sin marcador";
+    const est = estadoPartidoV9(p);
+    const div=document.createElement("div");
+    div.className="partido-card";
+    div.innerHTML=`
+      <div class="partido-num">Partido ${numero}</div>
+      ${formatoPartidoVerticalV9(p)}
+      <div class="small">Fecha: ${formatoFecha(p.fecha_partido)}</div>
+      <div class="small">${marcador}</div>
+      <span class="${est.cls}">${est.txt}</span>
+      ${typeof resultadoVisiblePartido === "function" ? resultadoVisiblePartido(p) : ""}
+    `;
+    cont.appendChild(div);
+  });
+};
+
+if(typeof dibujarTablaLigaMX === "function"){
+  dibujarTablaLigaMX = function(){
+    const t=document.getElementById("tablaLigaMX");
+    if(!t || !Array.isArray(tablaLiga)) return;
+    let h=`<thead><tr><th>#</th><th class="nombre">Club</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Últimos 5</th><th>Fase</th></tr></thead><tbody>`;
+    tablaLiga.forEach(r=>{
+      h+=`<tr>
+        <td>${r.posicion||""}</td>
+        <td class="nombre">${escudoEquipoV9(r.club,"escudo-tabla")}<strong>${r.club||""}</strong></td>
+        <td>${r.pj||0}</td><td>${r.g||0}</td><td>${r.e||0}</td><td>${r.p||0}</td>
+        <td>${r.gf||0}</td><td>${r.gc||0}</td><td>${r.dg||0}</td><td><strong>${r.pts||0}</strong></td>
+        <td class="ultimos">${typeof ultimosHTML==="function" ? ultimosHTML(r.ultimos5) : (r.ultimos5||"")}</td>
+        <td>${r.fase||""}</td>
+      </tr>`;
+    });
+    t.innerHTML=h+`</tbody>`;
+  };
+}
+
+function insertarPanelClubesYPartidosV9(){
+  const adminJornada=document.getElementById("adminJornada");
+  if(adminJornada && !document.getElementById("zonaPeligroPartidosV9")){
+    const div=document.createElement("div");
+    div.id="zonaPeligroPartidosV9";
+    div.className="card admin-danger-zone";
+    div.innerHTML=`
+      <h3>Zona de cuidado</h3>
+      <p class="small">Elimina todos los partidos de la jornada activa si necesitas volver a cargarlos desde cero.</p>
+      <button class="btn-red" onclick="eliminarTodosPartidosJornada()">Eliminar todos los partidos de la jornada activa</button>
+    `;
+    adminJornada.appendChild(div);
+  }
+  const adminLiga=document.getElementById("adminLigaBox");
+  if(adminLiga && !document.getElementById("adminClubesV9")){
+    const div=document.createElement("div");
+    div.id="adminClubesV9";
+    div.className="card";
+    div.innerHTML=`
+      <h3>Clubes Liga MX</h3>
+      <p class="small">Da de baja un club por venta/castigo y registra su reemplazo.</p>
+      <div class="form-grid">
+        <div><label>Club nuevo / reemplazo</label><input id="clubNuevoNombre" placeholder="Ej. Club nuevo"></div>
+        <div><label>URL del escudo</label><input id="clubNuevoEscudo" placeholder="https://..."></div>
+      </div><br>
+      <button class="btn-primary" onclick="agregarClubNuevoV9()">Agregar club</button>
+      <br><br>
+      <div id="listaClubesAdminV9"></div>
+    `;
+    adminLiga.appendChild(div);
+  }
+  dibujarClubesAdminV9();
+}
+
+async function eliminarTodosPartidosJornada(){
+  if(!esAdmin){mostrarMensaje("Solo administrador puede eliminar partidos.","error");return;}
+  if(!jornadaActiva){mostrarMensaje("No hay jornada activa.","error");return;}
+  const ok=confirm("¿Seguro que quieres eliminar TODOS los partidos de la jornada activa? También se borrarán pronósticos asociados a esos partidos.");
+  if(!ok) return;
+  try{
+    const ids=partidos.map(p=>p.id);
+    if(ids.length){
+      await db.from("pronosticos").delete().in("partido_id",ids);
+      const {error}=await db.from("partidos").delete().eq("jornada_id",jornadaActiva.id);
+      if(error) throw error;
+    }
+    if(typeof registrarAuditoria==="function") await registrarAuditoria(null,"Administrador eliminó todos los partidos de la jornada activa");
+    await cargarTodo();
+    dibujarTodo();
+    mostrarMensaje("Partidos eliminados correctamente.","ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al eliminar partidos: "+e.message,"error");
+  }
+}
+
+async function dibujarClubesAdminV9(){
+  const cont=document.getElementById("listaClubesAdminV9");
+  if(!cont) return;
+  await cargarEquiposCacheV9();
+  let html="";
+  (equiposCache||[]).forEach(eq=>{
+    html+=`
+      <div class="club-card ${eq.activo===false?"inactivo":""}">
+        <div class="club-info">
+          ${eq.escudo_url?`<img class="escudo-tabla" src="${eq.escudo_url}" onerror="this.style.display='none'">`:"⚽"}
+          <div><strong>${eq.nombre}</strong><br><span class="small">${eq.activo===false?"Inactivo / baja":"Activo"}</span></div>
+        </div>
+        <div class="acciones">
+          <button class="${eq.activo===false?"btn-green":"btn-yellow"}" onclick="toggleClubActivoV9('${eq.id}', ${eq.activo===false?"true":"false"})">
+            ${eq.activo===false?"Reactivar":"Dar baja"}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  cont.innerHTML=html;
+}
+
+async function toggleClubActivoV9(id,activo){
+  try{
+    const {error}=await db.from("equipos").update({activo}).eq("id",id);
+    if(error) throw error;
+    await cargarEquiposCacheV9();
+    await dibujarClubesAdminV9();
+    dibujarTodo();
+    mostrarMensaje(activo?"Club reactivado.":"Club dado de baja.","ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al actualizar club: "+e.message,"error");
+  }
+}
+
+async function agregarClubNuevoV9(){
+  const nombre=document.getElementById("clubNuevoNombre").value.trim();
+  const escudo=document.getElementById("clubNuevoEscudo").value.trim();
+  if(!nombre){mostrarMensaje("Escribe el nombre del club nuevo.","error");return;}
+  try{
+    const {error}=await db.from("equipos").insert({nombre,escudo_url:escudo||null,activo:true});
+    if(error) throw error;
+    document.getElementById("clubNuevoNombre").value="";
+    document.getElementById("clubNuevoEscudo").value="";
+    await cargarEquiposCacheV9();
+    await dibujarClubesAdminV9();
+    mostrarMensaje("Club agregado correctamente.","ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("Error al agregar club: "+e.message,"error");
+  }
+}
+
+if(typeof loginAdmin==="function"){
+  const loginAdminOriginalV9=loginAdmin;
+  loginAdmin=function(){
+    loginAdminOriginalV9();
+    setTimeout(()=>insertarPanelClubesYPartidosV9(),300);
+  };
+}
+
+if(typeof mostrarAdminSub==="function"){
+  const mostrarAdminSubOriginalV9=mostrarAdminSub;
+  mostrarAdminSub=function(id,btn){
+    mostrarAdminSubOriginalV9(id,btn);
+    if(id==="adminLigaBox" || id==="adminJornada"){
+      setTimeout(()=>insertarPanelClubesYPartidosV9(),300);
+    }
+  };
+}
+
+function iniciarRelojV9(){
+  if(intervaloV9) clearInterval(intervaloV9);
+  intervaloV9=setInterval(()=>{
+    try{
+      dibujarResumen();
+      dibujarTablaQuiniela();
+      dibujarPartidos();
+    }catch(e){}
+  },1000);
+}
+
+if(typeof iniciarApp==="function"){
+  iniciarApp=async function(){
+    try{
+      await cargarEquiposCacheV9();
+      await cargarConfiguracion();
+      await cargarJornadaActiva();
+      await cargarTodo();
+      dibujarTodo();
+      iniciarRelojV9();
+      activarRealtime();
+    }catch(e){
+      console.error(e);
+      mostrarMensaje("Error al iniciar: "+e.message,"error");
+    }
+  };
 }
 
 </script>
