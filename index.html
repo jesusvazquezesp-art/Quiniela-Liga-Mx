@@ -119,6 +119,34 @@ th.partido-header{min-width:150px}
 .dueno-tag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:999px;background:#e8f5e9;color:#1b5e20;font-size:11px;font-weight:bold}
 .no-dueno-tag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:999px;background:#eeeeee;color:#555;font-size:11px}
 
+
+/* =================== V8.1 FIX: RESULTADO EN QUINIELA Y NÚMEROS =================== */
+.marcador-real{
+  margin-top:6px;
+  padding:5px 6px;
+  border-radius:8px;
+  background:#f8fafc;
+  border:1px solid #d6dbe3;
+  font-size:12px;
+  line-height:1.25;
+}
+.resultado-real{
+  display:inline-block;
+  margin-top:4px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#e3f2fd;
+  color:#0d47a1;
+  font-weight:bold;
+}
+.dueno-ok{
+  color:#0b5d1e;
+  font-weight:bold;
+}
+.dueno-no{
+  color:#667085;
+}
+
 </style>
 </head>
 
@@ -1320,6 +1348,241 @@ async function recargarPorCambio(){
     recargando=false;
   },800);
 }
+
+
+// =================== V8.1 FIX: RESULTADO VISIBLE Y EDICIÓN POR DISPOSITIVO ===================
+
+// ID único por navegador/dispositivo. No es MAC real; es un código guardado en este navegador.
+function obtenerDispositivoActual(){
+  let id = localStorage.getItem("quiniela_dispositivo_id");
+  if(!id){
+    id = "DEV-" + Math.random().toString(36).substring(2,10).toUpperCase() + "-" + Date.now();
+    localStorage.setItem("quiniela_dispositivo_id", id);
+  }
+  return id;
+}
+
+// Esta era la función que faltaba y causaba:
+// ReferenceError: resultadoVisiblePartido is not defined
+function resultadoVisiblePartido(p){
+  const tieneMarcador = p.goles_local !== null && p.goles_local !== undefined &&
+                        p.goles_visitante !== null && p.goles_visitante !== undefined;
+
+  if(!tieneMarcador){
+    return `<div class="marcador-real">Marcador pendiente<br><span class="resultado-real">Sin resultado</span></div>`;
+  }
+
+  const resultado = p.resultado || resultadoDesdeGoles(p.goles_local, p.goles_visitante) || "-";
+  let texto = "Empate";
+  if(resultado === "L") texto = "Ganó Local";
+  if(resultado === "V") texto = "Ganó Visita";
+
+  return `
+    <div class="marcador-real">
+      <strong>${p.goles_local} - ${p.goles_visitante}</strong><br>
+      <span class="resultado-real">${resultado} · ${texto}</span>
+    </div>
+  `;
+}
+
+function numeroPartidoVisible(p, index){
+  const n = Number(p.numero_partido);
+  if(Number.isFinite(n) && n > 0) return n;
+  return index + 1;
+}
+
+function puedeEditarUsuario(u){
+  if(esAdmin) return true;
+  const actual = obtenerDispositivoActual();
+  return u.dispositivo_id === actual;
+}
+
+// Reforzar creación de quiniela para guardar el ID del navegador como dueño
+if(typeof crearQuinielaNueva === "function"){
+  const crearQuinielaNuevaOriginalFix = crearQuinielaNueva;
+  crearQuinielaNueva = async function(nombre, telefono, elecciones){
+    const codigo = obtenerDispositivoActual();
+
+    const {data:usuario,error:uError}=await db.from("usuarios").insert({
+      nombre,
+      telefono,
+      activo:true,
+      dispositivo_id:codigo,
+      ultima_actividad:new Date().toISOString()
+    }).select().single();
+    if(uError)throw uError;
+
+    const registros=elecciones.map(e=>({
+      usuario_id:usuario.id,
+      jornada_id:jornadaActiva.id,
+      partido_id:e.partido.id,
+      pronostico:e.pronostico,
+      acierto:null,
+      fecha_registro:new Date().toISOString()
+    }));
+
+    const {error:prError}=await db.from("pronosticos").insert(registros);
+    if(prError)throw prError;
+
+    await db.from("pagos").insert({
+      usuario_id:usuario.id,
+      jornada_id:jornadaActiva.id,
+      monto:jornadaActiva.costo||configuracion?.costo_default||20,
+      pagado:false,
+      metodo_pago:"efectivo",
+      observaciones:""
+    });
+
+    if(typeof registrarAuditoria === "function"){
+      await registrarAuditoria(usuario.id,`Registró quiniela: ${nombre}`);
+    }
+  }
+}
+
+// Evitar editar desde otro dispositivo
+if(typeof editarQuiniela === "function"){
+  const editarQuinielaOriginalFix = editarQuiniela;
+  editarQuiniela = function(usuarioId){
+    const u = usuarios.find(x=>x.id===usuarioId);
+    if(!u) return;
+
+    if(!puedeEditarUsuario(u)){
+      mostrarMensaje("Esta quiniela solo se puede editar desde el dispositivo donde se capturó. Si eres administrador, entra primero al panel Admin.", "error");
+      return;
+    }
+
+    return editarQuinielaOriginalFix(usuarioId);
+  }
+}
+
+// Sobrescribir tabla principal para mostrar marcador y resultado directo
+dibujarTablaQuiniela = function(){
+  const tabla=document.getElementById("tablaQuiniela");
+  if(!tabla) return;
+
+  let html=`<thead><tr><th class="nombre">Nombre</th>`;
+
+  partidos.forEach((p,index)=>{
+    const numero = numeroPartidoVisible(p,index);
+    const contenidoPartido = (typeof formatoPartidoVertical === "function")
+      ? formatoPartidoVertical(p)
+      : `<strong>${p.local||"Local"}</strong><br><span class="vs-linea">VS</span><br><strong>${p.visitante||"Visita"}</strong>`;
+
+    const estado = (typeof estadoPartidoV7 === "function")
+      ? estadoPartidoV7(p)
+      : {txt:"", cls:"estado-proximo"};
+
+    html+=`
+      <th class="partido-header">
+        <div class="small">Partido ${numero}</div>
+        ${contenidoPartido}
+        <span class="estado-juego ${estado.cls}">${estado.txt}</span>
+        ${resultadoVisiblePartido(p)}
+      </th>`;
+  });
+
+  html+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  if(!bloqueada){
+    html+=`<tr class="captura-row">
+      <td class="nombre">
+        <input id="nuevoNombre" placeholder="Ej. Jesús 1">
+        <input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px">
+        <div class="small" id="modoEdicionTexto">Nueva quiniela</div>
+      </td>`;
+
+    partidos.forEach(p=>{
+      html+=`<td>
+        <select id="nuevo-${p.id}">
+          <option value="">-</option>
+          <option value="L">L</option>
+          <option value="E">E</option>
+          <option value="V">V</option>
+        </select>
+      </td>`;
+    });
+
+    html+=`<td>-</td><td>
+      <div class="acciones">
+        <button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button>
+        <button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button>
+      </div>
+    </td></tr>`;
+  }else{
+    html+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
+  }
+
+  usuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno = puedeEditarUsuario(u);
+
+    html+=`<tr>
+      <td class="nombre">
+        <strong>${u.nombre}</strong>
+        <div class="small ${esDueno ? "dueno-ok" : "dueno-no"}">
+          ${esDueno ? "Editable en este dispositivo" : "Solo lectura"}
+        </div>
+      </td>`;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html+=`<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html+=`<td><strong>${stats.aciertos}</strong> / ${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html+=`<span class="small">No editable aquí</span>`;
+    }else{
+      html+=`<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin === "function"){
+      html+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html+=`</td></tr>`;
+  });
+
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+};
+
+// Corrección visual: si todos dicen Partido 1 porque numero_partido viene repetido,
+// usar el índice visual también en tarjetas de partidos
+if(typeof dibujarPartidos === "function"){
+  dibujarPartidos = function(){
+    const cont=document.getElementById("listaPartidos");
+    if(!cont) return;
+    cont.innerHTML="";
+    partidos.forEach((p,index)=>{
+      const numero = numeroPartidoVisible(p,index);
+      const marcador=(p.goles_local!==null && p.goles_visitante!==null)?`${p.goles_local} - ${p.goles_visitante}`:"Sin marcador";
+      const est = (typeof estadoPartidoV7 === "function") ? estadoPartidoV7(p) : {txt:"",cls:"estado-proximo"};
+      const contenidoPartido = (typeof formatoPartidoVertical === "function")
+        ? formatoPartidoVertical(p)
+        : `<strong>${p.local||"Local"}</strong><br>VS<br><strong>${p.visitante||"Visita"}</strong>`;
+
+      const div=document.createElement("div");
+      div.className="partido-card";
+      div.innerHTML=`
+        <div class="partido-num">Partido ${numero}</div>
+        ${contenidoPartido}
+        <div class="small">Fecha: ${formatoFecha(p.fecha_partido)}</div>
+        <div class="small">${marcador}</div>
+        <span class="estado-juego ${est.cls}">${est.txt}</span>
+        ${resultadoVisiblePartido(p)}
+      `;
+      cont.appendChild(div);
+    });
+  }
+}
+
 </script>
 </body>
 </html>
