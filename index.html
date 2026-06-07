@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026</title>
+<title>Quiniela MX 2026 v8</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -112,6 +112,13 @@ th.nombre{background:#eef3fb;z-index:3}
 th.partido-header{min-width:150px}
 
 @media(max-width:700px){header h1{font-size:22px}.contenedor{padding:8px}table{min-width:900px}}
+
+/* =================== V8: DUEÑO DEL DISPOSITIVO Y RESULTADO EN QUINIELA =================== */
+.resultado-real{display:block;margin-top:6px;padding:4px 6px;border-radius:8px;background:#f1f5f9;color:#111;font-size:11px;font-weight:bold;line-height:1.25}
+.resultado-real .ganador{color:#0d47a1}
+.dueno-tag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:999px;background:#e8f5e9;color:#1b5e20;font-size:11px;font-weight:bold}
+.no-dueno-tag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:999px;background:#eeeeee;color:#555;font-size:11px}
+
 </style>
 </head>
 
@@ -548,63 +555,44 @@ function dibujarResumen(){
 
 function dibujarTablaQuiniela(){
   const tabla=document.getElementById("tablaQuiniela");
-
-  let html=`<thead><tr><th class="nombre">Nombre</th>`;
+  let h=`<thead><tr><th class="nombre">Nombre</th>`;
   partidos.forEach(p=>{
     const est=estadoPartido(p);
-    html+=`<th class="partido-header">${formatoPartidoVertical(p)}<span class="estado-juego ${est.cls}">${est.txt}</span></th>`;
+    h+=`<th class="partido-header">${formatoPartidoVertical(p)}<span class="estado-juego ${est.cls}">${est.txt}</span>${resultadoVisiblePartido(p)}</th>`;
   });
-  html+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+  h+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
 
-  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+  const bloq=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
 
-  if(!bloqueada){
-    html+=`<tr class="captura-row">
-      <td class="nombre">
-        <input id="nuevoNombre" placeholder="Ej. Jesús 1">
-        <input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px">
-        <div class="small" id="modoEdicionTexto">Nueva quiniela</div>
-      </td>`;
-    partidos.forEach(p=>{
-      html+=`<td>
-        <select id="nuevo-${p.id}">
-          <option value="">-</option>
-          <option value="L">L</option>
-          <option value="E">E</option>
-          <option value="V">V</option>
-        </select>
-      </td>`;
-    });
-    html+=`<td>-</td><td>
-      <div class="acciones">
-        <button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button>
-        <button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button>
-      </div>
-    </td></tr>`;
+  if(!bloq){
+    h+=`<tr class="captura-row"><td class="nombre"><input id="nuevoNombre" placeholder="Ej. Jesús 1"><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modoEdicionTexto">Nueva quiniela</div></td>`;
+    partidos.forEach(p=>h+=`<td><select id="nuevo-${p.id}"><option value="">-</option><option value="L">L</option><option value="E">E</option><option value="V">V</option></select></td>`);
+    h+=`<td>-</td><td><div class="acciones"><button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button><button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button></div></td></tr>`;
   }else{
-    html+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
+    h+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
   }
 
   usuarios.forEach(u=>{
-    const stats=calcularAciertosUsuario(u.id);
-    html+=`<tr><td class="nombre"><strong>${u.nombre}</strong><div class="small">${u.dispositivo_id||""}</div></td>`;
+    const st=calcularAciertosUsuario(u.id);
+    const mia=esMiQuiniela(u);
+    h+=`<tr><td class="nombre"><strong>${u.nombre}</strong><div class="small">${u.dispositivo_id||""}</div>${mia?'<span class="dueno-tag">Este dispositivo</span>':'<span class="no-dueno-tag">Solo lectura</span>'}</td>`;
     partidos.forEach(p=>{
       const pr=obtenerPronostico(u.id,p.id);
-      const clase=clasePronostico(pr,p);
-      html+=`<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+      h+=`<td><span class="celda-pronostico ${clasePronostico(pr,p)}">${pr?.pronostico||"-"}</span></td>`;
     });
-    html+=`<td><strong>${stats.aciertos}</strong> / ${stats.calificados}</td><td>`;
-    if(!bloqueada){
-      html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
-      if(esAdmin){ html+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`; }
+    h+=`<td><strong>${st.aciertos}</strong> / ${st.calificados}</td><td>`;
+    if(!bloq && (mia || esAdmin)){
+      h+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
+    }else if(!bloq){
+      h+=`<span class="small">Solo desde el dispositivo donde se capturó</span>`;
     }else{
-      html+=`<span class="small">Cerrada</span>`;
+      h+=`<span class="small">Cerrada</span>`;
     }
-    html+=`</td></tr>`;
+    if(esAdmin){ h+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`; }
+    h+=`</td></tr>`;
   });
-
-  html+=`</tbody>`;
-  tabla.innerHTML=html;
+  h+=`</tbody>`;
+  tabla.innerHTML=h;
 }
 
 function obtenerPronostico(usuarioId,partidoId){
@@ -942,12 +930,13 @@ async function guardarParticipacion(){
 }
 
 async function crearQuinielaNueva(nombre,telefono,elecciones){
-  const codigo="MX26-"+Math.random().toString(36).substring(2,6).toUpperCase();
+  const codigo=obtenerDeviceId();
 
   const {data:usuario,error:uError}=await db.from("usuarios").insert({
     nombre, telefono, activo:true, dispositivo_id:codigo, ultima_actividad:new Date().toISOString()
   }).select().single();
   if(uError)throw uError;
+  guardarMiQuiniela(usuario.id);
 
   const registros=elecciones.map(e=>({
     usuario_id:usuario.id, jornada_id:jornadaActiva.id, partido_id:e.partido.id,
@@ -968,6 +957,8 @@ async function crearQuinielaNueva(nombre,telefono,elecciones){
 }
 
 async function actualizarQuinielaExistente(usuarioId,nombre,telefono,elecciones){
+  const usuarioActual=usuarios.find(x=>x.id===usuarioId);
+  if(!esAdmin && !esMiQuiniela(usuarioActual)){ throw new Error("Esta quiniela solo se puede modificar desde el dispositivo donde se capturó."); }
   const {error:uError}=await db.from("usuarios").update({
     nombre, telefono, ultima_actividad:new Date().toISOString()
   }).eq("id",usuarioId);
@@ -998,6 +989,10 @@ function editarQuiniela(usuarioId){
   }
   const u=usuarios.find(x=>x.id===usuarioId);
   if(!u)return;
+  if(!esAdmin && !esMiQuiniela(u)){
+    mostrarMensaje("Esta quiniela solo se puede editar desde el dispositivo donde se capturó.","error");
+    return;
+  }
   usuarioEditandoId=usuarioId;
   document.getElementById("nuevoNombre").value=u.nombre||"";
   document.getElementById("nuevoTelefono").value=u.telefono||"";
