@@ -305,6 +305,45 @@ th.partido-header{min-width:150px}
   font-weight:bold;
 }
 
+
+/* =================== V15: PAGOS ADMIN CLAROS EN CELULAR =================== */
+.pagos-cards-movil{display:none}
+.pago-card-admin{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:12px;
+  margin:10px 0;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.pago-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.pago-nombre{
+  font-size:20px;
+  font-weight:bold;
+}
+.pago-monto{
+  font-weight:bold;
+  color:#0d47a1;
+}
+.pago-card-admin textarea,
+.pago-card-admin input{
+  margin-top:6px;
+}
+@media(max-width:760px){
+  #tablaPagos{
+    display:none;
+  }
+  .pagos-cards-movil{
+    display:block;
+  }
+}
+
 </style>
 </head>
 
