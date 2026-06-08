@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026móvil</title>
+<title>Quiniela MX 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -198,6 +198,61 @@ th.partido-header{min-width:150px}
   .tabs{position:sticky;top:0;z-index:20;background:#f3f6fb;padding:8px 0}
 }
 @media(min-width:761px){.quiniela-desktop-wrap{display:block}}
+
+
+/* =================== V11: MÓVIL CAPTURA ARRIBA + TABLA HORIZONTAL ABAJO =================== */
+.mobile-tabla-horizontal{
+  display:block;
+  margin-top:14px;
+  overflow-x:auto;
+  background:white;
+  border-radius:16px;
+  box-shadow:0 2px 10px rgba(0,0,0,.10);
+}
+.mobile-tabla-horizontal table{
+  min-width:980px;
+  width:100%;
+  border-collapse:collapse;
+}
+.mobile-tabla-horizontal th,
+.mobile-tabla-horizontal td{
+  padding:8px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:center;
+  vertical-align:middle;
+}
+.mobile-tabla-horizontal th{
+  background:#eef3fb;
+  font-size:12px;
+}
+.mobile-tabla-horizontal .nombre-movil{
+  position:sticky;
+  left:0;
+  background:white;
+  z-index:3;
+  text-align:left;
+  min-width:145px;
+}
+.mobile-tabla-horizontal th.nombre-movil{
+  background:#eef3fb;
+  z-index:4;
+}
+.mobile-partido-mini{
+  line-height:1.25;
+  font-size:11px;
+}
+.mobile-resultado-mini{
+  margin-top:4px;
+  padding:3px 5px;
+  border-radius:8px;
+  background:#e3f2fd;
+  color:#0d47a1;
+  font-weight:bold;
+  display:inline-block;
+}
+@media(max-width:760px){
+  .mobile-card.participante-card-v10{display:none}
+}
 
 </style>
 </head>
@@ -2111,6 +2166,145 @@ if(typeof dibujarTodo==="function"){
 setInterval(()=>{
   try{dibujarVistaMovilQuiniela();}catch(e){}
 },1000);
+
+
+
+// =================== V11: ABAJO EN HORIZONTAL CON RESULTADOS ===================
+function resultadoMiniMovil(p){
+  const tiene = p.goles_local !== null && p.goles_local !== undefined &&
+                p.goles_visitante !== null && p.goles_visitante !== undefined;
+  if(!tiene) return `<span class="mobile-resultado-mini">Pend.</span>`;
+
+  const r = p.resultado || resultadoDesdeGoles(p.goles_local,p.goles_visitante) || "-";
+  return `<span class="mobile-resultado-mini">${p.goles_local}-${p.goles_visitante} · ${r}</span>`;
+}
+
+function dibujarTablaHorizontalMovilAbajo(){
+  let html = `
+    <div class="mobile-tabla-horizontal">
+      <table>
+        <thead>
+          <tr>
+            <th class="nombre-movil">Nombre</th>
+  `;
+
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible==="function" ? numeroPartidoVisible(p,index) : (index+1);
+    html += `
+      <th>
+        <div class="mobile-partido-mini">
+          <strong>P${numero}</strong><br>
+          ${p.local || "Local"}<br>
+          VS<br>
+          ${p.visitante || "Visita"}<br>
+          ${resultadoMiniMovil(p)}
+        </div>
+      </th>
+    `;
+  });
+
+  html += `<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  usuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno=typeof puedeEditarUsuario==="function"?puedeEditarUsuario(u):true;
+
+    html += `
+      <tr>
+        <td class="nombre-movil">
+          <strong>${u.nombre}</strong><br>
+          <span class="small ${esDueno?"dueno-ok":"dueno-no"}">${esDueno?"Editable aquí":"Solo lectura"}</span>
+        </td>
+    `;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html += `<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html += `<td><strong>${stats.aciertos}</strong>/${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html += `<button class="btn-yellow" onclick="editarQuinielaMovil('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html += `<span class="small">No editable</span>`;
+    }else{
+      html += `<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin==="function"){
+      html += `<br><button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html += `</td></tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  return html;
+}
+
+// Reemplaza solo la parte inferior móvil.
+// Arriba conserva la captura por tarjetas.
+dibujarVistaMovilQuiniela = function(){
+  const cont=document.getElementById("vistaMovilQuiniela");
+  if(!cont) return;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+  let html="";
+
+  if(!bloqueada){
+    html+=`
+      <div class="mobile-captura">
+        <h3>Registrar quiniela</h3>
+        <input id="movilNombre" placeholder="Ej. Jesús 1">
+        <br><br>
+        <input id="movilTelefono" placeholder="Teléfono opcional">
+        <div class="small" id="movilModoEdicion">Nueva quiniela</div>
+    `;
+
+    partidos.forEach((p,index)=>{
+      const numero=typeof numeroPartidoVisible==="function"?numeroPartidoVisible(p,index):(index+1);
+      const est=typeof estadoPartidoV9==="function"?estadoPartidoV9(p):{txt:"",cls:"contador-segundos"};
+      html+=`
+        <div class="mobile-partido">
+          <div class="mobile-partido-head">
+            <span class="mobile-partido-title">Partido ${numero}</span>
+            <span class="${est.cls}">${est.txt}</span>
+          </div>
+          <div class="mobile-equipos">
+            ${typeof escudoEquipoV9==="function"?escudoEquipoV9(p.local):""} ${p.local||"Local"}
+            <div class="mobile-vs">VS</div>
+            ${typeof escudoEquipoV9==="function"?escudoEquipoV9(p.visitante):""} ${p.visitante||"Visita"}
+          </div>
+          ${typeof resultadoVisiblePartido==="function"?resultadoVisiblePartido(p):""}
+          <select class="mobile-select" id="movil-${p.id}">
+            <option value="">Seleccionar</option>
+            <option value="L">L - Local</option>
+            <option value="E">E - Empate</option>
+            <option value="V">V - Visita</option>
+          </select>
+        </div>
+      `;
+    });
+
+    html+=`
+        <div class="mobile-actions">
+          <button id="btnGuardarMovil" class="btn-primary" onclick="guardarParticipacionMovil()">Guardar</button>
+          <button class="btn-gray" onclick="limpiarMovil()">Limpiar</button>
+        </div>
+      </div>
+    `;
+  }else{
+    html+=`<div class="mobile-card"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></div>`;
+  }
+
+  html += dibujarTablaHorizontalMovilAbajo();
+
+  cont.innerHTML=html;
+};
 
 </script>
 </body>
