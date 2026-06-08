@@ -376,7 +376,7 @@ th.partido-header{min-width:150px}
 
   <section id="quiniela" class="seccion activa">
     <div class="card">
-      <h2>Quiniela tradicional</h2>
+      <h2>⚽ QUINIELA COPA MX 🏆</h2>
       <p class="small">Captura arriba y al guardar se agrega automáticamente abajo. También puedes editar mientras la jornada esté abierta.</p>
       <div id="estadoGuardado" class="estado-guardado"></div>
     </div>
@@ -791,7 +791,7 @@ function dibujarTablaQuiniela(){
   const bloq=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
 
   if(!bloq){
-    h+=`<tr class="captura-row"><td class="nombre"><input id="nuevoNombre" placeholder="Ej. Jesús 1"><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modoEdicionTexto">Nueva quiniela</div></td>`;
+    h+=`<tr class="captura-row"><td class="nombre"><input id="nuevoNombre" placeholder="Ej. "><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modoEdicionTexto">Nueva quiniela</div></td>`;
     partidos.forEach(p=>h+=`<td><select id="nuevo-${p.id}"><option value="">-</option><option value="L">L</option><option value="E">E</option><option value="V">V</option></select></td>`);
     h+=`<td>-</td><td><div class="acciones"><button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button><button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button></div></td></tr>`;
   }else{
