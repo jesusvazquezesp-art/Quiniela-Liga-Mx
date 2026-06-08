@@ -254,6 +254,49 @@ th.partido-header{min-width:150px}
   .mobile-card.participante-card-v10{display:none}
 }
 
+
+/* =================== V12: MÓVIL SIN COLUMNA FIJA + SELECTOR DE JUGADOR =================== */
+.mobile-selector-jugador{
+  background:white;
+  border-radius:16px;
+  padding:14px;
+  margin:14px 0;
+  box-shadow:0 2px 10px rgba(0,0,0,.10);
+}
+@media(max-width:760px){
+  .mobile-tabla-horizontal .nombre-movil{
+    position:static !important;
+    left:auto !important;
+    z-index:auto !important;
+    min-width:150px;
+  }
+  .mobile-tabla-horizontal th.nombre-movil{
+    position:static !important;
+    background:#eef3fb !important;
+  }
+  .mobile-tabla-horizontal table{
+    min-width:1050px;
+  }
+}
+
+
+/* =================== V13: FIX FOCO MÓVIL Y RECUPERAR EDICIÓN =================== */
+.btn-link-edit{
+  background:#0d47a1;
+  color:white;
+  margin-top:6px;
+}
+.aviso-edicion{
+  display:inline-block;
+  margin-top:4px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#e3f2fd;
+  color:#0d47a1;
+  font-size:12px;
+  font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -2305,6 +2348,359 @@ dibujarVistaMovilQuiniela = function(){
 
   cont.innerHTML=html;
 };
+
+
+
+// =================== V12: SELECTOR DE JUGADOR EN MÓVIL ===================
+let jugadorMovilSeleccionado = "todos";
+
+function cambiarJugadorMovil(){
+  const sel=document.getElementById("selectorJugadorMovil");
+  jugadorMovilSeleccionado = sel ? sel.value : "todos";
+  dibujarVistaMovilQuiniela();
+}
+
+function dibujarSelectorJugadorMovil(){
+  let html=`
+    <div class="mobile-selector-jugador">
+      <label><strong>Ver jugador</strong></label>
+      <select id="selectorJugadorMovil" onchange="cambiarJugadorMovil()">
+        <option value="todos" ${jugadorMovilSeleccionado==="todos"?"selected":""}>Todos los jugadores</option>
+  `;
+  usuarios.forEach(u=>{
+    html+=`<option value="${u.id}" ${jugadorMovilSeleccionado===u.id?"selected":""}>${u.nombre}</option>`;
+  });
+  html+=`</select>
+    <div class="small">Selecciona un jugador y desliza a la derecha para ver sus pronósticos contra los resultados.</div>
+    </div>`;
+  return html;
+}
+
+function dibujarTablaHorizontalMovilAbajo(){
+  const listaUsuarios = jugadorMovilSeleccionado==="todos"
+    ? usuarios
+    : usuarios.filter(u=>u.id===jugadorMovilSeleccionado);
+
+  let html = `
+    ${dibujarSelectorJugadorMovil()}
+    <div class="mobile-tabla-horizontal">
+      <table>
+        <thead>
+          <tr>
+            <th class="nombre-movil">Jugador</th>
+  `;
+
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible==="function" ? numeroPartidoVisible(p,index) : (index+1);
+    html += `
+      <th>
+        <div class="mobile-partido-mini">
+          <strong>P${numero}</strong><br>
+          ${p.local || "Local"}<br>
+          VS<br>
+          ${p.visitante || "Visita"}<br>
+          ${resultadoMiniMovil(p)}
+        </div>
+      </th>
+    `;
+  });
+
+  html += `<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  listaUsuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno=typeof puedeEditarUsuario==="function"?puedeEditarUsuario(u):true;
+
+    html += `
+      <tr>
+        <td class="nombre-movil">
+          <strong>${u.nombre}</strong><br>
+          <span class="small ${esDueno?"dueno-ok":"dueno-no"}">${esDueno?"Editable aquí":"Solo lectura"}</span>
+        </td>
+    `;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html += `<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html += `<td><strong>${stats.aciertos}</strong>/${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html += `<button class="btn-yellow" onclick="editarQuinielaMovil('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html += `<span class="small">No editable</span>`;
+    }else{
+      html += `<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin==="function"){
+      html += `<br><button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html += `</td></tr>`;
+  });
+
+  if(listaUsuarios.length===0){
+    html += `<tr><td colspan="${partidos.length+3}">No hay jugador seleccionado.</td></tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+  return html;
+}
+
+let ultimoScrollMovil = 0;
+
+const dibujarVistaMovilQuinielaV12 = dibujarVistaMovilQuiniela;
+dibujarVistaMovilQuiniela = function(){
+  const tablaActual=document.querySelector(".mobile-tabla-horizontal");
+  if(tablaActual) ultimoScrollMovil = tablaActual.scrollLeft || 0;
+
+  dibujarVistaMovilQuinielaV12();
+
+  const tablaNueva=document.querySelector(".mobile-tabla-horizontal");
+  if(tablaNueva) tablaNueva.scrollLeft = ultimoScrollMovil;
+};
+
+
+
+// =================== V13: NO REDIBUJAR MIENTRAS ESCRIBES + RECUPERAR EDICIÓN ===================
+
+// Guardamos qué quinielas pertenecen a este navegador.
+function obtenerMisQuinielasLocales(){
+  try{
+    return JSON.parse(localStorage.getItem("quiniela_mis_registros") || "[]");
+  }catch(e){
+    return [];
+  }
+}
+
+function guardarQuinielaLocal(usuarioId){
+  const lista = obtenerMisQuinielasLocales();
+  if(!lista.includes(usuarioId)){
+    lista.push(usuarioId);
+    localStorage.setItem("quiniela_mis_registros", JSON.stringify(lista));
+  }
+}
+
+function inputActivoMovil(){
+  const el=document.activeElement;
+  if(!el) return false;
+  const tag=(el.tagName||"").toLowerCase();
+  return tag==="input" || tag==="select" || tag==="textarea";
+}
+
+// Mejoramos la regla de edición:
+// 1. Admin puede todo.
+// 2. Si el navegador tiene el ID guardado, puede editar.
+// 3. Si dispositivo_id coincide, puede editar.
+puedeEditarUsuario = function(u){
+  if(esAdmin) return true;
+  const mis = obtenerMisQuinielasLocales();
+  if(mis.includes(u.id)) return true;
+
+  if(typeof obtenerDispositivoActual === "function"){
+    const actual = obtenerDispositivoActual();
+    if(u.dispositivo_id === actual) return true;
+  }
+
+  return false;
+};
+
+// Reforzar creación: al guardar una nueva quiniela, queda vinculada a este navegador.
+if(typeof crearQuinielaNueva === "function"){
+  crearQuinielaNueva = async function(nombre, telefono, elecciones){
+    const codigo = typeof obtenerDispositivoActual === "function"
+      ? obtenerDispositivoActual()
+      : ("DEV-" + Math.random().toString(36).substring(2,10).toUpperCase());
+
+    const {data:usuario,error:uError}=await db.from("usuarios").insert({
+      nombre,
+      telefono,
+      activo:true,
+      dispositivo_id:codigo,
+      ultima_actividad:new Date().toISOString()
+    }).select().single();
+
+    if(uError) throw uError;
+
+    guardarQuinielaLocal(usuario.id);
+
+    const registros=elecciones.map(e=>({
+      usuario_id:usuario.id,
+      jornada_id:jornadaActiva.id,
+      partido_id:e.partido.id,
+      pronostico:e.pronostico,
+      acierto:null,
+      fecha_registro:new Date().toISOString()
+    }));
+
+    const {error:prError}=await db.from("pronosticos").insert(registros);
+    if(prError) throw prError;
+
+    await db.from("pagos").insert({
+      usuario_id:usuario.id,
+      jornada_id:jornadaActiva.id,
+      monto:jornadaActiva.costo||configuracion?.costo_default||20,
+      pagado:false,
+      metodo_pago:"efectivo",
+      observaciones:""
+    });
+
+    if(typeof registrarAuditoria==="function"){
+      await registrarAuditoria(usuario.id,`Registró quiniela: ${nombre}`);
+    }
+  };
+}
+
+// Permite recuperar edición de una quiniela creada antes de esta mejora.
+// Esto es útil porque las primeras versiones no guardaban correctamente el dueño en localStorage.
+async function reclamarYEditarQuiniela(usuarioId){
+  const u=usuarios.find(x=>x.id===usuarioId);
+  if(!u) return;
+
+  const ok=confirm(`¿Quieres vincular "${u.nombre}" a este dispositivo para poder editarla mientras la jornada esté abierta?`);
+  if(!ok) return;
+
+  try{
+    const codigo = typeof obtenerDispositivoActual === "function"
+      ? obtenerDispositivoActual()
+      : ("DEV-" + Math.random().toString(36).substring(2,10).toUpperCase());
+
+    const {error}=await db.from("usuarios").update({
+      dispositivo_id:codigo,
+      ultima_actividad:new Date().toISOString()
+    }).eq("id",usuarioId);
+
+    if(error) throw error;
+
+    guardarQuinielaLocal(usuarioId);
+    await cargarTodo();
+    dibujarTodo();
+
+    setTimeout(()=>editarQuinielaMovil ? editarQuinielaMovil(usuarioId) : editarQuiniela(usuarioId), 250);
+    mostrarMensaje("Quiniela vinculada a este dispositivo. Ya puedes editarla.", "ok");
+  }catch(e){
+    console.error(e);
+    mostrarMensaje("No se pudo vincular la quiniela: "+e.message, "error");
+  }
+}
+
+// Evitar que el redibujado del contador te saque del campo de captura.
+// Si estás escribiendo o seleccionando, no redibuja la vista móvil.
+const dibujarVistaMovilQuinielaBaseV13 = dibujarVistaMovilQuiniela;
+dibujarVistaMovilQuiniela = function(){
+  if(inputActivoMovil()){
+    return;
+  }
+
+  const tablaActual=document.querySelector(".mobile-tabla-horizontal");
+  const scrollActual=tablaActual ? tablaActual.scrollLeft : 0;
+
+  dibujarVistaMovilQuinielaBaseV13();
+
+  const tablaNueva=document.querySelector(".mobile-tabla-horizontal");
+  if(tablaNueva) tablaNueva.scrollLeft=scrollActual;
+};
+
+// Rehacer la tabla móvil inferior para que incluya botón de recuperar edición cuando no sea editable.
+dibujarTablaHorizontalMovilAbajo = function(){
+  const listaUsuarios = jugadorMovilSeleccionado==="todos"
+    ? usuarios
+    : usuarios.filter(u=>u.id===jugadorMovilSeleccionado);
+
+  let html = `
+    ${dibujarSelectorJugadorMovil()}
+    <div class="mobile-tabla-horizontal">
+      <table>
+        <thead>
+          <tr>
+            <th class="nombre-movil">Jugador</th>
+  `;
+
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible==="function" ? numeroPartidoVisible(p,index) : (index+1);
+    html += `
+      <th>
+        <div class="mobile-partido-mini">
+          <strong>P${numero}</strong><br>
+          ${p.local || "Local"}<br>
+          VS<br>
+          ${p.visitante || "Visita"}<br>
+          ${resultadoMiniMovil(p)}
+        </div>
+      </th>
+    `;
+  });
+
+  html += `<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  listaUsuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno=puedeEditarUsuario(u);
+
+    html += `
+      <tr>
+        <td class="nombre-movil">
+          <strong>${u.nombre}</strong><br>
+          <span class="small ${esDueno?"dueno-ok":"dueno-no"}">${esDueno?"Editable aquí":"Solo lectura"}</span>
+        </td>
+    `;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html += `<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html += `<td><strong>${stats.aciertos}</strong>/${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html += `<button class="btn-yellow" onclick="editarQuinielaMovil('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html += `
+        <span class="small">No editable</span><br>
+        <button class="btn-link-edit" onclick="reclamarYEditarQuiniela('${u.id}')">Vincular y editar</button>
+      `;
+    }else{
+      html += `<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin==="function"){
+      html += `<br><button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html += `</td></tr>`;
+  });
+
+  if(listaUsuarios.length===0){
+    html += `<tr><td colspan="${partidos.length+3}">No hay jugador seleccionado.</td></tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+  return html;
+};
+
+// También evitar que el reloj principal redibuje la tabla desktop/móvil si estás escribiendo.
+if(typeof iniciarRelojV9==="function"){
+  iniciarRelojV9 = function(){
+    if(intervaloV9) clearInterval(intervaloV9);
+    intervaloV9=setInterval(()=>{
+      try{
+        if(inputActivoMovil()) return;
+        dibujarResumen();
+        dibujarTablaQuiniela();
+        dibujarPartidos();
+        dibujarVistaMovilQuiniela();
+      }catch(e){}
+    },1000);
+  };
+}
 
 </script>
 </body>
