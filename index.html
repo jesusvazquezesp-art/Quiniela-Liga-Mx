@@ -297,6 +297,14 @@ th.partido-header{min-width:150px}
   font-weight:bold;
 }
 
+
+/* =================== V14: SIN VINCULAR Y PAGOS ADMIN SIEMPRE DISPONIBLES =================== */
+.no-editar-aviso{
+  color:#667085;
+  font-size:13px;
+  font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -2699,6 +2707,253 @@ if(typeof iniciarRelojV9==="function"){
         dibujarVistaMovilQuiniela();
       }catch(e){}
     },1000);
+  };
+}
+
+
+
+// =================== V14: QUITAR VINCULAR Y MANTENER PAGOS ABIERTOS PARA ADMIN ===================
+
+// Regla definitiva:
+// - El dueño del dispositivo puede editar.
+// - El administrador puede editar/eliminar.
+// - Otro dispositivo solo lectura.
+// - Ya NO existe botón "Vincular y editar".
+puedeEditarUsuario = function(u){
+  if(esAdmin) return true;
+
+  const mis = typeof obtenerMisQuinielasLocales === "function" ? obtenerMisQuinielasLocales() : [];
+  if(mis.includes(u.id)) return true;
+
+  if(typeof obtenerDispositivoActual === "function"){
+    const actual = obtenerDispositivoActual();
+    if(u.dispositivo_id === actual) return true;
+  }
+
+  return false;
+};
+
+// Anular la función de reclamar para que nadie pueda tomar una quiniela ajena.
+reclamarYEditarQuiniela = function(usuarioId){
+  mostrarMensaje("Por seguridad, esta quiniela solo se edita desde el dispositivo donde fue capturada o desde Admin.", "error");
+};
+
+// Tabla móvil inferior sin "Vincular y editar".
+dibujarTablaHorizontalMovilAbajo = function(){
+  const listaUsuarios = jugadorMovilSeleccionado==="todos"
+    ? usuarios
+    : usuarios.filter(u=>u.id===jugadorMovilSeleccionado);
+
+  let html = `
+    ${dibujarSelectorJugadorMovil()}
+    <div class="mobile-tabla-horizontal">
+      <table>
+        <thead>
+          <tr>
+            <th class="nombre-movil">Jugador</th>
+  `;
+
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible==="function" ? numeroPartidoVisible(p,index) : (index+1);
+    html += `
+      <th>
+        <div class="mobile-partido-mini">
+          <strong>P${numero}</strong><br>
+          ${p.local || "Local"}<br>
+          VS<br>
+          ${p.visitante || "Visita"}<br>
+          ${resultadoMiniMovil(p)}
+        </div>
+      </th>
+    `;
+  });
+
+  html += `<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  listaUsuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno=puedeEditarUsuario(u);
+
+    html += `
+      <tr>
+        <td class="nombre-movil">
+          <strong>${u.nombre}</strong><br>
+          <span class="small ${esDueno?"dueno-ok":"dueno-no"}">${esDueno?"Editable aquí":"Solo lectura"}</span>
+        </td>
+    `;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html += `<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html += `<td><strong>${stats.aciertos}</strong>/${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html += `<button class="btn-yellow" onclick="editarQuinielaMovil('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html += `<span class="no-editar-aviso">No editable</span>`;
+    }else if(bloqueada && esAdmin){
+      html += `<button class="btn-yellow" onclick="editarQuinielaMovil('${u.id}')">Editar Admin</button>`;
+    }else{
+      html += `<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin==="function"){
+      html += `<br><button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html += `</td></tr>`;
+  });
+
+  if(listaUsuarios.length===0){
+    html += `<tr><td colspan="${partidos.length+3}">No hay jugador seleccionado.</td></tr>`;
+  }
+
+  html += `</tbody></table></div>`;
+  return html;
+};
+
+// Tabla desktop también sin posibilidad de reclamar.
+dibujarTablaQuiniela = function(){
+  const tabla=document.getElementById("tablaQuiniela");
+  if(!tabla) return;
+
+  let html=`<thead><tr><th class="nombre">Nombre</th>`;
+
+  partidos.forEach((p,index)=>{
+    const numero = typeof numeroPartidoVisible === "function" ? numeroPartidoVisible(p,index) : (index+1);
+    const contenidoPartido = (typeof formatoPartidoVerticalV9 === "function")
+      ? formatoPartidoVerticalV9(p)
+      : (typeof formatoPartidoVertical === "function" ? formatoPartidoVertical(p) : `<strong>${p.local||"Local"}</strong><br>VS<br><strong>${p.visitante||"Visita"}</strong>`);
+
+    const estado = (typeof estadoPartidoV9 === "function")
+      ? estadoPartidoV9(p)
+      : (typeof estadoPartidoV7 === "function" ? estadoPartidoV7(p) : {txt:"", cls:"estado-proximo"});
+
+    html+=`
+      <th class="partido-header">
+        <div class="small">Partido ${numero}</div>
+        ${contenidoPartido}
+        <span class="${estado.cls || "estado-juego"}">${estado.txt || ""}</span>
+        ${typeof resultadoVisiblePartido === "function" ? resultadoVisiblePartido(p) : ""}
+      </th>`;
+  });
+
+  html+=`<th>Aciertos</th><th>Acción</th></tr></thead><tbody>`;
+
+  const bloqueada=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
+
+  if(!bloqueada){
+    html+=`<tr class="captura-row">
+      <td class="nombre">
+        <input id="nuevoNombre" placeholder="Ej. Jesús 1">
+        <input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px">
+        <div class="small" id="modoEdicionTexto">Nueva quiniela</div>
+      </td>`;
+
+    partidos.forEach(p=>{
+      html+=`<td>
+        <select id="nuevo-${p.id}">
+          <option value="">-</option>
+          <option value="L">L</option>
+          <option value="E">E</option>
+          <option value="V">V</option>
+        </select>
+      </td>`;
+    });
+
+    html+=`<td>-</td><td>
+      <div class="acciones">
+        <button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button>
+        <button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button>
+      </div>
+    </td></tr>`;
+  }else{
+    html+=`<tr><td colspan="${partidos.length+3}"><strong>Quiniela cerrada. Ya no se pueden guardar cambios.</strong></td></tr>`;
+  }
+
+  usuarios.forEach(u=>{
+    const stats=calcularAciertosUsuario(u.id);
+    const esDueno = puedeEditarUsuario(u);
+
+    html+=`<tr>
+      <td class="nombre">
+        <strong>${u.nombre}</strong>
+        <div class="small ${esDueno ? "dueno-ok" : "dueno-no"}">
+          ${esDueno ? "Editable en este dispositivo" : "Solo lectura"}
+        </div>
+      </td>`;
+
+    partidos.forEach(p=>{
+      const pr=obtenerPronostico(u.id,p.id);
+      const clase=clasePronostico(pr,p);
+      html+=`<td><span class="celda-pronostico ${clase}">${pr?.pronostico||"-"}</span></td>`;
+    });
+
+    html+=`<td><strong>${stats.aciertos}</strong> / ${stats.calificados}</td><td>`;
+
+    if(!bloqueada && esDueno){
+      html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar</button>`;
+    }else if(!bloqueada && !esDueno){
+      html+=`<span class="no-editar-aviso">No editable</span>`;
+    }else if(bloqueada && esAdmin){
+      html+=`<button class="btn-yellow" onclick="editarQuiniela('${u.id}')">Editar Admin</button>`;
+    }else{
+      html+=`<span class="small">Cerrada</span>`;
+    }
+
+    if(esAdmin && typeof eliminarQuinielaAdmin === "function"){
+      html+=` <button class="btn-red" onclick="eliminarQuinielaAdmin('${u.id}')">Eliminar</button>`;
+    }
+
+    html+=`</td></tr>`;
+  });
+
+  html+=`</tbody>`;
+  tabla.innerHTML=html;
+};
+
+// Pagos siempre disponibles para Admin, aunque la jornada esté bloqueada.
+function asegurarPagosAdminSiempre(){
+  if(!esAdmin) return;
+  const panel=document.getElementById("adminPagosBox");
+  if(panel){
+    panel.style.display="";
+    panel.classList.remove("bloqueado");
+  }
+  if(typeof dibujarPagos === "function"){
+    dibujarPagos();
+  }
+}
+
+// Reforzar cada vez que se entra a Admin o se dibuja todo.
+if(typeof loginAdmin === "function"){
+  const loginAdminBaseV14 = loginAdmin;
+  loginAdmin = function(){
+    loginAdminBaseV14();
+    setTimeout(()=>asegurarPagosAdminSiempre(),300);
+  };
+}
+
+if(typeof mostrarAdminSub === "function"){
+  const mostrarAdminSubBaseV14 = mostrarAdminSub;
+  mostrarAdminSub = function(id,btn){
+    mostrarAdminSubBaseV14(id,btn);
+    if(id==="adminPagosBox"){
+      asegurarPagosAdminSiempre();
+    }
+  };
+}
+
+if(typeof dibujarTodo === "function"){
+  const dibujarTodoBaseV14 = dibujarTodo;
+  dibujarTodo = function(){
+    dibujarTodoBaseV14();
+    asegurarPagosAdminSiempre();
   };
 }
 
