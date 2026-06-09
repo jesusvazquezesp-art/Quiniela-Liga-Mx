@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026</title>
+<title>Quiniela MX 2026 v16 auditoria</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -344,6 +344,18 @@ th.partido-header{min-width:150px}
   }
 }
 
+
+/* =================== V16 AUDITORÍA =================== */
+.audit-card{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.audit-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.audit-accion{font-weight:bold;color:#0d47a1}
+.audit-fecha{font-size:12px;color:#667085}
+.audit-json{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;overflow:auto;font-size:12px;margin-top:8px;white-space:pre-wrap}
+.audit-filtros{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+.audit-diff{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
+.audit-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px}
+.audit-box pre{white-space:pre-wrap;font-size:12px}
+
 </style>
 </head>
 
@@ -376,7 +388,7 @@ th.partido-header{min-width:150px}
 
   <section id="quiniela" class="seccion activa">
     <div class="card">
-      <h2>⚽ QUINIELA COPA MX 🏆</h2>
+      <h2>Quiniela tradicional</h2>
       <p class="small">Captura arriba y al guardar se agrega automáticamente abajo. También puedes editar mientras la jornada esté abierta.</p>
       <div id="estadoGuardado" class="estado-guardado"></div>
     </div>
@@ -791,7 +803,7 @@ function dibujarTablaQuiniela(){
   const bloq=!!(jornadaActiva?.bloqueada||configuracion?.quiniela_bloqueada);
 
   if(!bloq){
-    h+=`<tr class="captura-row"><td class="nombre"><input id="nuevoNombre" placeholder="Ej. "><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modoEdicionTexto">Nueva quiniela</div></td>`;
+    h+=`<tr class="captura-row"><td class="nombre"><input id="nuevoNombre" placeholder="Ej. Jesús 1"><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modoEdicionTexto">Nueva quiniela</div></td>`;
     partidos.forEach(p=>h+=`<td><select id="nuevo-${p.id}"><option value="">-</option><option value="L">L</option><option value="E">E</option><option value="V">V</option></select></td>`);
     h+=`<td>-</td><td><div class="acciones"><button id="btnGuardarQuiniela" class="btn-primary" onclick="guardarParticipacion()">Guardar</button><button class="btn-gray" onclick="cancelarEdicion()">Limpiar</button></div></td></tr>`;
   }else{
@@ -2993,6 +3005,268 @@ if(typeof dibujarTodo === "function"){
   dibujarTodo = function(){
     dibujarTodoBaseV14();
     asegurarPagosAdminSiempre();
+  };
+}
+
+
+
+// =================== V16 AUDITORÍA COMPLETA ===================
+let auditoriaListaV16=[];
+
+function insertarPanelAuditoriaV16(){
+  const subtabs=document.querySelector(".admin-subtabs");
+  const panel=document.getElementById("panelAdmin");
+  if(!subtabs || !panel) return;
+
+  if(!document.getElementById("btnAuditoriaV16")){
+    const btn=document.createElement("button");
+    btn.id="btnAuditoriaV16";
+    btn.textContent="📜 Auditoría";
+    btn.onclick=function(){ mostrarAdminSub("adminAuditoriaBoxV16",btn); cargarAuditoriaV16(); };
+    subtabs.appendChild(btn);
+  }
+
+  if(!document.getElementById("adminAuditoriaBoxV16")){
+    const cont=document.createElement("div");
+    cont.id="adminAuditoriaBoxV16";
+    cont.className="admin-subseccion";
+    cont.innerHTML=`
+      <h3>Auditoría</h3>
+      <p class="small">Evidencia de creaciones, ediciones, pagos, resultados, bloqueos y eliminaciones.</p>
+      <div class="audit-filtros">
+        <div><label>Buscar</label><input id="auditBuscarV16" placeholder="Ej. Jaime" oninput="dibujarAuditoriaV16()"></div>
+        <div><label>Acción</label><select id="auditAccionV16" onchange="dibujarAuditoriaV16()">
+          <option value="">Todas</option>
+          <option value="CREAR_QUINIELA">Crear quiniela</option>
+          <option value="EDITAR_QUINIELA">Editar quiniela</option>
+          <option value="PAGO">Pago</option>
+          <option value="RESULTADO">Resultado</option>
+          <option value="BLOQUEO">Bloqueo</option>
+          <option value="ELIMINAR">Eliminar</option>
+          <option value="EVENTO">Evento</option>
+        </select></div>
+        <div><label>Registros</label><select id="auditLimiteV16" onchange="cargarAuditoriaV16()">
+          <option value="50">Últimos 50</option><option value="100">Últimos 100</option><option value="200">Últimos 200</option>
+        </select></div>
+      </div>
+      <button class="btn-primary" onclick="cargarAuditoriaV16()">Actualizar</button>
+      <div id="listaAuditoriaV16"></div>
+    `;
+    const adminCard=panel.querySelector(".card:last-child") || panel;
+    adminCard.appendChild(cont);
+  }
+}
+
+async function registrarAuditoriaCompletaV16({usuarioId=null,accion="EVENTO",actor="",detalle="",datos={}}){
+  try{
+    const dispositivo=(typeof obtenerDispositivoActual==="function")?obtenerDispositivoActual():"";
+    await db.from("auditoria").insert({
+      usuario_id:usuarioId,
+      jornada_id:jornadaActiva?.id||null,
+      accion,
+      actor,
+      dispositivo_id:dispositivo,
+      detalle,
+      datos:datos||{}
+    });
+  }catch(e){console.warn("Auditoría no guardada:",e);}
+}
+
+registrarAuditoria = async function(usuarioId,detalle){
+  const u=usuarios.find(x=>x.id===usuarioId);
+  await registrarAuditoriaCompletaV16({
+    usuarioId,
+    accion:"EVENTO",
+    actor:u?.nombre || (esAdmin?"admin":""),
+    detalle,
+    datos:{}
+  });
+};
+
+function pronosticosObjetoV16(usuarioId){
+  const obj={};
+  partidos.forEach((p,i)=>{
+    const pr=obtenerPronostico(usuarioId,p.id);
+    obj["P"+(i+1)]={partido:`${p.local||"Local"} vs ${p.visitante||"Visita"}`,pronostico:pr?.pronostico||"-"};
+  });
+  return obj;
+}
+
+function cambiosPronosticoV16(antes,despues){
+  const cambios=[];
+  Object.keys(despues).forEach(k=>{
+    const a=antes[k]?.pronostico||"-";
+    const d=despues[k]?.pronostico||"-";
+    if(a!==d) cambios.push(`${k}: ${a} → ${d}`);
+  });
+  return cambios;
+}
+
+// Crear quiniela con auditoría.
+if(typeof crearQuinielaNueva==="function"){
+  crearQuinielaNueva = async function(nombre,telefono,elecciones){
+    const codigo=(typeof obtenerDispositivoActual==="function")?obtenerDispositivoActual():("DEV-"+Date.now());
+    const {data:usuario,error:uError}=await db.from("usuarios").insert({
+      nombre,telefono,activo:true,dispositivo_id:codigo,ultima_actividad:new Date().toISOString()
+    }).select().single();
+    if(uError) throw uError;
+    if(typeof guardarQuinielaLocal==="function") guardarQuinielaLocal(usuario.id);
+
+    const regs=elecciones.map(e=>({
+      usuario_id:usuario.id,jornada_id:jornadaActiva.id,partido_id:e.partido.id,
+      pronostico:e.pronostico,acierto:null,fecha_registro:new Date().toISOString()
+    }));
+    const {error:prError}=await db.from("pronosticos").insert(regs);
+    if(prError) throw prError;
+
+    await db.from("pagos").insert({
+      usuario_id:usuario.id,jornada_id:jornadaActiva.id,
+      monto:jornadaActiva.costo||configuracion?.costo_default||20,
+      pagado:false,metodo_pago:"efectivo",observaciones:""
+    });
+
+    const despues={};
+    elecciones.forEach((e,i)=>despues["P"+(i+1)]={partido:`${e.partido.local} vs ${e.partido.visitante}`,pronostico:e.pronostico});
+
+    await registrarAuditoriaCompletaV16({
+      usuarioId:usuario.id,accion:"CREAR_QUINIELA",actor:nombre,
+      detalle:`${nombre} registró una quiniela`,
+      datos:{despues}
+    });
+  };
+}
+
+// Editar quiniela con antes/después.
+if(typeof actualizarQuinielaExistente==="function"){
+  actualizarQuinielaExistente = async function(usuarioId,nombre,telefono,elecciones){
+    const antes=pronosticosObjetoV16(usuarioId);
+
+    const {error:uError}=await db.from("usuarios").update({
+      nombre,telefono,ultima_actividad:new Date().toISOString()
+    }).eq("id",usuarioId);
+    if(uError) throw uError;
+
+    for(const e of elecciones){
+      const pr=obtenerPronostico(usuarioId,e.partido.id);
+      if(pr){
+        const {error}=await db.from("pronosticos").update({pronostico:e.pronostico,fecha_registro:new Date().toISOString()}).eq("id",pr.id);
+        if(error) throw error;
+      }else{
+        const {error}=await db.from("pronosticos").insert({
+          usuario_id:usuarioId,jornada_id:jornadaActiva.id,partido_id:e.partido.id,
+          pronostico:e.pronostico,acierto:null,fecha_registro:new Date().toISOString()
+        });
+        if(error) throw error;
+      }
+    }
+
+    const despues={};
+    elecciones.forEach((e,i)=>despues["P"+(i+1)]={partido:`${e.partido.local} vs ${e.partido.visitante}`,pronostico:e.pronostico});
+    const cambios=cambiosPronosticoV16(antes,despues);
+
+    await registrarAuditoriaCompletaV16({
+      usuarioId,accion:"EDITAR_QUINIELA",actor:nombre,
+      detalle:cambios.length?`${nombre} modificó ${cambios.join(", ")}`:`${nombre} guardó sin cambios`,
+      datos:{antes,despues,cambios}
+    });
+  };
+}
+
+// Pago con auditoría.
+if(typeof cambiarPago==="function"){
+  const cambiarPagoBaseV16=cambiarPago;
+  cambiarPago = async function(usuarioId){
+    const pagoAntes=pagos.find(p=>p.usuario_id===usuarioId);
+    const usuario=usuarios.find(u=>u.id===usuarioId);
+    const antes={pagado:pagoAntes?.pagado||false,monto:pagoAntes?.monto||jornadaActiva?.costo||0,observaciones:pagoAntes?.observaciones||""};
+
+    await cambiarPagoBaseV16(usuarioId);
+
+    await cargarTodo();
+    const pagoDespues=pagos.find(p=>p.usuario_id===usuarioId);
+    await registrarAuditoriaCompletaV16({
+      usuarioId,accion:"PAGO",actor:"admin",
+      detalle:`Admin cambió pago de ${usuario?.nombre||"participante"} a ${pagoDespues?.pagado?"PAGADO":"PENDIENTE"}`,
+      datos:{participante:usuario?.nombre||"",antes,despues:{pagado:pagoDespues?.pagado||false,monto:pagoDespues?.monto||0,observaciones:pagoDespues?.observaciones||""}}
+    });
+    if(esAdmin) cargarAuditoriaV16();
+  };
+}
+
+// Resultados con auditoría.
+if(typeof guardarResultados==="function"){
+  const guardarResultadosBaseV16=guardarResultados;
+  guardarResultados = async function(){
+    const antes={};
+    partidos.forEach((p,i)=>antes["P"+(i+1)]={partido:`${p.local} vs ${p.visitante}`,gl:p.goles_local,gv:p.goles_visitante,resultado:p.resultado});
+
+    await guardarResultadosBaseV16();
+
+    await cargarTodo();
+    const despues={};
+    partidos.forEach((p,i)=>despues["P"+(i+1)]={partido:`${p.local} vs ${p.visitante}`,gl:p.goles_local,gv:p.goles_visitante,resultado:p.resultado});
+
+    await registrarAuditoriaCompletaV16({
+      accion:"RESULTADO",actor:"admin",detalle:"Admin guardó resultados de la jornada",datos:{antes,despues}
+    });
+    if(esAdmin) cargarAuditoriaV16();
+  };
+}
+
+async function cargarAuditoriaV16(){
+  try{
+    const limite=Number(document.getElementById("auditLimiteV16")?.value||50);
+    const {data,error}=await db.from("auditoria").select("*").order("fecha",{ascending:false}).limit(limite);
+    if(error) throw error;
+    auditoriaListaV16=data||[];
+    dibujarAuditoriaV16();
+  }catch(e){console.error(e);mostrarMensaje("Error al cargar auditoría: "+e.message,"error");}
+}
+
+function dibujarAuditoriaV16(){
+  const cont=document.getElementById("listaAuditoriaV16");
+  if(!cont) return;
+  const buscar=(document.getElementById("auditBuscarV16")?.value||"").toLowerCase().trim();
+  const accion=(document.getElementById("auditAccionV16")?.value||"");
+  let lista=auditoriaListaV16||[];
+  if(accion) lista=lista.filter(x=>x.accion===accion);
+  if(buscar) lista=lista.filter(x=>[x.actor,x.accion,x.detalle,JSON.stringify(x.datos||{})].join(" ").toLowerCase().includes(buscar));
+
+  if(!lista.length){cont.innerHTML=`<div class="audit-card">No hay registros.</div>`;return;}
+
+  let html="";
+  lista.forEach(a=>{
+    const d=a.datos||{};
+    const antes=d.antes?JSON.stringify(d.antes,null,2):"";
+    const despues=d.despues?JSON.stringify(d.despues,null,2):"";
+    const cambios=Array.isArray(d.cambios)?d.cambios.join(" | "):"";
+    html+=`
+      <div class="audit-card">
+        <div class="audit-head">
+          <div><div class="audit-accion">${a.accion||"EVENTO"}</div><strong>Actor:</strong> ${a.actor||"-"}<br><span class="small">Dispositivo: ${a.dispositivo_id||"-"}</span></div>
+          <div class="audit-fecha">${formatoFecha(a.fecha)}</div>
+        </div>
+        <div>${a.detalle||""}</div>
+        ${cambios?`<div class="audit-json"><strong>Cambios:</strong><br>${cambios}</div>`:""}
+        ${(antes||despues)?`<div class="audit-diff"><div class="audit-box"><strong>Antes</strong><pre>${antes||"-"}</pre></div><div class="audit-box"><strong>Después</strong><pre>${despues||"-"}</pre></div></div>`:`<div class="audit-json">${JSON.stringify(d,null,2)}</div>`}
+      </div>`;
+  });
+  cont.innerHTML=html;
+}
+
+if(typeof loginAdmin==="function"){
+  const loginAdminBaseV16=loginAdmin;
+  loginAdmin=function(){
+    loginAdminBaseV16();
+    setTimeout(()=>{insertarPanelAuditoriaV16();cargarAuditoriaV16();},500);
+  };
+}
+
+if(typeof dibujarTodo==="function"){
+  const dibujarTodoBaseV16=dibujarTodo;
+  dibujarTodo=function(){
+    dibujarTodoBaseV16();
+    if(esAdmin) insertarPanelAuditoriaV16();
   };
 }
 
