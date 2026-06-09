@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026 v16 auditoria</title>
+<title>Quiniela MX 2026 v17 jornadas</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -355,6 +355,14 @@ th.partido-header{min-width:150px}
 .audit-diff{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
 .audit-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px}
 .audit-box pre{white-space:pre-wrap;font-size:12px}
+
+
+/* =================== V17: JORNADAS E HORA LOCAL =================== */
+.jornada-card-admin{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.jornada-card-admin.activa{border:2px solid #2e7d32;background:#f2fff5}
+.jornada-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.estado-activa,.estado-archivada,.estado-abierta{display:inline-block;padding:4px 8px;border-radius:999px;font-weight:bold}
+.estado-activa{background:#c8e6c9;color:#0b5d1e}.estado-archivada{background:#e0e0e0;color:#333}.estado-abierta{background:#e3f2fd;color:#0d47a1}
 
 </style>
 </head>
@@ -3268,6 +3276,139 @@ if(typeof dibujarTodo==="function"){
     dibujarTodoBaseV16();
     if(esAdmin) insertarPanelAuditoriaV16();
   };
+}
+
+
+
+// =================== V17: HORA LOCAL Y ARCHIVAR/ACTIVAR JORNADAS ===================
+let jornadasAdminV17=[];
+
+function fechaSupabaseLocalV17(fecha){
+  if(!fecha) return null;
+  let txt=String(fecha).trim().replace(" ","T");
+  if(!/[zZ]$/.test(txt) && !/[+-]\d{2}:\d{2}$/.test(txt)) txt+="Z";
+  const d=new Date(txt);
+  return isNaN(d)?null:d;
+}
+formatoFecha=function(fecha){
+  const d=fechaSupabaseLocalV17(fecha);
+  if(!d)return "-";
+  return d.toLocaleString("es-MX",{timeZone:"America/Chihuahua",dateStyle:"medium",timeStyle:"short"});
+};
+function fechaCortaV17(fecha){
+  const d=fechaSupabaseLocalV17(fecha);
+  if(!d)return "-";
+  return d.toLocaleString("es-MX",{timeZone:"America/Chihuahua",dateStyle:"short",timeStyle:"short"});
+}
+async function auditarJornadaV17(detalle,datos={}){
+  try{
+    const dispositivo=(typeof obtenerDispositivoActual==="function")?obtenerDispositivoActual():"";
+    await db.from("auditoria").insert({
+      usuario_id:null,
+      jornada_id:jornadaActiva?.id||null,
+      accion:"JORNADA",
+      actor:"admin",
+      dispositivo_id:dispositivo,
+      detalle,
+      datos
+    });
+  }catch(e){console.warn(e)}
+}
+function insertarPanelJornadasV17(){
+  const subtabs=document.querySelector(".admin-subtabs");
+  const panel=document.getElementById("panelAdmin");
+  if(!subtabs||!panel)return;
+  if(!document.getElementById("btnJornadasV17")){
+    const btn=document.createElement("button");
+    btn.id="btnJornadasV17"; btn.textContent="📦 Jornadas";
+    btn.onclick=function(){mostrarAdminSub("adminJornadasBoxV17",btn);cargarJornadasAdminV17();};
+    subtabs.appendChild(btn);
+  }
+  if(!document.getElementById("adminJornadasBoxV17")){
+    const cont=document.createElement("div");
+    cont.id="adminJornadasBoxV17"; cont.className="admin-subseccion";
+    cont.innerHTML=`
+      <h3>Archivar y activar jornadas</h3>
+      <p class="small">No borres una jornada terminada. Ciérrala/archívala y activa la siguiente para conservar historial.</p>
+      <button class="btn-primary" onclick="cargarJornadasAdminV17()">Actualizar lista</button>
+      <div id="listaJornadasAdminV17"></div>`;
+    const adminCard=panel.querySelector(".card:last-child")||panel;
+    adminCard.appendChild(cont);
+  }
+}
+async function cargarJornadasAdminV17(){
+  try{
+    const {data,error}=await db.from("jornadas").select("*").order("fecha_creacion",{ascending:false});
+    if(error)throw error;
+    jornadasAdminV17=data||[];
+    dibujarJornadasAdminV17();
+  }catch(e){console.error(e);mostrarMensaje("Error al cargar jornadas: "+e.message,"error")}
+}
+function dibujarJornadasAdminV17(){
+  const cont=document.getElementById("listaJornadasAdminV17");
+  if(!cont)return;
+  if(!jornadasAdminV17.length){cont.innerHTML=`<div class="jornada-card-admin">No hay jornadas registradas.</div>`;return;}
+  let html="";
+  jornadasAdminV17.forEach(j=>{
+    const activa=!!j.activa,bloqueada=!!j.bloqueada;
+    html+=`<div class="jornada-card-admin ${activa?"activa":""}">
+      <div class="jornada-card-head">
+        <div><h3 style="margin:0">${j.nombre||"Jornada"}</h3>
+          <div class="small">Costo: ${dinero(j.costo||0)}</div>
+          <div class="small">Inicio: ${fechaCortaV17(j.fecha_inicio)}</div>
+          <div class="small">Cierre: ${fechaCortaV17(j.fecha_cierre)}</div>
+          <div class="small">Creada: ${fechaCortaV17(j.fecha_creacion)}</div>
+        </div>
+        <div>${activa?'<span class="estado-activa">Activa / Principal</span>':'<span class="estado-archivada">No activa</span>'}<br><br>
+        ${bloqueada?'<span class="estado-archivada">Cerrada</span>':'<span class="estado-abierta">Abierta</span>'}</div>
+      </div><br><div class="acciones">
+        ${!activa?`<button class="btn-green" onclick="activarJornadaV17('${j.id}')">Poner como principal</button>`:""}
+        ${!bloqueada?`<button class="btn-yellow" onclick="archivarJornadaV17('${j.id}')">Cerrar / Archivar</button>`:`<button class="btn-gray" onclick="abrirJornadaV17('${j.id}')">Reabrir</button>`}
+      </div></div>`;
+  });
+  cont.innerHTML=html;
+}
+async function activarJornadaV17(jornadaId){
+  const j=jornadasAdminV17.find(x=>x.id===jornadaId); if(!j)return;
+  if(!confirm(`¿Poner "${j.nombre}" como jornada principal?`))return;
+  try{
+    await db.from("jornadas").update({activa:false}).neq("id","00000000-0000-0000-0000-000000000000");
+    const {error}=await db.from("jornadas").update({activa:true}).eq("id",jornadaId);
+    if(error)throw error;
+    await auditarJornadaV17(`Admin puso ${j.nombre} como jornada principal`,{jornada:j.nombre,activa:true});
+    await cargarJornadaActiva(); await cargarTodo(); await cargarJornadasAdminV17(); dibujarTodo();
+    mostrarMensaje(`${j.nombre} ahora es la jornada principal.`,"ok");
+  }catch(e){console.error(e);mostrarMensaje("Error al activar jornada: "+e.message,"error")}
+}
+async function archivarJornadaV17(jornadaId){
+  const j=jornadasAdminV17.find(x=>x.id===jornadaId); if(!j)return;
+  if(!confirm(`¿Cerrar/archivar "${j.nombre}"? Se conserva todo el historial.`))return;
+  try{
+    const {error}=await db.from("jornadas").update({bloqueada:true,activa:false}).eq("id",jornadaId);
+    if(error)throw error;
+    await auditarJornadaV17(`Admin cerró/archivó ${j.nombre}`,{jornada:j.nombre,bloqueada:true,activa:false});
+    await cargarJornadaActiva(); await cargarTodo(); await cargarJornadasAdminV17(); dibujarTodo();
+    mostrarMensaje(`${j.nombre} fue archivada.`,"ok");
+  }catch(e){console.error(e);mostrarMensaje("Error al archivar jornada: "+e.message,"error")}
+}
+async function abrirJornadaV17(jornadaId){
+  const j=jornadasAdminV17.find(x=>x.id===jornadaId); if(!j)return;
+  if(!confirm(`¿Reabrir "${j.nombre}"?`))return;
+  try{
+    const {error}=await db.from("jornadas").update({bloqueada:false}).eq("id",jornadaId);
+    if(error)throw error;
+    await auditarJornadaV17(`Admin reabrió ${j.nombre}`,{jornada:j.nombre,bloqueada:false});
+    await cargarJornadasAdminV17(); await cargarJornadaActiva(); await cargarTodo(); dibujarTodo();
+    mostrarMensaje(`${j.nombre} fue reabierta.`,"ok");
+  }catch(e){console.error(e);mostrarMensaje("Error al reabrir jornada: "+e.message,"error")}
+}
+if(typeof loginAdmin==="function"){
+  const loginAdminBaseV17=loginAdmin;
+  loginAdmin=function(){loginAdminBaseV17();setTimeout(()=>{insertarPanelJornadasV17();cargarJornadasAdminV17();},500);};
+}
+if(typeof dibujarTodo==="function"){
+  const dibujarTodoBaseV17=dibujarTodo;
+  dibujarTodo=function(){dibujarTodoBaseV17();if(esAdmin)insertarPanelJornadasV17();};
 }
 
 </script>
