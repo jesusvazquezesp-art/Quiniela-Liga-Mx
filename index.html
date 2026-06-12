@@ -706,9 +706,42 @@ function medallaPorLugar(lugar){
 }
 function formatoFecha(fecha){
   if(!fecha)return "-";
-  const d=new Date(fecha);
-  if(isNaN(d))return "-";
-  return d.toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"});
+
+  const d = new Date(fecha);
+
+  const dias = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIÉRCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SÁBADO"
+  ];
+
+  const meses = [
+    "Enero","Febrero","Marzo","Abril",
+    "Mayo","Junio","Julio","Agosto",
+    "Septiembre","Octubre","Noviembre","Diciembre"
+  ];
+
+  const hora = d.toLocaleTimeString('es-MX',{
+    hour:'numeric',
+    minute:'2-digit',
+    hour12:true
+  });
+
+  return `
+    <div style="font-weight:bold;color:#0d47a1;">
+      ${dias[d.getDay()]}
+    </div>
+    <div>
+      ${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}
+    </div>
+    <div>
+      ${hora}
+    </div>
+  `;
 }
 function valorDatetimeLocal(fecha){
   if(!fecha)return "";
@@ -915,7 +948,11 @@ function dibujarPartidos(){
     div.className="partido-card";
     div.innerHTML=`<div class="partido-num">Partido ${p.numero_partido}</div>
       ${formatoPartidoVertical(p)}
-      <div class="small">Fecha: ${formatoFecha(p.fecha_partido)}</div>
+
+
+      <div class="small">${formatoFecha(p.fecha_partido)}</div>
+
+
       <div class="small">${marcador}</div>
       <span class="estado-juego ${est.cls}">${est.txt}</span>`;
     cont.appendChild(div);
