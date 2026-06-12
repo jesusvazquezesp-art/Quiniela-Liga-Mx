@@ -704,6 +704,8 @@ function medallaPorLugar(lugar){
   if(lugar===3)return "🥉";
   return lugar;
 }
+    
+    
 function formatoFecha(fecha){
   if(!fecha)return "-";
 
@@ -743,6 +745,8 @@ function formatoFecha(fecha){
     </div>
   `;
 }
+    
+    
 function valorDatetimeLocal(fecha){
   if(!fecha)return "";
   const d=new Date(fecha);
@@ -2211,9 +2215,18 @@ function dibujarVistaMovilQuiniela(){
             <span class="${est.cls}">${est.txt}</span>
           </div>
           <div class="mobile-equipos">
-            ${typeof escudoEquipoV9==="function"?escudoEquipoV9(p.local):""} ${p.local||"Local"}
-            <div class="mobile-vs">VS</div>
-            ${typeof escudoEquipoV9==="function"?escudoEquipoV9(p.visitante):""} ${p.visitante||"Visita"}
+            
+
+${escudoEquipo(p.local)} ${p.local || "Local"}
+<div class="mobile-vs">VS</div>
+${escudoEquipo(p.visitante)} ${p.visitante || "Visita"}
+
+<div class="small" style="margin-top:8px;text-align:center;">
+  ${formatoFecha(p.fecha_partido)}
+</div>
+
+
+
           </div>
           ${typeof resultadoVisiblePartido==="function"?resultadoVisiblePartido(p):""}
           <select class="mobile-select" id="movil-${p.id}">
