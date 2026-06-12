@@ -3486,6 +3486,79 @@ if(typeof dibujarTodo==="function"){
   dibujarTodo=function(){dibujarTodoBaseV17();if(esAdmin)insertarPanelJornadasV17();};
 }
 
+    
+    /* PARCHE FINAL: escudos y fecha en tarjetas móviles */
+(function(){
+  const anterior = window.dibujarVistaMovilQuiniela;
+
+  window.dibujarVistaMovilQuiniela = function(){
+    const cont = document.getElementById("vistaMovilQuiniela");
+    if(!cont) return;
+
+    const bloqueada = !!(jornadaActiva?.bloqueada || configuracion?.quiniela_bloqueada);
+    let html = "";
+
+    if(!bloqueada){
+      html += `
+        <div class="mobile-captura">
+          <h3>Registrar quiniela</h3>
+          <input id="movilNombre" placeholder="Ej. Jesús 1">
+          <br><br>
+          <input id="movilTelefono" placeholder="Teléfono opcional">
+          <div class="small" id="movilModoEdicion">Nueva quiniela</div>
+      `;
+
+      partidos.forEach((p,index)=>{
+        const numero = typeof numeroPartidoVisible==="function" ? numeroPartidoVisible(p,index) : (index+1);
+        const est = typeof estadoPartidoV9==="function" ? estadoPartidoV9(p) : {txt:"",cls:"contador-segundos"};
+
+        html += `
+          <div class="mobile-partido">
+            <div class="mobile-partido-head">
+              <span class="mobile-partido-title">Partido ${numero}</span>
+              <span class="${est.cls}">${est.txt}</span>
+            </div>
+
+            <div class="mobile-equipos">
+              ${escudoEquipo(p.local)} ${p.local || "Local"}
+              <div class="mobile-vs">VS</div>
+              ${escudoEquipo(p.visitante)} ${p.visitante || "Visita"}
+            </div>
+
+            <div class="small" style="margin-top:8px;text-align:center;">
+              ${formatoFecha(p.fecha_partido)}
+            </div>
+
+            ${typeof resultadoVisiblePartido==="function" ? resultadoVisiblePartido(p) : ""}
+
+            <select class="mobile-select" id="movil-${p.id}">
+              <option value="">Seleccionar</option>
+              <option value="L">L - Local</option>
+              <option value="E">E - Empate</option>
+              <option value="V">V - Visita</option>
+            </select>
+          </div>
+        `;
+      });
+
+      html += `
+          <div class="mobile-actions">
+            <button id="btnGuardarMovil" class="btn-primary" onclick="guardarParticipacionMovil()">Guardar</button>
+            <button class="btn-gray" onclick="limpiarMovil()">Limpiar</button>
+          </div>
+        </div>
+      `;
+    }
+
+    if(typeof dibujarTablaHorizontalMovilAbajo === "function"){
+      html += dibujarTablaHorizontalMovilAbajo();
+    }
+
+    cont.innerHTML = html;
+  };
+})();
+    
+    
 </script>
 </body>
 </html>
