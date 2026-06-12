@@ -163,8 +163,26 @@ th.partido-header{min-width:150px}
 .contador-vivo{background:#ffebee;color:#c62828;animation:pulse 1s infinite;}
 .contador-espera{background:#fff8e1;color:#795548;}
 .contador-terminado{background:#c8e6c9;color:#0b5d1e;}
-.escudo-mini,.escudo-tabla{background:white;border-radius:50%;}
-.admin-danger-zone{border:2px dashed #c62828;background:#fff5f5;}
+
+  
+.escudo,
+.escudo-tabla,
+.escudo-mini{
+  width:40px !important;
+  height:40px !important;
+  max-width:40px !important;
+  max-height:40px !important;
+  object-fit:contain !important;
+  display:inline-block !important;
+  vertical-align:middle !important;
+  border-radius:50%;
+}
+
+.club-info img{
+  flex:0 0 40px !important;
+}
+  
+  .admin-danger-zone{border:2px dashed #c62828;background:#fff5f5;}
 .club-card{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
   border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin:6px 0;background:#fff;
