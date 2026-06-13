@@ -1960,9 +1960,15 @@ function escudoEquipoV9(nombre, clase="escudo-mini"){
 
 function formatoPartidoVerticalV9(p){
   return `
-    <div class="equipo-linea equipo-local">${escudoEquipoV9(p.local)}<span>${p.local||"Local"}</span></div>
+    <div class="equipo-linea equipo-local">
+      ${escudoEquipo(p.local)}
+      <span>${p.local || "Local"}</span>
+    </div>
     <div class="vs-linea">VS</div>
-    <div class="equipo-linea equipo-visita">${escudoEquipoV9(p.visitante)}<span>${p.visitante||"Visita"}</span></div>
+    <div class="equipo-linea equipo-visita">
+      ${escudoEquipo(p.visitante)}
+      <span>${p.visitante || "Visita"}</span>
+    </div>
   `;
 }
 
