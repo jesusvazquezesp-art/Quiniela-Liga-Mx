@@ -2831,17 +2831,29 @@ dibujarTablaHorizontalMovilAbajo = function(){
 // También evitar que el reloj principal redibuje la tabla desktop/móvil si estás escribiendo.
 if(typeof iniciarRelojV9==="function"){
   iniciarRelojV9 = function(){
-    if(intervaloV9) clearInterval(intervaloV9);
-    intervaloV9=setInterval(()=>{
+    if(typeof intervaloV9 !== "undefined" && intervaloV9){
+      clearInterval(intervaloV9);
+    }
+
+    intervaloV9 = setInterval(()=>{
       try{
-        if(inputActivoMovil()) return;
+        const el = document.activeElement;
+        const escribiendo = el && ["INPUT","TEXTAREA","SELECT"].includes(el.tagName);
+
+        if(escribiendo) return;
+
         dibujarResumen();
         dibujarTablaQuiniela();
         dibujarPartidos();
-        dibujarVistaMovilQuiniela();
+
+        if(typeof dibujarVistaMovilQuiniela === "function"){
+          dibujarVistaMovilQuiniela();
+        }
       }catch(e){}
-    },1000);
+    },10000);
   };
+
+  iniciarRelojV9();
 }
 
 
