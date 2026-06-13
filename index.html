@@ -974,20 +974,34 @@ function dibujarClasificacion(){
 function dibujarPartidos(){
   const cont=document.getElementById("listaPartidos");
   cont.innerHTML="";
+
   partidos.forEach(p=>{
-    const marcador=(p.goles_local!==null && p.goles_visitante!==null)?`${p.goles_local} - ${p.goles_visitante}`:"Sin marcador";
+    const marcador=(p.goles_local!==null && p.goles_visitante!==null)
+      ? `${p.goles_local} - ${p.goles_visitante}`
+      : "Sin marcador";
+
     const est=estadoPartido(p);
+
     const div=document.createElement("div");
     div.className="partido-card";
-    div.innerHTML=`<div class="partido-num">Partido ${p.numero_partido}</div>
+    div.innerHTML=`
+      <div class="partido-num">Partido ${p.numero_partido}</div>
+
       ${formatoPartidoVertical(p)}
 
+      <div class="small" style="text-align:center;margin-top:8px;">
+        ${formatoFecha(p.fecha_partido)}
+      </div>
 
-      <div class="small">${formatoFecha(p.fecha_partido)}</div>
+      <div class="small" style="text-align:center;margin-top:6px;">
+        ${marcador}
+      </div>
 
+      <div style="text-align:center;">
+        <span class="estado-juego ${est.cls}">${est.txt}</span>
+      </div>
+    `;
 
-      <div class="small">${marcador}</div>
-      <span class="estado-juego ${est.cls}">${est.txt}</span>`;
     cont.appendChild(div);
   });
 }
