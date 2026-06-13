@@ -3487,6 +3487,42 @@ if(typeof dibujarTodo==="function"){
 }
 
     
+    /* FIX FINAL: no cerrar teclado al escribir en móvil */
+(function(){
+  const dibujarBase = window.dibujarVistaMovilQuiniela;
+
+  window.inputActivoMovil = function(){
+    const el = document.activeElement;
+    if(!el) return false;
+    const tag = (el.tagName || "").toLowerCase();
+    return tag === "input" || tag === "textarea" || tag === "select";
+  };
+
+  window.dibujarVistaMovilQuiniela = function(){
+    if(window.inputActivoMovil()){
+      return;
+    }
+    return dibujarBase();
+  };
+
+  const relojBase = window.iniciarRelojPartidos;
+  window.iniciarRelojPartidos = function(){
+    setInterval(()=>{
+      try{
+        if(window.inputActivoMovil()) return;
+        dibujarResumen();
+        dibujarTablaQuiniela();
+        dibujarPartidos();
+        if(typeof dibujarVistaMovilQuiniela === "function"){
+          dibujarVistaMovilQuiniela();
+        }
+      }catch(e){}
+    },60000);
+  };
+})();
+    
+    
+    
     /* PARCHE FINAL: escudos y fecha en tarjetas móviles */
 (function(){
   const anterior = window.dibujarVistaMovilQuiniela;
