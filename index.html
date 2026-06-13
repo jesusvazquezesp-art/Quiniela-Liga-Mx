@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela MX 2026</title>
+<title>Quiniela MX 2026 v1</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -692,10 +692,22 @@ function estadoPartido(p){
   if(ahora>=inicio && ahora<=finEstimado)return {txt:"🔴 En vivo",cls:"estado-vivo"};
   return {txt:"Terminó, esperando actualización",cls:"estado-espera"};
 }
+function hayCampoActivoQuiniela(){
+  const el = document.activeElement;
+  if(!el) return false;
+  const tag = (el.tagName || "").toUpperCase();
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+}
+
 function iniciarRelojPartidos(){
   setInterval(()=>{
-    try{dibujarResumen();dibujarTablaQuiniela();dibujarPartidos();}catch(e){}
-  },60000);
+    try{
+      if(hayCampoActivoQuiniela()) return;
+      dibujarResumen();
+      dibujarPartidos();
+      // No redibujamos la tabla mientras alguien captura, para no cerrar el teclado.
+    }catch(e){}
+  },30000);
 }
 
 function medallaPorLugar(lugar){
@@ -2348,9 +2360,13 @@ if(typeof dibujarTodo==="function"){
   };
 }
 
-setInterval(()=>{
-  try{dibujarVistaMovilQuiniela();}catch(e){}
-},1000);
+// Reloj móvil corregido: no redibuja mientras se escribe, para no cerrar el teclado.
+let intervaloMovilSeguroV10 = setInterval(()=>{
+  try{
+    if(typeof hayCampoActivoQuiniela === "function" && hayCampoActivoQuiniela()) return;
+    if(typeof dibujarVistaMovilQuiniela === "function") dibujarVistaMovilQuiniela();
+  }catch(e){}
+},30000);
 
 
 
@@ -2843,12 +2859,8 @@ if(typeof iniciarRelojV9==="function"){
         if(escribiendo) return;
 
         dibujarResumen();
-        dibujarTablaQuiniela();
         dibujarPartidos();
-
-        if(typeof dibujarVistaMovilQuiniela === "function"){
-          dibujarVistaMovilQuiniela();
-        }
+        // Evitar redibujar quiniela/móvil durante captura para no cerrar el teclado.
       }catch(e){}
     },10000);
   };
@@ -3523,13 +3535,10 @@ if(typeof dibujarTodo==="function"){
       try{
         if(window.inputActivoMovil()) return;
         dibujarResumen();
-        dibujarTablaQuiniela();
         dibujarPartidos();
-        if(typeof dibujarVistaMovilQuiniela === "function"){
-          dibujarVistaMovilQuiniela();
-        }
+        // No redibujar tabla ni vista móvil durante captura.
       }catch(e){}
-    },60000);
+    },30000);
   };
 })();
     
@@ -3540,6 +3549,7 @@ if(typeof dibujarTodo==="function"){
   const anterior = window.dibujarVistaMovilQuiniela;
 
   window.dibujarVistaMovilQuiniela = function(){
+    if(typeof hayCampoActivoQuiniela === "function" && hayCampoActivoQuiniela()) return;
     const cont = document.getElementById("vistaMovilQuiniela");
     if(!cont) return;
 
