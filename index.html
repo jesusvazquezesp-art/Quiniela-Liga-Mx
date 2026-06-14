@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--azul:#0d47a1;--azul2:#1565c0;--fondo:#f3f6fb;--card:#fff;--borde:#d9e1ec;--texto:#172033;--verde:#c8e6c9;--verdeTxt:#0b5d1e;--gris:#e0e0e0;--rojo:#c62828;--amarillo:#fff8e1}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;text-align:center;padding:18px 10px}h1{margin:0;font-size:26px}.contenedor{max-width:1350px;margin:auto;padding:12px}.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.box,.card{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.box{text-align:center}.small{font-size:13px;color:#667085}.num{font-size:22px;font-weight:bold;color:var(--azul)}.tabs,.subtabs{display:flex;gap:8px;overflow:auto;margin:12px 0}.tabs button,.subtabs button,button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer;white-space:nowrap}.tabs button,.subtabs button{background:#e3e8ef;color:#111}.tabs button.activo,.subtabs button.activo,.btn-primary{background:var(--azul);color:#fff}.btn-green{background:#2e7d32;color:#fff}.btn-red{background:#c62828;color:#fff}.btn-yellow{background:#fbc02d;color:#111}.btn-gray{background:#607d8b;color:#fff}button:disabled{opacity:.6;cursor:not-allowed}.seccion,.admin-sub{display:none}.seccion.activa,.admin-sub.activa{display:block}input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:8px;font-size:15px}label{font-weight:bold;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.mensaje{display:none;padding:12px;border-radius:10px;margin:10px 0;font-weight:bold}.mensaje.ok{display:block;background:#d7f5dd;color:#145a22}.mensaje.error{display:block;background:#ffe0e0;color:#7f0000}.mensaje.info{display:block;background:#e3f2fd;color:#0d47a1}.tabla-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}table{width:100%;border-collapse:collapse;min-width:950px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:center;vertical-align:middle}th{background:#eef3fb}.nombre{position:sticky;left:0;background:#fff;text-align:left;z-index:2;min-width:170px}th.nombre{background:#eef3fb;z-index:3}.pick{font-weight:bold;border-radius:8px;padding:7px 10px;display:inline-block;min-width:38px}.pendiente{background:var(--amarillo);color:#795548}.acierto{background:var(--verde);color:var(--verdeTxt)}.fallo{background:var(--gris);color:#333}.partidos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.partido-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px}.equipo{font-weight:bold;text-align:center}.escudo{width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-right:6px}.equipo-row{display:flex;align-items:center;justify-content:center;gap:6px}.equipos-usados{margin:10px 0;padding:10px;border-radius:10px;font-weight:bold}.equipos-ok{background:#d7f5dd;color:#145a22}.equipos-bad{background:#ffe0e0;color:#7f0000}.vs{text-align:center;color:var(--azul);font-weight:bold;margin:5px}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3fb;color:var(--azul);font-weight:bold}.led{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c62828;box-shadow:0 0 9px #c62828;animation:pulse 1s infinite;margin-right:5px}@keyframes pulse{50%{opacity:.3}}.estado-ok{background:#c8e6c9;color:#0b5d1e}.estado-warn{background:#fff8e1;color:#795548}.estado-live{background:#ffebee;color:#c62828}.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none}.audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin:8px 0}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;text-align:center;padding:18px 10px}h1{margin:0;font-size:26px}.contenedor{max-width:1350px;margin:auto;padding:12px}.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.box,.card{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.box{text-align:center}.small{font-size:13px;color:#667085}.num{font-size:22px;font-weight:bold;color:var(--azul)}.tabs,.subtabs{display:flex;gap:8px;overflow:auto;margin:12px 0}.tabs button,.subtabs button,button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer;white-space:nowrap}.tabs button,.subtabs button{background:#e3e8ef;color:#111}.tabs button.activo,.subtabs button.activo,.btn-primary{background:var(--azul);color:#fff}.btn-green{background:#2e7d32;color:#fff}.btn-red{background:#c62828;color:#fff}.btn-yellow{background:#fbc02d;color:#111}.btn-gray{background:#607d8b;color:#fff}button:disabled{opacity:.6;cursor:not-allowed}.seccion,.admin-sub{display:none}.seccion.activa,.admin-sub.activa{display:block}input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:8px;font-size:15px}label{font-weight:bold;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.mensaje{display:none;padding:12px;border-radius:10px;margin:10px 0;font-weight:bold}.mensaje.ok{display:block;background:#d7f5dd;color:#145a22}.mensaje.error{display:block;background:#ffe0e0;color:#7f0000}.mensaje.info{display:block;background:#e3f2fd;color:#0d47a1}.tabla-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}table{width:100%;border-collapse:collapse;min-width:950px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:center;vertical-align:middle}th{background:#eef3fb}.nombre{position:sticky;left:0;background:#fff;text-align:left;z-index:2;min-width:170px}th.nombre{background:#eef3fb;z-index:3}.pick{font-weight:bold;border-radius:8px;padding:7px 10px;display:inline-block;min-width:38px}.pendiente{background:var(--amarillo);color:#795548}.acierto{background:var(--verde);color:var(--verdeTxt)}.fallo{background:var(--gris);color:#333}.partidos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.partido-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px}.equipo{font-weight:bold;text-align:center}.escudo{width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-right:6px}.equipo-row{display:flex;align-items:center;justify-content:center;gap:6px}.equipos-usados{margin:10px 0;padding:10px;border-radius:10px;font-weight:bold}.equipos-ok{background:#d7f5dd;color:#145a22}.equipos-bad{background:#ffe0e0;color:#7f0000}.vs{text-align:center;color:var(--azul);font-weight:bold;margin:5px}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3fb;color:var(--azul);font-weight:bold}.led{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c62828;box-shadow:0 0 9px #c62828;animation:pulse 1s infinite;margin-right:5px}@keyframes pulse{50%{opacity:.3}}.estado-ok{background:#c8e6c9;color:#0b5d1e}.estado-warn{background:#fff8e1;color:#795548}.estado-live{background:#ffebee;color:#c62828}.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
 .vista-movil{display:none}
 @media(max-width:760px){
   .quiniela-desktop{display:none!important}
@@ -154,9 +154,164 @@
   .match-team .escudo{width:23px;height:23px}
 }
 
+
+/* FIX10: Vista de partidos más limpia en PC, sin empalmar nombres ni marcadores */
+@media(min-width:761px){
+  #partidos .partidos-grid{
+    grid-template-columns:repeat(2, minmax(520px, 1fr));
+    gap:14px;
+    align-items:stretch;
+  }
+  #partidos .partido-card.match-card{
+    min-height:165px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:visible;
+  }
+  #partidos .match-line{
+    grid-template-columns:minmax(190px,1fr) 58px 42px 58px minmax(190px,1fr);
+    gap:10px;
+    width:100%;
+  }
+  #partidos .match-team{
+    font-size:17px;
+    line-height:1.15;
+    white-space:normal;
+    overflow:visible;
+  }
+  #partidos .match-team span{
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
+  }
+  #partidos .match-team .escudo{width:30px;height:30px}
+  #partidos .match-score{
+    width:58px;
+    min-width:58px;
+    height:46px;
+    color:#fff!important;
+  }
+  #partidos .match-date,
+  #partidos .match-status{
+    width:100%;
+    text-align:center;
+  }
+}
+@media(min-width:1180px){
+  #partidos .partidos-grid{grid-template-columns:repeat(2, minmax(560px, 1fr));}
+}
+@media(min-width:1500px){
+  #partidos .partidos-grid{grid-template-columns:repeat(3, minmax(520px, 1fr));}
+}
+
+
+/* FIX11: Vista de liguilla en PC a todo el ancho, sin empalmes */
+#listaPartidos > .liguilla-panel{
+  grid-column:1 / -1;
+  width:100%;
+  max-width:100%;
+}
+#partidos .liguilla-panel{
+  overflow:visible;
+}
+#partidos .liguilla-bloque{
+  width:100%;
+  overflow:visible;
+}
+#partidos .liguilla-card.match-card{
+  min-width:0;
+  overflow:visible;
+}
+@media(min-width:761px){
+  #partidos .liguilla-grid{
+    grid-template-columns:repeat(2, minmax(520px, 1fr));
+    gap:14px;
+    align-items:stretch;
+  }
+  #partidos .liguilla-card.match-card{
+    min-height:150px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  #partidos .liguilla-card .match-line{
+    grid-template-columns:minmax(185px,1fr) 58px 42px 58px minmax(185px,1fr);
+    gap:10px;
+    width:100%;
+  }
+  #partidos .liguilla-card .match-team{
+    font-size:16px;
+    line-height:1.15;
+  }
+  #partidos .liguilla-card .match-team span{
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
+  }
+  #partidos .liguilla-card .match-score{
+    width:58px;
+    min-width:58px;
+    height:46px;
+    color:#fff!important;
+  }
+  #partidos .liguilla-grid:has(.liguilla-card:nth-child(1):last-child){
+    grid-template-columns:minmax(520px, 760px);
+  }
+}
+@media(min-width:1500px){
+  #partidos .liguilla-grid{
+    grid-template-columns:repeat(2, minmax(560px, 1fr));
+  }
+}
+
+
+/* FIX12: menú de 3 líneas y modo oscuro */
+.menu-flotante{position:fixed;top:12px;right:12px;z-index:9999}
+.menu-btn{width:46px;height:42px;border-radius:12px;background:rgba(255,255,255,.92);color:#0d47a1;box-shadow:0 3px 12px rgba(0,0,0,.22);font-size:24px;line-height:1;padding:0}
+.menu-panel{display:none;position:absolute;right:0;top:50px;width:230px;background:var(--card);color:var(--texto);border:1px solid var(--borde);border-radius:16px;padding:12px;box-shadow:0 8px 28px rgba(0,0,0,.28)}
+.menu-panel.abierto{display:block}
+.menu-title{font-weight:900;margin-bottom:10px;color:var(--azul)}
+.menu-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--borde)}
+.switch{position:relative;width:54px;height:30px;flex:0 0 54px}
+.switch input{display:none}
+.slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:999px;transition:.2s}
+.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.28)}
+.switch input:checked + .slider{background:#0d47a1}
+.switch input:checked + .slider:before{transform:translateX(24px)}
+body.dark{--azul:#4da3ff;--azul2:#1e6ed8;--fondo:#07111f;--card:#0f1b2d;--borde:#26364c;--texto:#eef6ff;--verde:#126b39;--verdeTxt:#fff;--gris:#475569;--rojo:#c62828;--amarillo:#5b4a16}
+body.dark header{background:linear-gradient(135deg,#07111f,#123c73)}
+body.dark .box,body.dark .card,body.dark .partido-card,body.dark .audit-card,body.dark .fama-card,body.dark .liguilla-bloque,body.dark .liguilla-card,body.dark .boleto-form-card,body.dark .boleto-list-card,body.dark .ranking-mini,body.dark .mobile-matrix-wrap,body.dark .liga-card-mobile,body.dark .detalle-equipos,body.dark .detalle-pill,body.dark .liga-stat{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
+body.dark .small,body.dark .audit-time,body.dark .liga-extra-mobile{color:#b7c4d8!important}
+body.dark .tabs button,body.dark .subtabs button,body.dark .selector-jornadas button,body.dark .liguilla-tabs button{background:#1f2d42;color:#e8f1ff}
+body.dark .tabs button.activo,body.dark .subtabs button.activo,body.dark .selector-jornadas button.activo,body.dark .liguilla-tabs button.activo{background:#0d47a1;color:#fff}
+body.dark .tabla-wrap,body.dark table,body.dark td,body.dark th{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
+body.dark th,body.dark th.nombre,body.dark .nombre,body.dark .mobile-matrix th,body.dark .mobile-matrix .col-nombre,body.dark .liga-head-mobile{background:#16243a!important;color:#eef6ff!important}
+body.dark input,body.dark select,body.dark textarea{background:#0b1524;color:#eef6ff;border-color:#33445f}
+body.dark .tombola-box{background:#0c233a;border-color:#23517a;color:#d9ecff}
+body.dark .campeon-box{background:linear-gradient(135deg,#332600,#111827);border-color:#fbc02d}
+body.dark .badge{background:#1d3352;color:#d9ecff}
+body.dark .estado-ok{background:#14532d;color:#dcfce7}
+body.dark .estado-warn{background:#513f12;color:#fff0bd}
+body.dark .estado-live{background:#4a1414;color:#ffd0d0}
+body.dark .match-score{color:#fff!important}
+body.dark .menu-btn{background:#0f1b2d;color:#fff;border:1px solid #31445f}
+@media(max-width:760px){.menu-flotante{top:8px;right:8px}.menu-btn{width:42px;height:38px;font-size:22px}.menu-panel{width:220px}}
+
 </style>
 </head>
 <body>
+<div class="menu-flotante">
+  <button class="menu-btn" onclick="toggleMenuOpciones()" title="Opciones">☰</button>
+  <div id="menuOpciones" class="menu-panel">
+    <div class="menu-title">Opciones</div>
+    <div class="menu-row">
+      <span>🌙 Modo oscuro</span>
+      <label class="switch"><input id="modoOscuroCheck" type="checkbox" onchange="cambiarModoOscuro(this.checked)"><span class="slider"></span></label>
+    </div>
+  </div>
+</div>
+
 <header><h1>🏆 Quiniela Copa MX V2</h1><div id="subtitulo">Cargando...</div></header>
 <div class="contenedor">
  <div class="resumen">
@@ -183,6 +338,7 @@
 const SUPABASE_URL="https://pijlscldaveqmcxlcebz.supabase.co";
 const SUPABASE_KEY="sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
 const ADMIN_USER="admin", ADMIN_PASS="QuinielaMx2026";
+const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[];
 let editandoId=null, editandoJornadaId=null, jornadaVistaId=null;
@@ -420,8 +576,30 @@ async function guardarBoleto(){if(!jornada||bloqueada())return msg('La jornada e
 function editar(uid){let u=usuarios.find(x=>x.id===uid);if(!u)return;if(!esAdmin&&!dueño(u))return msg('Solo se puede editar desde el celular donde se capturó','error');editandoId=uid;$('nuevoNombre').value=u.nombre;$('nuevoTelefono').value=u.telefono||'';partidos.forEach(p=>{$('sel_'+p.id).value=pr(uid,p.id)?.pronostico||''});$('modo').textContent='Editando: '+u.nombre;$('btnGuardar').textContent='Actualizar';copiarDesktopAMovil();window.scrollTo({top:0,behavior:'smooth'})}
 function editarMovil(uid){editar(uid);setTimeout(()=>copiarDesktopAMovil(),50)}
 function limpiar(){editandoId=null;if($('nuevoNombre')){$('nuevoNombre').value='';$('nuevoTelefono').value='';partidos.forEach(p=>{let s=$('sel_'+p.id);if(s)s.value=''});$('modo').textContent='Nuevo boleto';$('btnGuardar').textContent='Guardar';copiarDesktopAMovil()}}
-function loginAdmin(){if($('adminUser').value===ADMIN_USER&&$('adminPass').value===ADMIN_PASS){esAdmin=true;$('login').style.display='none';$('panelAdmin').style.display='block';dibujar();msg('Admin activo','ok')}else msg('Usuario o contraseña incorrectos','error')}
-function logoutAdmin(){esAdmin=false;$('login').style.display='block';$('panelAdmin').style.display='none';msg('Admin cerrado','info')}
+function aplicarEstadoAdmin(){
+  const login=$('login'), panel=$('panelAdmin');
+  if(login) login.style.display=esAdmin?'none':'block';
+  if(panel) panel.style.display=esAdmin?'block':'none';
+}
+function loginAdmin(){
+  if($('adminUser').value===ADMIN_USER&&$('adminPass').value===ADMIN_PASS){
+    esAdmin=true;
+    localStorage.setItem(ADMIN_SESSION_KEY,'1');
+    aplicarEstadoAdmin();
+    dibujar();
+    cargarPrivado(false);
+    msg('Admin activo. Permanecerá abierto hasta que cierres sesión.','ok');
+  }else msg('Usuario o contraseña incorrectos','error')
+}
+function logoutAdmin(){
+  esAdmin=false;
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  editandoJornadaId=null;
+  aplicarEstadoAdmin();
+  cancelarEdicion(false);
+  dibujar();
+  msg('Admin cerrado. La página volvió a modo usuario.','info')
+}
 function dibAdmin(){let nums='';for(let i=1;i<=17;i++)nums+=`<option value="${i}">Jornada ${i}</option>`;nums+=`<option value="${NUM_LIGUILLA}">🏆 Liguilla</option>`;$('jNumero').innerHTML=nums;if(!$('jNombre').value)$('jNombre').value='Jornada 1'; if($('jNumero')) $('jNumero').setAttribute('onchange','prepararFormJornada()'); prepararFormJornada();dibJornadas();dibResultados();dibPagos()}
 function partidoLiguillaNombre(i){const nombres=['Cuartos ida 1','Cuartos ida 2','Cuartos ida 3','Cuartos ida 4','Cuartos vuelta 1','Cuartos vuelta 2','Cuartos vuelta 3','Cuartos vuelta 4','Semifinal ida 1','Semifinal ida 2','Semifinal vuelta 1','Semifinal vuelta 2','Final ida','Final vuelta'];return nombres[i-1]||('Partido '+i)}
 function totalPartidosForm(){return Number($('jNumero')?.value)===NUM_LIGUILLA?14:9}
@@ -509,7 +687,13 @@ async function cambiarPago(uid,val){if(!esAdmin)return msg('Solo administrador',
 async function obsPago(uid){let pa=pago(uid);if(pa)await db.from('pagos').update({observaciones:$('obs_'+uid).value}).eq('id',pa.id)}
 async function recalcularTablaLiga(){let all=await db.from('partidos').select('*').eq('finalizado',true);let map={};(all.data||[]).forEach(m=>{if(m.goles_local===null||m.goles_visitante===null)return;[m.local,m.visitante].forEach(c=>{if(!map[c])map[c]={club:c,pj:0,g:0,e:0,p:0,gf:0,gc:0,pts:0,ult:[]}});let gl=+m.goles_local,gv=+m.goles_visitante,L=map[m.local],V=map[m.visitante];L.pj++;V.pj++;L.gf+=gl;L.gc+=gv;V.gf+=gv;V.gc+=gl;if(gl>gv){L.g++;L.pts+=3;V.p++;L.ult.push('G');V.ult.push('P')}else if(gl<gv){V.g++;V.pts+=3;L.p++;V.ult.push('G');L.ult.push('P')}else{L.e++;V.e++;L.pts++;V.pts++;L.ult.push('E');V.ult.push('E')}});let filas=Object.values(map).map(x=>({...x,dg:x.gf-x.gc,ultimos:x.ult.slice(-5).join(','),fase:''})).sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||a.club.localeCompare(b.club)).map((x,i)=>({...x,posicion:i+1,fase:i<8?'Liguilla':''}));for(const f of filas){let ex=await db.from('tabla_liga_mx').select('id').eq('club',f.club).maybeSingle();let reg={club:f.club,posicion:f.posicion,pj:f.pj,g:f.g,e:f.e,p:f.p,gf:f.gf,gc:f.gc,dg:f.dg,pts:f.pts,ultimos:f.ultimos,fase:f.fase,actualizado:new Date().toISOString()};if(ex.data)await db.from('tabla_liga_mx').update(reg).eq('id',ex.data.id);else await db.from('tabla_liga_mx').insert(reg)}}
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:g.nombre,aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>x.nombre).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
-async function init(){try{await cargar();setInterval(()=>{dibResumen();dibPartidos()},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+
+function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
+function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo);localStorage.setItem('quiniela_copamx_modo_oscuro',activo?'1':'0')}
+function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
+document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
+
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();setInterval(()=>{dibResumen();dibPartidos()},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
