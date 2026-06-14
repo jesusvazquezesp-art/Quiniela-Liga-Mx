@@ -4,10 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiniela Copa MX V2</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--azul:#0d47a1;--azul2:#1565c0;--fondo:#f3f6fb;--card:#fff;--borde:#d9e1ec;--texto:#172033;--verde:#c8e6c9;--verdeTxt:#0b5d1e;--gris:#e0e0e0;--rojo:#c62828;--amarillo:#fff8e1}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;text-align:center;padding:18px 10px}h1{margin:0;font-size:26px}.contenedor{max-width:1350px;margin:auto;padding:12px}.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.box,.card{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.box{text-align:center}.small{font-size:13px;color:#667085}.num{font-size:22px;font-weight:bold;color:var(--azul)}.tabs,.subtabs{display:flex;gap:8px;overflow:auto;margin:12px 0}.tabs button,.subtabs button,button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer;white-space:nowrap}.tabs button,.subtabs button{background:#e3e8ef;color:#111}.tabs button.activo,.subtabs button.activo,.btn-primary{background:var(--azul);color:#fff}.btn-green{background:#2e7d32;color:#fff}.btn-red{background:#c62828;color:#fff}.btn-yellow{background:#fbc02d;color:#111}.btn-gray{background:#607d8b;color:#fff}button:disabled{opacity:.6;cursor:not-allowed}.seccion,.admin-sub{display:none}.seccion.activa,.admin-sub.activa{display:block}input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:8px;font-size:15px}label{font-weight:bold;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.mensaje{display:none;padding:12px;border-radius:10px;margin:10px 0;font-weight:bold}.mensaje.ok{display:block;background:#d7f5dd;color:#145a22}.mensaje.error{display:block;background:#ffe0e0;color:#7f0000}.mensaje.info{display:block;background:#e3f2fd;color:#0d47a1}.tabla-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}table{width:100%;border-collapse:collapse;min-width:950px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:center;vertical-align:middle}th{background:#eef3fb}.nombre{position:sticky;left:0;background:#fff;text-align:left;z-index:2;min-width:170px}th.nombre{background:#eef3fb;z-index:3}.pick{font-weight:bold;border-radius:8px;padding:7px 10px;display:inline-block;min-width:38px}.pendiente{background:var(--amarillo);color:#795548}.acierto{background:var(--verde);color:var(--verdeTxt)}.fallo{background:var(--gris);color:#333}.partidos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.partido-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px}.equipo{font-weight:bold;text-align:center}.escudo{width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-right:6px}.equipo-row{display:flex;align-items:center;justify-content:center;gap:6px}.equipos-usados{margin:10px 0;padding:10px;border-radius:10px;font-weight:bold}.equipos-ok{background:#d7f5dd;color:#145a22}.equipos-bad{background:#ffe0e0;color:#7f0000}.vs{text-align:center;color:var(--azul);font-weight:bold;margin:5px}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3fb;color:var(--azul);font-weight:bold}.led{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c62828;box-shadow:0 0 9px #c62828;animation:pulse 1s infinite;margin-right:5px}@keyframes pulse{50%{opacity:.3}}.estado-ok{background:#c8e6c9;color:#0b5d1e}.estado-warn{background:#fff8e1;color:#795548}.estado-live{background:#ffebee;color:#c62828}.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto)}header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;text-align:center;padding:18px 10px}h1{margin:0;font-size:26px}.contenedor{max-width:1350px;margin:auto;padding:12px}.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.box,.card{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.box{text-align:center}.small{font-size:13px;color:#667085}.num{font-size:22px;font-weight:bold;color:var(--azul)}.tabs,.subtabs{display:flex;gap:8px;overflow:auto;margin:12px 0}.tabs button,.subtabs button,button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer;white-space:nowrap}.tabs button,.subtabs button{background:#e3e8ef;color:#111}.tabs button.activo,.subtabs button.activo,.btn-primary{background:var(--azul);color:#fff}.btn-green{background:#2e7d32;color:#fff}.btn-red{background:#c62828;color:#fff}.btn-yellow{background:#fbc02d;color:#111}.btn-gray{background:#607d8b;color:#fff}button:disabled{opacity:.6;cursor:not-allowed}.seccion,.admin-sub{display:none}.seccion.activa,.admin-sub.activa{display:block}input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:8px;font-size:15px}label{font-weight:bold;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.mensaje{display:none;padding:12px;border-radius:10px;margin:10px 0;font-weight:bold}.mensaje.ok{display:block;background:#d7f5dd;color:#145a22}.mensaje.error{display:block;background:#ffe0e0;color:#7f0000}.mensaje.info{display:block;background:#e3f2fd;color:#0d47a1}.tabla-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}table{width:100%;border-collapse:collapse;min-width:950px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:center;vertical-align:middle}th{background:#eef3fb}.nombre{position:sticky;left:0;background:#fff;text-align:left;z-index:2;min-width:170px}th.nombre{background:#eef3fb;z-index:3}.pick{font-weight:bold;border-radius:8px;padding:7px 10px;display:inline-block;min-width:38px}.pendiente{background:var(--amarillo);color:#795548}.acierto{background:var(--verde);color:var(--verdeTxt)}.fallo{background:var(--gris);color:#333}.partidos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.partido-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px}.equipo{font-weight:bold;text-align:center}.escudo{width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-right:6px}.equipo-row{display:flex;align-items:center;justify-content:center;gap:6px}.equipos-usados{margin:10px 0;padding:10px;border-radius:10px;font-weight:bold}.equipos-ok{background:#d7f5dd;color:#145a22}.equipos-bad{background:#ffe0e0;color:#7f0000}.vs{text-align:center;color:var(--azul);font-weight:bold;margin:5px}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3fb;color:var(--azul);font-weight:bold}.led{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c62828;box-shadow:0 0 9px #c62828;animation:pulse 1s infinite;margin-right:5px}@keyframes pulse{50%{opacity:.3}}.estado-ok{background:#c8e6c9;color:#0b5d1e}.estado-warn{background:#fff8e1;color:#795548}.estado-live{background:#ffebee;color:#c62828}.estado-prox{background:#e3f2fd;color:#0d47a1}
+.estado-flow{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.estado-flow span{font-size:11px;font-weight:bold;padding:4px 7px;border-radius:999px;background:#eef3fb;color:#607d8b;border:1px solid #d6dbe3}
+.estado-flow span.activo{background:#0d47a1;color:#fff;border-color:#0d47a1;box-shadow:0 2px 8px rgba(13,71,161,.25)}
+.header-logo{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.header-logo img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+.header-logo h1{margin:0;font-size:28px;line-height:1.05}
+.header-logo .header-sub{font-size:14px;opacity:.92;margin-top:3px}
+.contador-box{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.1;min-width:92px;max-width:120px;white-space:normal;text-align:center}
+.contador-label{display:block;font-size:12px;font-weight:900;line-height:1.1}
+.contador-tiempo{display:block;font-size:15px;font-weight:900;line-height:1.15;white-space:nowrap}
+.match-status .contador-box{padding:2px 0}
+.mh-partido .contador-box{min-width:64px;max-width:72px}
+.mh-partido .contador-label{font-size:10px}
+.mh-partido .contador-tiempo{font-size:11px}
+@media(max-width:760px){.header-logo img{width:58px;height:58px}.header-logo h1{font-size:22px}.header-logo .header-sub{font-size:12px}.contador-tiempo{font-size:14px}}
+body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25))}
+.logo-campeon{width:115px;height:115px;object-fit:contain;display:block;margin:0 auto 8px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
+.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
 .vista-movil{display:none}
 @media(max-width:760px){
   .quiniela-desktop{display:none!important}
@@ -321,6 +341,9 @@ body.dark .badge{background:#1d3352;color:#d9ecff}
 body.dark .estado-ok{background:#14532d;color:#dcfce7}
 body.dark .estado-warn{background:#513f12;color:#fff0bd}
 body.dark .estado-live{background:#4a1414;color:#ffd0d0}
+body.dark .estado-prox{background:#0f2d52;color:#bfdbfe}
+body.dark .estado-flow span{background:#182235;color:#b6c2d6;border-color:#31405c}
+body.dark .estado-flow span.activo{background:#60a5fa;color:#07111f;border-color:#60a5fa}
 body.dark .match-score{color:#fff!important}
 body.dark .menu-btn{background:#0f1b2d;color:#fff;border:1px solid #31445f}
 body.dark .pronostico-card,
@@ -361,7 +384,7 @@ body.dark .ranking-row{border-color:#26364c!important}
   </div>
 </div>
 
-<header><h1>🏆 Quiniela Copa MX V2</h1><div id="subtitulo">Cargando...</div></header>
+<header><div class="header-logo"><img src="logo.png" alt="Logo Quiniela Copa MX"><div><h1>Quiniela Copa MX</h1><div class="header-sub" id="subtitulo">Cargando...</div></div></div></header>
 <div class="contenedor">
  <div class="resumen">
   <div class="box"><div class="small">Jornada activa</div><div class="num" id="rJornada">-</div></div>
@@ -432,7 +455,36 @@ function equipoMini(nombre,clase){
   return `<div class="match-team ${clase}">${clase==='local'?`<span>${esc(nombre||'-')}</span>${escudo(nombre)}`:`${escudo(nombre)}<span>${esc(nombre||'-')}</span>`}</div>`;
 }
 function resFrom(gl,gv){gl=Number(gl);gv=Number(gv);if(Number.isNaN(gl)||Number.isNaN(gv))return null;return gl>gv?'L':gl<gv?'V':'E'}
-function estadoPartido(p){if(p.finalizado&&p.resultado)return['✅ Finalizado','estado-ok'];if(!p.fecha_partido)return['Sin fecha','estado-warn'];const now=new Date(),ini=new Date(p.fecha_partido),fin=new Date(ini.getTime()+120*60000);if(now<ini){let ms=ini-now, m=Math.floor(ms/60000),d=Math.floor(m/1440),h=Math.floor((m%1440)/60),mi=m%60;return[`Inicia en ${d?d+'d ':''}${h}h ${mi}m`,''];}if(now<=fin)return['<span class="led"></span>EN VIVO','estado-live'];return['⏳ En espera de resultados','estado-warn']}
+function textoFalta(ms){
+  if(ms<=0)return '0m';
+  let m=Math.floor(ms/60000), d=Math.floor(m/1440), h=Math.floor((m%1440)/60), mi=m%60;
+  let out=[];
+  if(d) out.push(d+'d');
+  if(h) out.push(h+'h');
+  out.push(mi+'m');
+  return out.join(' ');
+}
+function estadoClavePartido(p){
+  if(p.finalizado&&p.resultado)return 'finalizado';
+  if(!p.fecha_partido)return 'sinfecha';
+  const now=new Date(), ini=new Date(p.fecha_partido), fin=new Date(ini.getTime()+120*60000);
+  if(now<ini)return 'previo';
+  if(now<=fin)return 'vivo';
+  return 'espera';
+}
+function estadoPartido(p){
+  const clave=estadoClavePartido(p);
+  if(clave==='finalizado')return ['✅ Finalizado','estado-ok'];
+  if(clave==='sinfecha')return ['Sin fecha','estado-warn'];
+  if(clave==='previo')return ['⏱️ Inicia en '+textoFalta(new Date(p.fecha_partido)-new Date()),'estado-prox'];
+  if(clave==='vivo')return ['<span class="led"></span>EN VIVO','estado-live'];
+  return ['⏳ Esperando resultado oficial','estado-warn'];
+}
+function flujoPartidoHTML(p){
+  const c=estadoClavePartido(p);
+  const item=(clave,txt)=>`<span class="${c===clave?'activo':''}">${txt}</span>`;
+  return `<div class="estado-flow">${item('previo','⏱️ Antes')}${item('vivo','🔴 Vivo')}${item('espera','⏳ Espera')}${item('finalizado','✅ Final')}</div>`;
+}
 
 function bloqueada(){return !jornada || !jornada.activa || !!jornada.bloqueada || !!jornada.archivada}
 function usuariosJornada(){
@@ -488,7 +540,7 @@ function dibSelectorJornadas(){
 }
 async function verJornada(id){jornadaVistaId=id;await cargar()}
 function dibResumen(){let us=usuariosJornada(),pag=pagos.filter(x=>x.pagado).length,costo=jornada?.costo||20;$('subtitulo').textContent=jornada?`${jornada.nombre} · ${bloqueada()?'CERRADA':'ABIERTA'}`:'Sin jornada activa';$('rJornada').textContent=jornada?.nombre||'-';$('rCosto').textContent=money(costo);$('rBoletos').textContent=us.length;$('rPagados').textContent=pag;$('rBolsa').textContent=money(pag*costo);$('rEstado').textContent=bloqueada()?'Cerrada':'Abierta'}
-function headerPartido(p){const e=estadoPartido(p);return `<div><strong>P${p.numero_partido}</strong></div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><span class="badge ${e[1]}">${e[0]}</span>${p.resultado?`<div class="small"><b>${p.goles_local}-${p.goles_visitante}</b> Resultado ${p.resultado}</div>`:''}`}
+function headerPartido(p){const e=estadoPartido(p);return `<div><strong>P${p.numero_partido}</strong></div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div>${estadoPartidoHTML(p)}${p.resultado?`<div class="small"><b>${p.goles_local}-${p.goles_visitante}</b> Resultado ${p.resultado}</div>`:''}`}
 function clase(x,p){if(!x)return'pendiente';if(!p.resultado)return'pendiente';return x.pronostico===p.resultado?'acierto':'fallo'}
 function dibQuiniela(){
   let h='<thead><tr><th class="nombre">Boleto</th>'+partidos.map(p=>`<th>${headerPartido(p)}</th>`).join('')+'<th>Puntos</th><th>Acción</th></tr></thead><tbody>';
@@ -579,7 +631,8 @@ function cardPartidoNormal(p){
     </div>
     <div class="match-date">${fechaCortaPartido(p.fecha_partido)}</div>
     ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
-    <div class="match-status"><span class="badge ${e[1]}">${e[0]}</span></div>
+    <div class="match-status">${estadoPartidoHTML(p)}</div>
+    ${flujoPartidoHTML(p)}
   </div>`
 }
 function setFaseLiguilla(f){faseLiguillaVisible=f;dibPartidosLiguilla()}
@@ -597,7 +650,8 @@ function cardLiguilla(p){
     </div>
     <div class="match-date">${fechaCortaPartido(p.fecha_partido)}</div>
     ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
-    <div class="match-status"><span class="badge ${e[1]}">${e[0]}</span></div>
+    <div class="match-status">${estadoPartidoHTML(p)}</div>
+    ${flujoPartidoHTML(p)}
   </div>`
 }
 function bloqueLiguilla(titulo, nums){
@@ -620,8 +674,8 @@ function calcularCampeonFinal(){
 function campeonHTML(){
   const c=calcularCampeonFinal();
   if(!c)return '';
-  if(c.empate)return `<div class="campeon-box"><div class="campeon-copa">🏆</div><div class="campeon-titulo">Final en espera</div><div class="small">${esc(c.texto)}</div></div>`;
-  return `<div class="campeon-box"><div class="campeon-copa">🏆</div><div class="campeon-titulo">¡TENEMOS CAMPEÓN!</div><div class="campeon-equipo">${equipoHtml(c.equipo)}</div><div class="small">Marcador global: ${c.goles} - ${c.contra}</div></div>`;
+  if(c.empate)return `<div class="campeon-box"><img src="logo.png" class="logo-campeon" alt="Logo Quiniela Copa MX"><div class="campeon-copa">🏆</div><div class="campeon-titulo">Final en espera</div><div class="small">${esc(c.texto)}</div></div>`;
+  return `<div class="campeon-box"><img src="logo.png" class="logo-campeon" alt="Logo Quiniela Copa MX"><div class="campeon-copa">🏆</div><div class="campeon-titulo">¡TENEMOS CAMPEÓN!</div><div class="campeon-equipo">${equipoHtml(c.equipo)}</div><div class="small">Marcador global: ${c.goles} - ${c.contra}</div></div>`;
 }
 function dibPartidosLiguilla(){
   const tab=(id,txt)=>`<button class="${faseLiguillaVisible===id?'activo':''}" onclick="setFaseLiguilla('${id}')">${txt}</button>`;
@@ -680,45 +734,7 @@ function dibJornadas(){let html='';jornadas.forEach(j=>html+=`<div class="partid
 function dibResultados(){if(!jornada){$('formResultados').innerHTML='Sin jornada activa';return}$('formResultados').innerHTML=partidos.map(p=>`<div class="partido-card"><b>P${p.numero_partido}</b><div>${equipoHtml(p.local)}</div><div class="vs">VS</div><div>${equipoHtml(p.visitante)}</div><div class="grid"><div><label>Goles local</label><input id="gl_${p.id}" type="number" value="${p.goles_local??''}"></div><div><label>Goles visita</label><input id="gv_${p.id}" type="number" value="${p.goles_visitante??''}"></div></div><div class="small">Actual: ${p.resultado||'pendiente'}</div></div>`).join('')}
 function dibPagos(){let lista=usuariosJornada();let h='<thead><tr><th class="nombre">Boleto</th><th>Monto</th><th>Pagado</th><th>Observaciones</th></tr></thead><tbody>';lista.forEach(u=>{let pa=pago(u.id)||{};h+=`<tr><td class="nombre"><b>${u.nombre}</b></td><td>${money(pa.monto||jornada.costo||20)}</td><td><button class="${pa.pagado?'btn-green':'btn-gray'}" onclick="cambiarPago('${u.id}',${!pa.pagado})">${pa.pagado?'Pagado':'Pendiente'}</button></td><td><input id="obs_${u.id}" value="${pa.observaciones||''}" onchange="obsPago('${u.id}')"></td></tr>`});$('tablaPagos').innerHTML=h+'</tbody>'}
 async function cargarPrivado(redib=true){if(!esAdmin)return;let a=await db.from('auditoria').select('*').order('fecha',{ascending:false}).limit(80);if(!a.error)auditoria=a.data||[];dibAuditoria();if(redib)dibPagos()}
-
-function nombrePronostico(v){return v==='L'?'Local':v==='E'?'Empate':v==='V'?'Visita':(v||'-')}
-function audPicks(obj){return (obj&&Array.isArray(obj.picks))?obj.picks:[]}
-function audPronosticos(obj){return (obj&&Array.isArray(obj.pronosticos))?obj.pronosticos:[]}
-function resumenAuditoria(a){
-  const accion=String(a.accion||'MOVIMIENTO');
-  const antes=a.antes||{}, despues=a.despues||{};
-  const nombre=esc(despues.nombre || antes.usuario?.nombre || a.detalle || 'Boleto');
-  if(accion.includes('CREAR_BOLETO')){
-    const picks=audPicks(despues);
-    let cambios=picks.map(x=>`<div class="audit-change"><span class="audit-chip">P${x.partido}</span><span>Eligió</span><span class="audit-after">${nombrePronostico(x.pronostico)}</span></div>`).join('');
-    return `<div class="audit-summary"><b>${nombre}</b> creó un boleto.</div>${cambios}`;
-  }
-  if(accion.includes('EDITAR_BOLETO')){
-    const prev=audPronosticos(antes).slice().sort((a,b)=>{
-      const pa=partidos.find(p=>p.id===a.partido_id)?.numero_partido||0;
-      const pb=partidos.find(p=>p.id===b.partido_id)?.numero_partido||0;
-      return pa-pb;
-    });
-    const nuevos=audPicks(despues);
-    let cambios=[];
-    nuevos.forEach(n=>{
-      let old=prev.find(x=>(partidos.find(p=>p.id===x.partido_id)?.numero_partido)===n.partido);
-      const oldVal=old?.pronostico||'-';
-      if(oldVal!==n.pronostico) cambios.push({p:n.partido,old:oldVal,now:n.pronostico});
-    });
-    if(!cambios.length) cambios=[{p:'-',old:'Sin cambio visible',now:'Guardó nuevamente'}];
-    return `<div class="audit-summary"><b>${nombre}</b> modificó su boleto.</div>`+cambios.map(c=>`<div class="audit-change"><span class="audit-chip">P${c.p}</span><span class="audit-before">${nombrePronostico(c.old)}</span><span class="audit-arrow">→</span><span class="audit-after">${nombrePronostico(c.now)}</span></div>`).join('');
-  }
-  if(accion.includes('RESULT')) return `<div class="audit-summary">Se capturaron o actualizaron resultados.</div>`;
-  if(accion.includes('PAGO')) return `<div class="audit-summary">Se actualizó un pago.</div>`;
-  if(accion.includes('JORNADA')) return `<div class="audit-summary">Movimiento de jornada: ${esc(a.detalle||'')}</div>`;
-  return `<div class="audit-summary">${esc(a.detalle||accion)}</div>`;
-}
-function dibAuditoria(){
-  const cont=$('listaAuditoria'); if(!cont)return;
-  cont.innerHTML=auditoria.map(a=>`<div class="audit-card"><div class="audit-title"><div><div class="audit-action">${esc(a.accion||'MOVIMIENTO')}</div><div class="audit-time">${fecha(a.fecha)} · ${esc(a.actor||'')} · ${esc(a.dispositivo_id||'')}</div></div></div>${resumenAuditoria(a)}<details class="audit-details"><summary>Ver datos técnicos</summary><div class="audit-json">ANTES: ${esc(JSON.stringify(a.antes||{},null,2))}\nDESPUÉS: ${esc(JSON.stringify(a.despues||{},null,2))}</div></details></div>`).join('')||'<div class="audit-card">Sin movimientos</div>';
-}
-
+function dibAuditoria(){$('listaAuditoria').innerHTML=auditoria.map(a=>`<div class="audit-card"><b>${a.accion}</b><div class="small">${fecha(a.fecha)} · ${a.actor||''} · ${a.detalle||''}</div><div class="audit-json">ANTES: ${JSON.stringify(a.antes||{},null,2)}\nDESPUÉS: ${JSON.stringify(a.despues||{},null,2)}</div></div>`).join('')||'Sin movimientos'}
 async function leerFormJornada(){
   if(!esAdmin) throw new Error('Solo administrador');
   let num=+$('jNumero').value,costo=+$('jCosto').value||20,nombre=$('jNombre').value||(num===NUM_LIGUILLA?'Liguilla':`Jornada ${num}`);
