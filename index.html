@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiniela Copa MX V2</title>
+<meta name="description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
+<meta property="og:title" content="🏆 Quiniela Copa MX V2">
+<meta property="og:description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
+<meta property="og:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
+<meta property="og:image:secure_url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="🏆 Quiniela Copa MX V2">
+<meta name="twitter:description" content="Clasificación en vivo y liguilla">
+<meta name="twitter:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -387,6 +401,14 @@ body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b4530
 .backup-card h4{margin:0 0 8px}
 body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;color:#dbeafe}
 
+
+/* FIX24: Compartir WhatsApp y Open Graph */
+.share-box{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.share-btn{background:#25D366!important;color:#fff!important;border:0;box-shadow:0 3px 10px rgba(37,211,102,.25)}
+.share-btn:hover{filter:brightness(.96)}
+.share-note{font-size:12px;color:#667085}
+body.dark .share-note{color:#c9d4e6}
+
 </style>
 </head>
 <body>
@@ -417,7 +439,7 @@ body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;co
  <div id="msg" class="mensaje"></div>
  <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card"><h2>Registrar boleto</h2><p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
- <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
+ <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
@@ -1109,6 +1131,45 @@ function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo)
 function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
 
 
+/* =================== FIX24: COMPARTIR CLASIFICACIÓN WHATSAPP =================== */
+const URL_PUBLICA_QUINIELA = 'https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/';
+function medallaLugar(lugar){
+  if(lugar===1)return '🥇';
+  if(lugar===2)return '🥈';
+  if(lugar===3)return '🥉';
+  return lugar+'°';
+}
+function listaClasificacionCompartir(limite=10){
+  const lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
+  let lugar=0,pos=0,ant=null;
+  return lista.slice(0,limite).map(u=>{
+    pos++;
+    if(ant===null||u.a<ant)lugar=pos;
+    ant=u.a;
+    return `${medallaLugar(lugar)} ${u.nombre} — ${u.a}/${u.c} pts`;
+  });
+}
+function resumenPartidosCompartir(){
+  const finalizados=partidos.filter(p=>p.resultado);
+  if(!finalizados.length)return '';
+  return '\n\n⚽ Resultados capturados:\n'+finalizados.slice(0,9).map(p=>{
+    const gl=(p.goles_local??'-'), gv=(p.goles_visitante??'-');
+    return `P${p.numero_partido}: ${p.local} ${gl}-${gv} ${p.visitante}`;
+  }).join('\n');
+}
+async function compartirClasificacionWhatsApp(){
+  try{
+    const lineas=listaClasificacionCompartir(10);
+    if(!lineas.length){msg('Todavía no hay boletos para compartir.','info');return;}
+    const titulo=`🏆 QUINIELA COPA MX V2`;
+    const jornadaTxt=jornada?`\n${jornada.nombre}${jornada.activa?' ✅ Activa':''}${jornada.bloqueada?' 🔒 Cerrada':''}`:'';
+    const texto=`${titulo}${jornadaTxt}\n\n📊 Clasificación en vivo:\n${lineas.join('\n')}${resumenPartidosCompartir()}\n\n📲 Entra aquí:\n${URL_PUBLICA_QUINIELA}`;
+    const url='https://wa.me/?text='+encodeURIComponent(texto);
+    window.open(url,'_blank');
+  }catch(e){msg('No se pudo generar el mensaje de WhatsApp: '+e.message,'error')}
+}
+
+
 /* =================== FIX23: ESTADO VISUAL EN BOTONES =================== */
 let ultimoBotonAccion=null;
 document.addEventListener('click',function(e){
@@ -1196,6 +1257,7 @@ function aplicarEstadosABotones(){
   envolver('descargarRespaldo','⏳ Preparando descarga...');
   envolver('restaurarRespaldo','⏳ Restaurando respaldo...');
   envolver('loginAdmin','⏳ Entrando...');
+  envolver('compartirClasificacionWhatsApp','⏳ Generando mensaje...');
 }
 aplicarEstadosABotones();
 
