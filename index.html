@@ -376,6 +376,17 @@ body.dark .ranking-row{border-color:#26364c!important}
 .admin-maintenance h3{margin-top:0}
 .admin-maintenance .acciones{justify-content:flex-start}
 body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b45309}
+/* FIX22: respaldos */
+.btn-loading{position:relative;box-shadow:0 0 0 3px rgba(13,71,161,.12) inset}
+.btn-loading::after{content:"";display:inline-block;width:12px;height:12px;margin-left:8px;border:2px solid rgba(255,255,255,.65);border-top-color:transparent;border-radius:50%;animation:girarBtn .8s linear infinite;vertical-align:-2px}
+@keyframes girarBtn{to{transform:rotate(360deg)}}
+
+.backup-status{background:rgba(13,71,161,.08);border:1px solid #bfdbfe;border-radius:12px;padding:10px;margin:10px 0;font-weight:bold}
+.backup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px}
+.backup-card{background:var(--card);border:1px solid var(--borde);border-radius:12px;padding:12px}
+.backup-card h4{margin:0 0 8px}
+body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;color:#dbeafe}
+
 </style>
 </head>
 <body>
@@ -410,8 +421,10 @@ body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b4530
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
- <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button><button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div>
-<div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
+ <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Respaldo manual</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button><button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button><button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div>
+
+<div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
+<div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div></section>
 </div>
 <script>
@@ -420,7 +433,7 @@ const SUPABASE_KEY="sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
 const ADMIN_USER="admin", ADMIN_PASS="QuinielaMx2026";
 const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[];
+let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[],respaldos=[];
 let editandoId=null, editandoJornadaId=null, jornadaVistaId=null;
 const MINUTOS_CIERRE_AUTOMATICO = 10;
 let revisandoCierreAutomatico = false;
@@ -963,9 +976,229 @@ async function reiniciarTorneo(){
 }
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:g.nombre,aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>x.nombre).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
+const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx'];
+function inicioSemanaRespaldo(){
+  const d=new Date();
+  const dia=d.getDay(); // domingo 0, lunes 1
+  const diff=(dia+6)%7;
+  const ini=new Date(d.getFullYear(),d.getMonth(),d.getDate()-diff,8,0,0,0);
+  return ini;
+}
+function semanaKeyRespaldo(fechaBase=new Date()){
+  const ini=inicioSemanaRespaldo();
+  const y=ini.getFullYear();
+  const onejan=new Date(y,0,1);
+  const week=Math.ceil((((ini-onejan)/86400000)+onejan.getDay()+1)/7);
+  return `${y}-S${String(week).padStart(2,'0')}`;
+}
+async function obtenerDatosRespaldo(){
+  const datos={meta:{app:'Quiniela Copa MX',version:'FIX23_BOTONES_ESTADO',fecha:new Date().toISOString(),semana:semanaKeyRespaldo()},tablas:{}};
+  for(const t of TABLAS_RESPALDO){
+    const r=await db.from(t).select('*');
+    if(r.error) throw new Error(`No pude leer ${t}: ${r.error.message}`);
+    datos.tablas[t]=r.data||[];
+  }
+  const eq=await db.from('equipos').select('*').order('nombre');
+  datos.tablas.equipos=eq.error?[]:(eq.data||[]);
+  return datos;
+}
+async function guardarRespaldo(tipo,automatico=false){
+  const datos=await obtenerDatosRespaldo();
+  datos.meta.tipo=tipo;
+  const payload={tipo,fecha:new Date().toISOString(),semana:semanaKeyRespaldo(),datos};
+  const r=await db.from('respaldos').upsert(payload,{onConflict:'tipo'}).select().single();
+  if(r.error) throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
+  if(automatico) await audSistema('RESPALDO_AUTO','Sistema actualizó el respaldo automático semanal',jornada?.id||null,{}, {tipo,semana:payload.semana});
+  else await aud('RESPALDO_MANUAL','Admin creó respaldo manual',null,{}, {tipo,semana:payload.semana});
+  return r.data;
+}
+async function revisarRespaldoAutomatico(){
+  try{
+    const inicio=inicioSemanaRespaldo();
+    if(Date.now()<inicio.getTime()) return;
+    const r=await db.from('respaldos').select('*').eq('tipo','AUTO_SEMANAL').maybeSingle();
+    if(r.error) return console.warn('Respaldos no disponibles:',r.error.message);
+    if(r.data && new Date(r.data.fecha).getTime()>=inicio.getTime()) return;
+    await guardarRespaldo('AUTO_SEMANAL',true);
+    await cargarEstadoRespaldos();
+  }catch(e){console.warn('Respaldo automático:',e.message)}
+}
+async function cargarEstadoRespaldos(){
+  const box=$('estadoRespaldos');
+  try{
+    const r=await db.from('respaldos').select('tipo,fecha,semana').order('tipo');
+    if(r.error) throw r.error;
+    respaldos=r.data||[];
+    if(box){
+      const auto=respaldos.find(x=>x.tipo==='AUTO_SEMANAL');
+      const man=respaldos.find(x=>x.tipo==='MANUAL');
+      box.innerHTML=`Último automático: <b>${auto?fecha(auto.fecha)+' · '+esc(auto.semana||''):'No existe'}</b><br>Último manual: <b>${man?fecha(man.fecha)+' · '+esc(man.semana||''):'No existe'}</b>`;
+    }
+  }catch(e){
+    if(box) box.innerHTML='Falta correr el SQL de respaldos o revisar permisos: '+esc(e.message);
+  }
+}
+async function crearRespaldoManual(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    msg('Creando respaldo manual...','info');
+    await guardarRespaldo('MANUAL',false);
+    await cargarEstadoRespaldos();
+    msg('Respaldo manual creado. Se reescribió el respaldo manual anterior.','ok');
+  }catch(e){msg('Error respaldo: '+e.message,'error')}
+}
+async function forzarRespaldoAutomatico(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    msg('Actualizando respaldo automático...','info');
+    await guardarRespaldo('AUTO_SEMANAL',true);
+    await cargarEstadoRespaldos();
+    msg('Respaldo automático actualizado manualmente.','ok');
+  }catch(e){msg('Error respaldo automático: '+e.message,'error')}
+}
+async function obtenerRespaldoGuardado(tipo){
+  const r=await db.from('respaldos').select('*').eq('tipo',tipo).maybeSingle();
+  if(r.error) throw r.error;
+  if(!r.data) throw new Error('No existe respaldo '+tipo);
+  return r.data;
+}
+async function descargarRespaldo(tipo){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    const r=await obtenerRespaldoGuardado(tipo);
+    const blob=new Blob([JSON.stringify(r.datos,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`quiniela_copamx_${tipo}_${(r.semana||'respaldo')}.json`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(a.href);
+    msg('Respaldo descargado','ok');
+  }catch(e){msg('Error al descargar respaldo: '+e.message,'error')}
+}
+async function restaurarRespaldo(tipo){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    const r=await obtenerRespaldoGuardado(tipo);
+    if(!confirm(`Restaurar respaldo ${tipo} del ${fecha(r.fecha)}? Esto reemplazará jornadas, boletos, partidos, pronósticos, pagos, fama, auditoría y tabla general. Equipos y escudos se conservan.`))return;
+    const txt=prompt('Para confirmar escribe: RESTAURAR RESPALDO');
+    if(txt!=='RESTAURAR RESPALDO')return msg('Restauración cancelada','info');
+    const datos=r.datos?.tablas||{};
+    await db.from('pronosticos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('pagos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('fama').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('auditoria').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('partidos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('usuarios').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('jornadas').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    const orden=['jornadas','usuarios','partidos','pronosticos','pagos','fama','tabla_liga_mx','auditoria'];
+    for(const t of orden){
+      const arr=datos[t]||[];
+      if(arr.length){
+        const ins=await db.from(t).insert(arr);
+        if(ins.error) throw new Error(`Error restaurando ${t}: ${ins.error.message}`);
+      }
+    }
+    jornadaVistaId=null;editandoId=null;editandoJornadaId=null;
+    await cargar();
+    msg('Respaldo restaurado correctamente','ok');
+  }catch(e){msg('Error al restaurar: '+e.message,'error')}
+}
+
 function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
 function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo);localStorage.setItem('quiniela_copamx_modo_oscuro',activo?'1':'0')}
 function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
+
+
+/* =================== FIX23: ESTADO VISUAL EN BOTONES =================== */
+let ultimoBotonAccion=null;
+document.addEventListener('click',function(e){
+  const b=e.target.closest('button');
+  if(b) ultimoBotonAccion=b;
+},true);
+
+function textoBotonTerminado(textoTrabajo){
+  if(textoTrabajo.includes('respaldo')) return '✅ Respaldo listo';
+  if(textoTrabajo.includes('Restaurando')) return '✅ Restaurado';
+  if(textoTrabajo.includes('Recalculando')) return '✅ Recalculado';
+  if(textoTrabajo.includes('Reiniciando')) return '✅ Reiniciado';
+  if(textoTrabajo.includes('Guardando resultados')) return '✅ Resultados guardados';
+  if(textoTrabajo.includes('Guardando jornada')) return '✅ Jornada guardada';
+  if(textoTrabajo.includes('Guardando boleto')) return '✅ Boleto guardado';
+  if(textoTrabajo.includes('Activando')) return '✅ Activada';
+  if(textoTrabajo.includes('Cerrando')) return '✅ Cerrada';
+  if(textoTrabajo.includes('Abriendo')) return '✅ Abierta';
+  if(textoTrabajo.includes('Borrando')) return '✅ Borrado';
+  if(textoTrabajo.includes('pagos')||textoTrabajo.includes('pago')) return '✅ Pago actualizado';
+  return '✅ Listo';
+}
+
+async function ejecutarConEstadoBoton(textoTrabajo, tarea){
+  const btn=ultimoBotonAccion;
+  const usarBtn=btn && btn.tagName==='BUTTON' && !btn.disabled;
+  let original='';
+  if(usarBtn){
+    original=btn.innerHTML;
+    btn.dataset.textoOriginal=original;
+    btn.disabled=true;
+    btn.classList.add('btn-loading');
+    btn.innerHTML=textoTrabajo;
+  }
+  try{
+    const res=await tarea();
+    if(usarBtn){
+      btn.innerHTML=textoBotonTerminado(textoTrabajo);
+      setTimeout(()=>{
+        if(btn.dataset.textoOriginal){
+          btn.innerHTML=btn.dataset.textoOriginal;
+          btn.disabled=false;
+          btn.classList.remove('btn-loading');
+          delete btn.dataset.textoOriginal;
+        }
+      },1400);
+    }
+    return res;
+  }catch(e){
+    if(usarBtn){
+      btn.innerHTML='❌ Error';
+      setTimeout(()=>{
+        btn.innerHTML=original;
+        btn.disabled=false;
+        btn.classList.remove('btn-loading');
+        delete btn.dataset.textoOriginal;
+      },1800);
+    }
+    throw e;
+  }
+}
+
+function aplicarEstadosABotones(){
+  const envolver=(nombre,texto)=>{
+    const fn=window[nombre];
+    if(typeof fn!=='function' || fn.__conEstado)return;
+    const nuevo=function(...args){
+      return ejecutarConEstadoBoton(texto,()=>fn.apply(this,args));
+    };
+    nuevo.__conEstado=true;
+    window[nombre]=nuevo;
+  };
+  envolver('guardarBoleto','⏳ Guardando boleto...');
+  envolver('crearJornada','⏳ Guardando jornada...');
+  envolver('borrarJornada','⏳ Borrando jornada...');
+  envolver('activarJornada','⏳ Activando jornada...');
+  envolver('toggleJornada','⏳ Actualizando jornada...');
+  envolver('guardarResultados','⏳ Guardando resultados...');
+  envolver('cerrarYFama','⏳ Cerrando jornada...');
+  envolver('cambiarPago','⏳ Actualizando pago...');
+  envolver('forzarRecalculoTabla','⏳ Recalculando tabla...');
+  envolver('reiniciarTorneo','⏳ Reiniciando torneo...');
+  envolver('crearRespaldoManual','⏳ Generando respaldo...');
+  envolver('forzarRespaldoAutomatico','⏳ Generando respaldo...');
+  envolver('descargarRespaldo','⏳ Preparando descarga...');
+  envolver('restaurarRespaldo','⏳ Restaurando respaldo...');
+  envolver('loginAdmin','⏳ Entrando...');
+}
+aplicarEstadosABotones();
+
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
 
 async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();setInterval(async()=>{const cambio=await revisarCierreAutomatico();if(cambio)await cargar();else{dibResumen();dibPartidos()}},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
