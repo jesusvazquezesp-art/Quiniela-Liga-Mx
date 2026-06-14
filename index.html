@@ -93,29 +93,65 @@
 .tombola-box{background:#eef7ff;border:1px solid #bddcff;border-radius:16px;padding:12px;margin:12px 0}
 @media(max-width:760px){.liguilla-grid{grid-template-columns:1fr}.campeon-titulo{font-size:24px}.campeon-copa{font-size:50px}}
 
-/* FIX7: Sección Partidos estilo marcador alineado */
-.match-card{padding:14px}
+/* FIX8: Sección Partidos y Liguilla con marcador claro */
+.match-card{padding:14px;overflow:visible}
 .match-num{text-align:center;margin-bottom:10px}
-.match-line{display:grid;grid-template-columns:minmax(0,1fr) 46px 42px 46px minmax(0,1fr);align-items:center;gap:6px}
-.match-team{display:flex;align-items:center;gap:6px;font-weight:bold;min-width:0}
+.match-line{
+  display:grid;
+  grid-template-columns:minmax(115px,1fr) 50px 38px 50px minmax(115px,1fr);
+  align-items:center;
+  gap:7px;
+  overflow:visible;
+}
+.match-team{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+  min-width:0;
+  overflow:visible;
+  line-height:1.15;
+}
 .match-team.local{justify-content:flex-end;text-align:right}
 .match-team.visita{justify-content:flex-start;text-align:left}
-.match-team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.match-team span{
+  overflow:visible;
+  text-overflow:clip;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:normal;
+}
 .match-team .escudo{width:30px;height:30px;margin:0;flex:0 0 auto}
-.match-score{height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#eef3fb;color:#0d47a1}
-.score-win{background:#c8e6c9;color:#0b5d1e}
-.score-lose{background:#ffcdd2;color:#7f0000}
-.score-draw{background:#e0e0e0;color:#333}
+.match-score{
+  height:44px;
+  min-width:50px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:23px;
+  font-weight:900;
+  background:#0d47a1;
+  color:#fff;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.16);
+}
+.score-win{background:#2e7d32!important;color:#fff!important}
+.score-lose{background:#c62828!important;color:#fff!important}
+.score-draw{background:#757575!important;color:#fff!important}
 .match-vs{text-align:center;font-weight:900;color:#0d47a1}
 .match-date{text-align:center;margin-top:12px;font-weight:bold;color:#334155}
 .match-status{text-align:center;margin-top:8px}
 .match-status .badge{font-size:13px}
+.liguilla-card.match-card{background:#f8fafc;text-align:initial}
 @media(max-width:760px){
   .partidos-grid{grid-template-columns:1fr}
-  .match-line{grid-template-columns:minmax(0,1fr) 38px 34px 38px minmax(0,1fr);gap:4px}
-  .match-score{height:38px;font-size:20px;border-radius:10px}
-  .match-team{font-size:14px}
-  .match-team .escudo{width:24px;height:24px}
+  .match-line{
+    grid-template-columns:minmax(92px,1fr) 42px 30px 42px minmax(92px,1fr);
+    gap:4px;
+  }
+  .match-score{height:40px;min-width:42px;font-size:20px;border-radius:10px}
+  .match-team{font-size:13px}
+  .match-team .escudo{width:23px;height:23px}
 }
 
 </style>
@@ -333,8 +369,19 @@ function setFaseLiguilla(f){faseLiguillaVisible=f;dibPartidosLiguilla()}
 function partidosPorNums(nums){return nums.map(n=>partidos.find(p=>Number(p.numero_partido)===n)).filter(Boolean)}
 function cardLiguilla(p){
   let e=estadoPartido(p);
-  let marcador=p.finalizado&&p.goles_local!==null&&p.goles_visitante!==null?`<div style="margin-top:8px"><b>${p.goles_local} - ${p.goles_visitante}</b></div>`:'';
-  return `<div class="liguilla-card"><div class="badge">${esc(partidoLiguillaNombre(Number(p.numero_partido)))}</div><div class="equipo">${equipoHtml(p.local)}</div><div class="vs">VS</div><div class="equipo">${equipoHtml(p.visitante)}</div><div class="small">${fecha(p.fecha_partido)}<br>${esc(p.estadio||'')}</div><div style="margin-top:8px"><span class="badge ${e[1]}">${e[0]}</span></div>${marcador}</div>`
+  return `<div class="liguilla-card match-card">
+    <div class="match-num"><span class="badge">${esc(partidoLiguillaNombre(Number(p.numero_partido)))}</span></div>
+    <div class="match-line">
+      ${equipoMini(p.local,'local')}
+      <div class="match-score ${claseScorePartido(p,'local')}">${scorePartido(p,'local')}</div>
+      <div class="match-vs">VS</div>
+      <div class="match-score ${claseScorePartido(p,'visita')}">${scorePartido(p,'visita')}</div>
+      ${equipoMini(p.visitante,'visita')}
+    </div>
+    <div class="match-date">${fechaCortaPartido(p.fecha_partido)}</div>
+    ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
+    <div class="match-status"><span class="badge ${e[1]}">${e[0]}</span></div>
+  </div>`
 }
 function bloqueLiguilla(titulo, nums){
   let ps=partidosPorNums(nums);
