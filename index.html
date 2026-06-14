@@ -452,7 +452,6 @@ body.dark .share-note{color:#c9d4e6}
 <script>
 const SUPABASE_URL="https://pijlscldaveqmcxlcebz.supabase.co";
 const SUPABASE_KEY="sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
-const ADMIN_USER="admin", ADMIN_PASS="QuinielaMx2026";
 const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[],respaldos=[];
@@ -834,16 +833,44 @@ function aplicarEstadoAdmin(){
   if(login) login.style.display=esAdmin?'none':'block';
   if(panel) panel.style.display=esAdmin?'block':'none';
 }
-function loginAdmin(){
-  if($('adminUser').value===ADMIN_USER&&$('adminPass').value===ADMIN_PASS){
+async function loginAdmin(){
+  const usuario=($('adminUser')?.value||'').trim();
+  const password=$('adminPass')?.value||'';
+  if(!usuario||!password){msg('Escribe usuario y contraseña.','error');return}
+
+  let valido=false;
+  let errorRpc=null;
+
+  try{
+    const {data,error}=await db.rpc('validar_admin',{p_usuario:usuario,p_password:password});
+    if(error) errorRpc=error;
+    if(data===true) valido=true;
+  }catch(e){ errorRpc=e; }
+
+  if(!valido){
+    try{
+      const {data:cfg,error:cfgErr}=await db.from('configuracion')
+        .select('admin_usuario,pin_admin')
+        .limit(1)
+        .maybeSingle();
+      if(!cfgErr && cfg && String(cfg.admin_usuario||'admin')===usuario && String(cfg.pin_admin||'')===password){
+        valido=true;
+      }
+    }catch(e){ console.warn('Fallback configuracion falló:',e); }
+  }
+
+  if(valido){
     esAdmin=true;
     localStorage.setItem(ADMIN_SESSION_KEY,'1');
     aplicarEstadoAdmin();
     dibujar();
-    cargarPrivado(false);
-    msg('Admin activo. Permanecerá abierto hasta que cierres sesión.','ok');
-  }else msg('Usuario o contraseña incorrectos','error')
+    msg('Admin activo.','ok');
+  }else{
+    if(errorRpc) console.warn('RPC validar_admin falló:',errorRpc);
+    msg('Usuario o contraseña incorrectos. Revisa admin_config o configuracion.pin_admin.','error');
+  }
 }
+
 function logoutAdmin(){
   esAdmin=false;
   localStorage.removeItem(ADMIN_SESSION_KEY);
