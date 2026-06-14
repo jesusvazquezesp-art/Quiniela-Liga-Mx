@@ -370,6 +370,12 @@ body.dark .ranking-row{border-color:#26364c!important}
 
 @media(max-width:760px){.menu-flotante{top:8px;right:8px}.menu-btn{width:42px;height:38px;font-size:22px}.menu-panel{width:220px}}
 
+
+/* FIX19: botones admin de mantenimiento */
+.admin-maintenance{border:1px solid #f59e0b;background:rgba(245,158,11,.10);border-radius:14px;padding:14px;margin-top:14px}
+.admin-maintenance h3{margin-top:0}
+.admin-maintenance .acciones{justify-content:flex-start}
+body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b45309}
 </style>
 </head>
 <body>
@@ -404,7 +410,9 @@ body.dark .ranking-row{border-color:#26364c!important}
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
- <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div></div></section>
+ <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div>
+<div class="admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div>
+</div></section>
 </div>
 <script>
 const SUPABASE_URL="https://pijlscldaveqmcxlcebz.supabase.co";
@@ -817,7 +825,7 @@ async function borrarJornada(id){try{if(!esAdmin)return msg('Solo administrador'
   await db.from('fama').delete().eq('jornada_id',id);
   await db.from('jornadas').delete().eq('id',id);
   for(const uid of uids){await db.from('usuarios').delete().eq('id',uid)}
-  await aud('BORRAR_JORNADA',`Admin borró ${j?.nombre||id}`); editandoJornadaId=null; await cargar(); msg('Jornada borrada','ok')
+  await aud('BORRAR_JORNADA',`Admin borró ${j?.nombre||id}`); await recalcularTablaLiga(); editandoJornadaId=null; await cargar(); msg('Jornada borrada y tabla recalculada','ok')
 }catch(e){msg('Error al borrar: '+e.message,'error')}}
 async function activarJornada(id){if(!esAdmin)return msg('Solo administrador','error');jornadaVistaId=id;await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');await db.from('jornadas').update({activa:true}).eq('id',id);await aud('ACTIVAR_JORNADA','Admin activó jornada');await cargar();msg('Jornada activada','ok')}
 async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrador','error');await db.from('jornadas').update({bloqueada:cerrar}).eq('id',id);await aud(cerrar?'CERRAR_QUINIELA':'ABRIR_QUINIELA',cerrar?'Admin cerró quiniela':'Admin abrió quiniela');await cargar();msg(cerrar?'Quiniela cerrada':'Quiniela abierta','ok')}
@@ -825,7 +833,64 @@ async function guardarResultados(){try{if(!esAdmin)return msg('Solo administrado
 async function actualizarAciertos(){let ps=await db.from('partidos').select('*').eq('jornada_id',jornada.id);let prs=await db.from('pronosticos').select('*').eq('jornada_id',jornada.id);for(const x of prs.data||[]){let p=(ps.data||[]).find(y=>y.id===x.partido_id);if(p&&p.resultado)await db.from('pronosticos').update({acierto:x.pronostico===p.resultado}).eq('id',x.id)}}
 async function cambiarPago(uid,val){if(!esAdmin)return msg('Solo administrador','error');let pa=pago(uid);if(pa)await db.from('pagos').update({pagado:val,fecha_pago:val?new Date().toISOString():null,observaciones:$('obs_'+uid)?.value||pa.observaciones||''}).eq('id',pa.id);else await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:val,fecha_pago:val?new Date().toISOString():null});await aud(val?'MARCAR_PAGADO':'QUITAR_PAGO','Admin modificó pago',uid);await cargar();msg('Pago actualizado','ok')}
 async function obsPago(uid){let pa=pago(uid);if(pa)await db.from('pagos').update({observaciones:$('obs_'+uid).value}).eq('id',pa.id)}
-async function recalcularTablaLiga(){let all=await db.from('partidos').select('*').eq('finalizado',true);let map={};(all.data||[]).forEach(m=>{if(m.goles_local===null||m.goles_visitante===null)return;[m.local,m.visitante].forEach(c=>{if(!map[c])map[c]={club:c,pj:0,g:0,e:0,p:0,gf:0,gc:0,pts:0,ult:[]}});let gl=+m.goles_local,gv=+m.goles_visitante,L=map[m.local],V=map[m.visitante];L.pj++;V.pj++;L.gf+=gl;L.gc+=gv;V.gf+=gv;V.gc+=gl;if(gl>gv){L.g++;L.pts+=3;V.p++;L.ult.push('G');V.ult.push('P')}else if(gl<gv){V.g++;V.pts+=3;L.p++;V.ult.push('G');L.ult.push('P')}else{L.e++;V.e++;L.pts++;V.pts++;L.ult.push('E');V.ult.push('E')}});let filas=Object.values(map).map(x=>({...x,dg:x.gf-x.gc,ultimos:x.ult.slice(-5).join(','),fase:''})).sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||a.club.localeCompare(b.club)).map((x,i)=>({...x,posicion:i+1,fase:i<8?'Liguilla':''}));for(const f of filas){let ex=await db.from('tabla_liga_mx').select('id').eq('club',f.club).maybeSingle();let reg={club:f.club,posicion:f.posicion,pj:f.pj,g:f.g,e:f.e,p:f.p,gf:f.gf,gc:f.gc,dg:f.dg,pts:f.pts,ultimos:f.ultimos,fase:f.fase,actualizado:new Date().toISOString()};if(ex.data)await db.from('tabla_liga_mx').update(reg).eq('id',ex.data.id);else await db.from('tabla_liga_mx').insert(reg)}}
+async function recalcularTablaLiga(){
+  // Recalcula desde cero para evitar que se quede información vieja cuando se borran resultados o jornadas.
+  let all=await db.from('partidos').select('*').eq('finalizado',true);
+  if(all.error) throw all.error;
+  let map={};
+  (equipos||[]).forEach(e=>{map[e.nombre]={club:e.nombre,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,ult:[]}});
+  (all.data||[]).forEach(m=>{
+    if(m.goles_local===null||m.goles_visitante===null||m.goles_local===undefined||m.goles_visitante===undefined)return;
+    [m.local,m.visitante].forEach(c=>{if(!map[c])map[c]={club:c,pj:0,g:0,e:0,p:0,gf:0,gc:0,dg:0,pts:0,ult:[]}});
+    let gl=+m.goles_local,gv=+m.goles_visitante,L=map[m.local],V=map[m.visitante];
+    L.pj++;V.pj++;L.gf+=gl;L.gc+=gv;V.gf+=gv;V.gc+=gl;
+    if(gl>gv){L.g++;L.pts+=3;V.p++;L.ult.push('G');V.ult.push('P')}
+    else if(gl<gv){V.g++;V.pts+=3;L.p++;V.ult.push('G');L.ult.push('P')}
+    else{L.e++;V.e++;L.pts++;V.pts++;L.ult.push('E');V.ult.push('E')}
+  });
+  let filas=Object.values(map).map(x=>({...x,dg:x.gf-x.gc,ultimos:x.ult.slice(-5).join(','),fase:''}))
+    .sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||a.club.localeCompare(b.club))
+    .map((x,i)=>({...x,posicion:i+1,fase:i<8&&x.pj>0?'Liguilla':''}));
+  // Limpia la tabla para que no queden datos viejos.
+  await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+  if(filas.length){
+    let regs=filas.map(f=>({club:f.club,posicion:f.posicion,pj:f.pj,g:f.g,e:f.e,p:f.p,gf:f.gf,gc:f.gc,dg:f.dg,pts:f.pts,ultimos:f.ultimos,fase:f.fase,actualizado:new Date().toISOString()}));
+    let ins=await db.from('tabla_liga_mx').insert(regs);
+    if(ins.error) throw ins.error;
+  }
+}
+
+async function forzarRecalculoTabla(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    await recalcularTablaLiga();
+    await cargar();
+    await aud('RECALCULAR_TABLA','Admin forzó actualización de tabla general');
+    msg('Tabla general recalculada desde cero','ok');
+  }catch(e){msg('Error al recalcular tabla: '+e.message,'error')}
+}
+
+async function reiniciarTorneo(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    let c1=confirm('Esto borrará boletos, jornadas, partidos, resultados, pagos, fama y auditoría. Se conservan equipos y escudos. ¿Continuar?');
+    if(!c1)return;
+    let txt=prompt('Para confirmar escribe exactamente: REINICIAR TORNEO');
+    if(txt!=='REINICIAR TORNEO')return msg('Reinicio cancelado','info');
+    // Orden por relaciones.
+    await db.from('pronosticos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('pagos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('fama').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('auditoria').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('partidos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('usuarios').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('jornadas').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    jornada=null;jornadas=[];partidos=[];usuarios=[];pronosticos=[];pagos=[];auditoria=[];fama=[];tablaLiga=[];
+    await cargar();
+    msg('Torneo reiniciado. Equipos y escudos se conservaron.','ok');
+  }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
+}
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:g.nombre,aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>x.nombre).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
 function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
