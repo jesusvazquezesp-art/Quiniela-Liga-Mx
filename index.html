@@ -27,7 +27,7 @@
 @media(max-width:760px){.header-logo img{width:58px;height:58px}.header-logo h1{font-size:22px}.header-logo .header-sub{font-size:12px}.contador-tiempo{font-size:14px}}
 body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25))}
 .logo-campeon{width:115px;height:115px;object-fit:contain;display:block;margin:0 auto 8px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
-.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
+.acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.auto-cierre-info{margin-top:8px;padding:9px 10px;border-radius:10px;background:#fff8e1;color:#795548;font-weight:bold;text-align:center}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
 .vista-movil{display:none}
 @media(max-width:760px){
   .quiniela-desktop{display:none!important}
@@ -404,7 +404,7 @@ body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b4530
   <button class="activo" onclick="tab('quiniela',this)">📝 Quiniela</button><button onclick="tab('clasificacion',this)">🏆 Clasificación</button><button onclick="tab('partidos',this)">⚽ Partidos</button><button onclick="tab('tablaLiga',this)">📊 Tabla general</button><button onclick="tab('fama',this)">👑 Fama</button><button onclick="tab('admin',this)">🔒 Admin</button>
  </div>
  <div id="msg" class="mensaje"></div>
- <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div></div>
+ <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card"><h2>Registrar boleto</h2><p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
  <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
@@ -422,6 +422,8 @@ const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[];
 let editandoId=null, editandoJornadaId=null, jornadaVistaId=null;
+const MINUTOS_CIERRE_AUTOMATICO = 10;
+let revisandoCierreAutomatico = false;
 const NUM_LIGUILLA=18;
 const $=id=>document.getElementById(id);
 function msg(t,tipo='info'){const m=$('msg');m.textContent=t;m.className='mensaje '+tipo;setTimeout(()=>m.className='mensaje',6000)}
@@ -540,6 +542,69 @@ function aciertos(usuarioId){
   return {a,c};
 }
 
+
+function primerPartidoJornada(lista){
+  return (lista||[])
+    .filter(p=>p.fecha_partido && !isNaN(new Date(p.fecha_partido)))
+    .sort((a,b)=>new Date(a.fecha_partido)-new Date(b.fecha_partido))[0] || null;
+}
+
+function proximaJornadaDespues(jActual){
+  if(!jActual) return null;
+  const n=Number(jActual.numero||0);
+  return [...jornadas]
+    .filter(j=>Number(j.numero||0)>n && !j.archivada)
+    .sort((a,b)=>Number(a.numero||0)-Number(b.numero||0))[0] || null;
+}
+
+async function audSistema(accion,detalle,jornadaId=null,antes={},despues={}){
+  try{
+    await db.from('auditoria').insert({
+      accion,detalle,usuario_id:null,jornada_id:jornadaId,
+      antes,despues,dispositivo_id:deviceId(),actor:'sistema'
+    });
+  }catch(e){console.warn('Auditoría sistema:',e)}
+}
+
+async function revisarCierreAutomatico(){
+  if(revisandoCierreAutomatico) return false;
+  revisandoCierreAutomatico=true;
+  try{
+    const activa = jornadas.find(j=>j.activa && !j.bloqueada && !j.archivada);
+    if(!activa) return false;
+
+    const ps = await db.from('partidos').select('*').eq('jornada_id',activa.id).order('fecha_partido',{ascending:true});
+    if(ps.error) throw ps.error;
+    const primero = primerPartidoJornada(ps.data||[]);
+    if(!primero) return false;
+
+    const cierreMs = new Date(primero.fecha_partido).getTime() - (MINUTOS_CIERRE_AUTOMATICO*60*1000);
+    const ahoraMs = Date.now();
+    if(ahoraMs < cierreMs) return false;
+
+    const siguiente = proximaJornadaDespues(activa);
+
+    await db.from('jornadas').update({activa:false,bloqueada:true}).eq('id',activa.id);
+    await audSistema('AUTO_CIERRE_JORNADA',`Sistema cerró ${activa.nombre} ${MINUTOS_CIERRE_AUTOMATICO} minutos antes del primer partido`,activa.id,{jornada:activa,primer_partido:primero},{bloqueada:true,activa:false});
+
+    if(siguiente){
+      await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');
+      await db.from('jornadas').update({activa:true,bloqueada:false,archivada:false}).eq('id',siguiente.id);
+      await audSistema('AUTO_ABRIR_JORNADA',`Sistema abrió ${siguiente.nombre} para nuevos boletos`,siguiente.id,{jornada_anterior:activa},{jornada_activa:siguiente});
+      if(!jornadaVistaId || jornadaVistaId===activa.id) jornadaVistaId=siguiente.id;
+      msg(`${activa.nombre} se cerró automáticamente y se abrió ${siguiente.nombre}.`, 'ok');
+    }else{
+      msg(`${activa.nombre} se cerró automáticamente. No hay siguiente jornada creada para abrir.`, 'info');
+    }
+    return true;
+  }catch(e){
+    console.error('Cierre automático:',e);
+    return false;
+  }finally{
+    revisandoCierreAutomatico=false;
+  }
+}
+
 async function aud(accion,detalle,usuario_id=null,antes={},despues={}){try{await db.from('auditoria').insert({accion,detalle,usuario_id,jornada_id:jornada?.id||null,antes,despues,dispositivo_id:deviceId(),actor:esAdmin?'admin':'usuario'})}catch(e){console.warn(e)}}
 async function cargar(){
  const [jorRes,eRes]=await Promise.all([
@@ -548,6 +613,11 @@ async function cargar(){
  ]);
  if(jorRes.error)throw jorRes.error;if(eRes.error)throw eRes.error;
  jornadas=jorRes.data||[];equipos=eRes.data||[];
+ const cambioAuto = await revisarCierreAutomatico();
+ if(cambioAuto){
+   const ref=await db.from('jornadas').select('*').order('numero',{ascending:true});
+   if(!ref.error) jornadas=ref.data||[];
+ }
  jornada = (jornadaVistaId ? jornadas.find(j=>j.id===jornadaVistaId) : null) || jornadas.find(j=>j.activa) || null;
  if(jornada){
   const [p,u,pr,pa,f,t]=await Promise.all([
@@ -563,7 +633,7 @@ async function cargar(){
  }else{partidos=[];usuarios=[];pronosticos=[];pagos=[]}
  dibujar()
 }
-function dibujar(){dibSelectorJornadas();dibResumen();dibQuiniela();dibClasificacion();dibPartidos();dibTablaLiga();dibFama();const br=$('btnRecalcPublicWrap'); if(br) br.style.display=esAdmin?'block':'none'; if(esAdmin){dibAdmin();cargarPrivado(false)}}
+function dibujar(){dibSelectorJornadas();dibResumen();dibQuiniela();dibClasificacion();dibPartidos();dibTablaLiga();dibFama();if(esAdmin){dibAdmin();cargarPrivado(false)}}
 function dibSelectorJornadas(){
  const cont=$('selectorJornadas'); if(!cont) return;
  let html='';
@@ -898,7 +968,7 @@ function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo)
 function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
 
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();setInterval(()=>{dibResumen();dibPartidos()},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();setInterval(async()=>{const cambio=await revisarCierreAutomatico();if(cambio)await cargar();else{dibResumen();dibPartidos()}},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
