@@ -24,6 +24,24 @@
   .pick-box.acierto{background:#c8e6c9;color:#0b5d1e}.pick-box.fallo{background:#e0e0e0;color:#333}
   .mobile-actions{display:flex;gap:8px;margin-top:10px}.mobile-actions button{flex:1}
   .resumen .box{padding:10px}.num{font-size:20px}
+  .ranking-mini{background:#fff;border-radius:16px;padding:12px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .ranking-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #edf0f5;font-weight:bold}
+  .ranking-row:last-child{border-bottom:0}
+  .boleto-list-card{padding:0;overflow:hidden}
+  .boleto-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px;list-style:none;cursor:pointer}
+  .boleto-summary::-webkit-details-marker{display:none}
+  .boleto-title{font-size:20px;font-weight:800}
+  .boleto-score{text-align:right;font-size:20px;font-weight:800;color:#0d47a1}
+  .boleto-body{padding:0 14px 14px}
+  .detalle-partido{border:1px solid #e5e7eb;border-radius:15px;padding:12px;margin:10px 0;background:#f8fafc}
+  .detalle-partido.acierto{background:#eaf7ed;border-color:#c8e6c9;color:#0b5d1e}
+  .detalle-partido.fallo{background:#f1f3f6;border-color:#d9dce2;color:#333}
+  .detalle-partido.pendiente{background:#fffaf0;border-color:#fff1c2;color:#5f5140}
+  .detalle-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+  .detalle-equipos{font-weight:bold;text-align:center;background:white;border-radius:12px;padding:10px;margin:8px 0}
+  .detalle-resultado{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .detalle-pill{background:white;border-radius:12px;padding:8px;text-align:center;font-weight:bold}
+  .detalle-pill.ok{background:#c8e6c9;color:#0b5d1e}.detalle-pill.bad{background:#e0e0e0;color:#333}
 }
 
 </style>
@@ -142,12 +160,53 @@ function dibQuinielaMovil(lista){
   const cont=$('vistaMovilQuiniela'); if(!cont) return;
   if(!jornada){cont.innerHTML='<div class="boleto-form-card">No hay jornada activa.</div>';return}
   let html='';
+
   if(!bloqueada()&&partidos.length===9){
     html+=`<div class="boleto-form-card"><h3>Nuevo boleto</h3><input id="mNuevoNombre" placeholder="Nombre / boleto"><input id="mNuevoTelefono" placeholder="Teléfono opcional"><div class="small" id="mModo">Nuevo boleto</div>`;
     partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
   }else{html+=`<div class="boleto-form-card"><b>Quiniela cerrada.</b></div>`}
-  lista.forEach(u=>{html+=`<div class="boleto-list-card"><div class="boleto-head"><div><b>${esc(u.nombre)}</b><div class="small">${dueño(u)?'📱 Este celular':'Solo lectura'}</div></div><div><b>${u.a}</b> / ${u.c}</div></div><div class="picks-grid">`;partidos.forEach(p=>{let x=pr(u.id,p.id);html+=`<div class="pick-box ${clase(x,p)}"><div class="small">P${p.numero_partido}</div>${x?.pronostico||'-'}</div>`});html+=`</div>${!bloqueada()&&(dueño(u)||esAdmin)?`<div class="mobile-actions"><button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar</button></div>`:''}</div>`});
+
+  // Clasificación rápida arriba para que en celular se vea quién va ganando.
+  let lugar=0,pos=0,ant=null;
+  const lugares={};
+  lista.forEach(u=>{pos++; if(ant===null||u.a<ant)lugar=pos; ant=u.a; lugares[u.id]=lugar;});
+  if(lista.length){
+    html+=`<div class="ranking-mini"><h3 style="margin:0 0 8px">🏆 Clasificación en vivo</h3>`;
+    lista.slice(0,6).forEach(u=>{let l=lugares[u.id]; html+=`<div class="ranking-row"><span>${l===1?'🥇':l===2?'🥈':l===3?'🥉':l+'°'} ${esc(u.nombre)}</span><span>${u.a}/${u.c}</span></div>`});
+    html+=`</div>`;
+  }
+
+  lista.forEach((u,idx)=>{
+    const abierto = idx===0 || dueño(u) ? 'open' : '';
+    html+=`<details class="boleto-list-card" ${abierto}>
+      <summary class="boleto-summary">
+        <div><div class="boleto-title">${lugares[u.id]===1?'🥇':lugares[u.id]===2?'🥈':lugares[u.id]===3?'🥉':'🎟️'} ${esc(u.nombre)}</div><div class="small">${dueño(u)?'📱 Este celular':'Solo lectura'} · Lugar ${lugares[u.id]||'-'}</div></div>
+        <div class="boleto-score">${u.a}/${u.c}<div class="small">Ver detalles</div></div>
+      </summary>
+      <div class="boleto-body">`;
+
+    partidos.forEach(p=>{
+      const x=pr(u.id,p.id);
+      const cls=clase(x,p);
+      const est=estadoPartido(p);
+      const marcador=p.resultado?`${p.goles_local} - ${p.goles_visitante}`:'Pendiente';
+      const etiqueta=cls==='acierto'?'✅ ACIERTO':cls==='fallo'?'❌ FALLO':'⏳ PENDIENTE';
+      html+=`<div class="detalle-partido ${cls}">
+        <div class="detalle-head"><b>⚽ Partido ${p.numero_partido}</b><span class="badge ${est[1]}">${est[0]}</span></div>
+        <div class="detalle-equipos">${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}</div>
+        <div class="small" style="text-align:center">${fecha(p.fecha_partido)}${p.estadio?' · '+esc(p.estadio):''}</div>
+        <div class="detalle-resultado">
+          <div class="detalle-pill ${cls==='acierto'?'ok':cls==='fallo'?'bad':''}">Pronóstico<br><span style="font-size:22px">${x?.pronostico||'-'}</span></div>
+          <div class="detalle-pill">Resultado<br><span style="font-size:22px">${p.resultado||'-'}</span><br><span class="small">${marcador}</span></div>
+        </div>
+        <div style="text-align:center;margin-top:8px;font-weight:bold">${etiqueta}</div>
+      </div>`;
+    });
+
+    if(!bloqueada()&&(dueño(u)||esAdmin)) html+=`<div class="mobile-actions"><button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar boleto</button></div>`;
+    html+=`</div></details>`;
+  });
   cont.innerHTML=html;
 }
 function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('nuevoNombre').value=$('mNuevoNombre').value; $('nuevoTelefono').value=$('mNuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ds.value=ms.value}); }
