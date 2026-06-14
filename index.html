@@ -271,6 +271,28 @@
 .pago-admin-only{display:none!important}
 body.admin-on .pago-admin-only{display:block!important}
 
+/* FIX14: clasificación móvil clara y auditoría legible */
+.clasificacion-movil{display:none}
+.class-card{background:var(--card);border:1px solid var(--borde);border-radius:16px;padding:13px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.class-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.class-place{font-size:22px;font-weight:900;min-width:46px}
+.class-name{font-size:18px;font-weight:900;flex:1}
+.class-score{font-size:21px;font-weight:900;color:var(--azul);white-space:nowrap}
+.class-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.class-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-weight:bold;font-size:12px}
+.audit-json{background:#f8fafc!important;color:#172033!important;border:1px solid #e5e7eb!important;max-height:320px;overflow:auto}
+body.dark .audit-json{background:#0b1524!important;color:#e8f1ff!important;border-color:#33445f!important}
+body.dark .audit-change{background:#101c2e!important;border-color:#2b3c55!important;color:#e8f1ff!important}
+body.dark .audit-before{background:#5b4a16!important;color:#fff0bd!important}
+body.dark .audit-after{background:#14532d!important;color:#dcfce7!important}
+body.dark .class-card{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
+body.dark .class-pill{background:#1d3352!important;color:#d9ecff!important}
+@media(max-width:760px){
+  #clasificacion .tabla-wrap{display:none!important}
+  .clasificacion-movil{display:block}
+}
+
+
 /* FIX12: menú de 3 líneas y modo oscuro */
 .menu-flotante{position:fixed;top:12px;right:12px;z-index:9999}
 .menu-btn{width:46px;height:42px;border-radius:12px;background:rgba(255,255,255,.92);color:#0d47a1;box-shadow:0 3px 12px rgba(0,0,0,.22);font-size:24px;line-height:1;padding:0}
@@ -355,7 +377,7 @@ body.dark .ranking-row{border-color:#26364c!important}
  <div id="msg" class="mensaje"></div>
  <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card"><h2>Registrar boleto</h2><p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
- <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
+ <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
@@ -525,7 +547,19 @@ function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return;
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
 function guardarBoletoMovil(){copiarMovilADesktop();guardarBoleto()}
 function limpiarMovil(){limpiar();copiarDesktopAMovil()}
-function dibClasificacion(){let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>';let lugar=0,pos=0,ant=null;lista.forEach(u=>{pos++;if(ant===null||u.a<ant)lugar=pos;ant=u.a;h+=`<tr><td>${lugar===1?'🥇':lugar===2?'🥈':lugar===3?'🥉':lugar}</td><td class="nombre"><b>${u.nombre}</b></td><td><b>${u.a}</b></td><td>${u.c}</td></tr>`});$('tablaClasificacion').innerHTML=h+'</tbody>'}
+function dibClasificacion(){
+  let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
+  let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>';
+  let cards='',lugar=0,pos=0,ant=null;
+  lista.forEach(u=>{
+    pos++; if(ant===null||u.a<ant)lugar=pos; ant=u.a;
+    const med=lugar===1?'🥇':lugar===2?'🥈':lugar===3?'🥉':lugar;
+    h+=`<tr><td>${med}</td><td class="nombre"><b>${esc(u.nombre)}</b></td><td><b>${u.a}</b></td><td>${u.c}</td></tr>`;
+    cards+=`<div class="class-card"><div class="class-head"><div class="class-place">${med}</div><div class="class-name">${esc(u.nombre)}</div><div class="class-score">${u.a}/${u.c}</div></div><div class="class-meta"><span class="class-pill">Aciertos: ${u.a}</span><span class="class-pill">Calificados: ${u.c}</span></div></div>`;
+  });
+  $('tablaClasificacion').innerHTML=h+'</tbody>';
+  if($('clasificacionMovil')) $('clasificacionMovil').innerHTML=cards||'<div class="class-card">No hay boletos todavía.</div>';
+}
 let faseLiguillaVisible='cuartos';
 function dibPartidos(){
   if(!jornada){$('listaPartidos').innerHTML='Sin jornada activa';return}
@@ -646,7 +680,45 @@ function dibJornadas(){let html='';jornadas.forEach(j=>html+=`<div class="partid
 function dibResultados(){if(!jornada){$('formResultados').innerHTML='Sin jornada activa';return}$('formResultados').innerHTML=partidos.map(p=>`<div class="partido-card"><b>P${p.numero_partido}</b><div>${equipoHtml(p.local)}</div><div class="vs">VS</div><div>${equipoHtml(p.visitante)}</div><div class="grid"><div><label>Goles local</label><input id="gl_${p.id}" type="number" value="${p.goles_local??''}"></div><div><label>Goles visita</label><input id="gv_${p.id}" type="number" value="${p.goles_visitante??''}"></div></div><div class="small">Actual: ${p.resultado||'pendiente'}</div></div>`).join('')}
 function dibPagos(){let lista=usuariosJornada();let h='<thead><tr><th class="nombre">Boleto</th><th>Monto</th><th>Pagado</th><th>Observaciones</th></tr></thead><tbody>';lista.forEach(u=>{let pa=pago(u.id)||{};h+=`<tr><td class="nombre"><b>${u.nombre}</b></td><td>${money(pa.monto||jornada.costo||20)}</td><td><button class="${pa.pagado?'btn-green':'btn-gray'}" onclick="cambiarPago('${u.id}',${!pa.pagado})">${pa.pagado?'Pagado':'Pendiente'}</button></td><td><input id="obs_${u.id}" value="${pa.observaciones||''}" onchange="obsPago('${u.id}')"></td></tr>`});$('tablaPagos').innerHTML=h+'</tbody>'}
 async function cargarPrivado(redib=true){if(!esAdmin)return;let a=await db.from('auditoria').select('*').order('fecha',{ascending:false}).limit(80);if(!a.error)auditoria=a.data||[];dibAuditoria();if(redib)dibPagos()}
-function dibAuditoria(){$('listaAuditoria').innerHTML=auditoria.map(a=>`<div class="audit-card"><b>${a.accion}</b><div class="small">${fecha(a.fecha)} · ${a.actor||''} · ${a.detalle||''}</div><div class="audit-json">ANTES: ${JSON.stringify(a.antes||{},null,2)}\nDESPUÉS: ${JSON.stringify(a.despues||{},null,2)}</div></div>`).join('')||'Sin movimientos'}
+
+function nombrePronostico(v){return v==='L'?'Local':v==='E'?'Empate':v==='V'?'Visita':(v||'-')}
+function audPicks(obj){return (obj&&Array.isArray(obj.picks))?obj.picks:[]}
+function audPronosticos(obj){return (obj&&Array.isArray(obj.pronosticos))?obj.pronosticos:[]}
+function resumenAuditoria(a){
+  const accion=String(a.accion||'MOVIMIENTO');
+  const antes=a.antes||{}, despues=a.despues||{};
+  const nombre=esc(despues.nombre || antes.usuario?.nombre || a.detalle || 'Boleto');
+  if(accion.includes('CREAR_BOLETO')){
+    const picks=audPicks(despues);
+    let cambios=picks.map(x=>`<div class="audit-change"><span class="audit-chip">P${x.partido}</span><span>Eligió</span><span class="audit-after">${nombrePronostico(x.pronostico)}</span></div>`).join('');
+    return `<div class="audit-summary"><b>${nombre}</b> creó un boleto.</div>${cambios}`;
+  }
+  if(accion.includes('EDITAR_BOLETO')){
+    const prev=audPronosticos(antes).slice().sort((a,b)=>{
+      const pa=partidos.find(p=>p.id===a.partido_id)?.numero_partido||0;
+      const pb=partidos.find(p=>p.id===b.partido_id)?.numero_partido||0;
+      return pa-pb;
+    });
+    const nuevos=audPicks(despues);
+    let cambios=[];
+    nuevos.forEach(n=>{
+      let old=prev.find(x=>(partidos.find(p=>p.id===x.partido_id)?.numero_partido)===n.partido);
+      const oldVal=old?.pronostico||'-';
+      if(oldVal!==n.pronostico) cambios.push({p:n.partido,old:oldVal,now:n.pronostico});
+    });
+    if(!cambios.length) cambios=[{p:'-',old:'Sin cambio visible',now:'Guardó nuevamente'}];
+    return `<div class="audit-summary"><b>${nombre}</b> modificó su boleto.</div>`+cambios.map(c=>`<div class="audit-change"><span class="audit-chip">P${c.p}</span><span class="audit-before">${nombrePronostico(c.old)}</span><span class="audit-arrow">→</span><span class="audit-after">${nombrePronostico(c.now)}</span></div>`).join('');
+  }
+  if(accion.includes('RESULT')) return `<div class="audit-summary">Se capturaron o actualizaron resultados.</div>`;
+  if(accion.includes('PAGO')) return `<div class="audit-summary">Se actualizó un pago.</div>`;
+  if(accion.includes('JORNADA')) return `<div class="audit-summary">Movimiento de jornada: ${esc(a.detalle||'')}</div>`;
+  return `<div class="audit-summary">${esc(a.detalle||accion)}</div>`;
+}
+function dibAuditoria(){
+  const cont=$('listaAuditoria'); if(!cont)return;
+  cont.innerHTML=auditoria.map(a=>`<div class="audit-card"><div class="audit-title"><div><div class="audit-action">${esc(a.accion||'MOVIMIENTO')}</div><div class="audit-time">${fecha(a.fecha)} · ${esc(a.actor||'')} · ${esc(a.dispositivo_id||'')}</div></div></div>${resumenAuditoria(a)}<details class="audit-details"><summary>Ver datos técnicos</summary><div class="audit-json">ANTES: ${esc(JSON.stringify(a.antes||{},null,2))}\nDESPUÉS: ${esc(JSON.stringify(a.despues||{},null,2))}</div></details></div>`).join('')||'<div class="audit-card">Sin movimientos</div>';
+}
+
 async function leerFormJornada(){
   if(!esAdmin) throw new Error('Solo administrador');
   let num=+$('jNumero').value,costo=+$('jCosto').value||20,nombre=$('jNombre').value||(num===NUM_LIGUILLA?'Liguilla':`Jornada ${num}`);
