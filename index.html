@@ -266,6 +266,11 @@
 }
 
 
+
+/* FIX13: pagos privados y modo oscuro legible */
+.pago-admin-only{display:none!important}
+body.admin-on .pago-admin-only{display:block!important}
+
 /* FIX12: menú de 3 líneas y modo oscuro */
 .menu-flotante{position:fixed;top:12px;right:12px;z-index:9999}
 .menu-btn{width:46px;height:42px;border-radius:12px;background:rgba(255,255,255,.92);color:#0d47a1;box-shadow:0 3px 12px rgba(0,0,0,.22);font-size:24px;line-height:1;padding:0}
@@ -296,6 +301,28 @@ body.dark .estado-warn{background:#513f12;color:#fff0bd}
 body.dark .estado-live{background:#4a1414;color:#ffd0d0}
 body.dark .match-score{color:#fff!important}
 body.dark .menu-btn{background:#0f1b2d;color:#fff;border:1px solid #31445f}
+body.dark .pronostico-card,
+body.dark .detalle-partido,
+body.dark .mobile-help,
+body.dark .mobile-matrix,
+body.dark .mobile-matrix th,
+body.dark .mobile-matrix td{background:#0f1b2d!important;color:#eef6ff!important;border-color:#26364c!important}
+body.dark .pronostico-card .equipo,
+body.dark .pronostico-card .titulo-p,
+body.dark .detalle-equipos,
+body.dark .mh-partido,
+body.dark .m-row-name{color:#eef6ff!important}
+body.dark .pronostico-card .vs,
+body.dark .match-vs{color:#4da3ff!important}
+body.dark .pronostico-card .small,
+body.dark .mobile-help,
+body.dark .m-row-meta{color:#b7c4d8!important}
+body.dark .mobile-matrix{background:#0f1b2d!important}
+body.dark .mobile-matrix th{background:#16243a!important}
+body.dark .mobile-matrix .col-nombre{background:#0f1b2d!important}
+body.dark .mobile-matrix th.col-nombre{background:#16243a!important}
+body.dark .ranking-row{border-color:#26364c!important}
+
 @media(max-width:760px){.menu-flotante{top:8px;right:8px}.menu-btn{width:42px;height:38px;font-size:22px}.menu-panel{width:220px}}
 
 </style>
@@ -318,8 +345,8 @@ body.dark .menu-btn{background:#0f1b2d;color:#fff;border:1px solid #31445f}
   <div class="box"><div class="small">Jornada activa</div><div class="num" id="rJornada">-</div></div>
   <div class="box"><div class="small">Apuesta</div><div class="num" id="rCosto">$0</div></div>
   <div class="box"><div class="small">Boletos</div><div class="num" id="rBoletos">0</div></div>
-  <div class="box"><div class="small">Pagados</div><div class="num" id="rPagados">0</div></div>
-  <div class="box"><div class="small">Bolsa pagada</div><div class="num" id="rBolsa">$0</div></div>
+  <div class="box pago-admin-only"><div class="small">Pagados</div><div class="num" id="rPagados">0</div></div>
+  <div class="box pago-admin-only"><div class="small">Bolsa pagada</div><div class="num" id="rBolsa">$0</div></div>
   <div class="box"><div class="small">Estado</div><div class="num" id="rEstado">-</div></div>
  </div>
  <div class="tabs">
@@ -498,7 +525,7 @@ function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return;
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
 function guardarBoletoMovil(){copiarMovilADesktop();guardarBoleto()}
 function limpiarMovil(){limpiar();copiarDesktopAMovil()}
-function dibClasificacion(){let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th><th>Pago</th></tr></thead><tbody>';let lugar=0,pos=0,ant=null;lista.forEach(u=>{pos++;if(ant===null||u.a<ant)lugar=pos;ant=u.a;h+=`<tr><td>${lugar===1?'🥇':lugar===2?'🥈':lugar===3?'🥉':lugar}</td><td class="nombre"><b>${u.nombre}</b></td><td><b>${u.a}</b></td><td>${u.c}</td><td>${pago(u.id)?.pagado?'✅':'❌'}</td></tr>`});$('tablaClasificacion').innerHTML=h+'</tbody>'}
+function dibClasificacion(){let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>';let lugar=0,pos=0,ant=null;lista.forEach(u=>{pos++;if(ant===null||u.a<ant)lugar=pos;ant=u.a;h+=`<tr><td>${lugar===1?'🥇':lugar===2?'🥈':lugar===3?'🥉':lugar}</td><td class="nombre"><b>${u.nombre}</b></td><td><b>${u.a}</b></td><td>${u.c}</td></tr>`});$('tablaClasificacion').innerHTML=h+'</tbody>'}
 let faseLiguillaVisible='cuartos';
 function dibPartidos(){
   if(!jornada){$('listaPartidos').innerHTML='Sin jornada activa';return}
@@ -577,6 +604,7 @@ function editar(uid){let u=usuarios.find(x=>x.id===uid);if(!u)return;if(!esAdmin
 function editarMovil(uid){editar(uid);setTimeout(()=>copiarDesktopAMovil(),50)}
 function limpiar(){editandoId=null;if($('nuevoNombre')){$('nuevoNombre').value='';$('nuevoTelefono').value='';partidos.forEach(p=>{let s=$('sel_'+p.id);if(s)s.value=''});$('modo').textContent='Nuevo boleto';$('btnGuardar').textContent='Guardar';copiarDesktopAMovil()}}
 function aplicarEstadoAdmin(){
+  document.body.classList.toggle('admin-on', !!esAdmin);
   const login=$('login'), panel=$('panelAdmin');
   if(login) login.style.display=esAdmin?'none':'block';
   if(panel) panel.style.display=esAdmin?'block':'none';
