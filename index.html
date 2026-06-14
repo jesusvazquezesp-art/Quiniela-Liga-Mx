@@ -92,6 +92,32 @@
 @keyframes copaBounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
 .tombola-box{background:#eef7ff;border:1px solid #bddcff;border-radius:16px;padding:12px;margin:12px 0}
 @media(max-width:760px){.liguilla-grid{grid-template-columns:1fr}.campeon-titulo{font-size:24px}.campeon-copa{font-size:50px}}
+
+/* FIX7: Sección Partidos estilo marcador alineado */
+.match-card{padding:14px}
+.match-num{text-align:center;margin-bottom:10px}
+.match-line{display:grid;grid-template-columns:minmax(0,1fr) 46px 42px 46px minmax(0,1fr);align-items:center;gap:6px}
+.match-team{display:flex;align-items:center;gap:6px;font-weight:bold;min-width:0}
+.match-team.local{justify-content:flex-end;text-align:right}
+.match-team.visita{justify-content:flex-start;text-align:left}
+.match-team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.match-team .escudo{width:30px;height:30px;margin:0;flex:0 0 auto}
+.match-score{height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#eef3fb;color:#0d47a1}
+.score-win{background:#c8e6c9;color:#0b5d1e}
+.score-lose{background:#ffcdd2;color:#7f0000}
+.score-draw{background:#e0e0e0;color:#333}
+.match-vs{text-align:center;font-weight:900;color:#0d47a1}
+.match-date{text-align:center;margin-top:12px;font-weight:bold;color:#334155}
+.match-status{text-align:center;margin-top:8px}
+.match-status .badge{font-size:13px}
+@media(max-width:760px){
+  .partidos-grid{grid-template-columns:1fr}
+  .match-line{grid-template-columns:minmax(0,1fr) 38px 34px 38px minmax(0,1fr);gap:4px}
+  .match-score{height:38px;font-size:20px;border-radius:10px}
+  .match-team{font-size:14px}
+  .match-team .escudo{width:24px;height:24px}
+}
+
 </style>
 </head>
 <body>
@@ -143,6 +169,27 @@ function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.cla
 function dtLocal(v){if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function toISO(v){return v?new Date(v).toISOString():null}
 function fecha(v){if(!v)return'-';const d=new Date(v);return d.toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
+function fechaCortaPartido(v){
+  if(!v)return 'Sin fecha';
+  const d=new Date(v);
+  if(isNaN(d))return 'Sin fecha';
+  return d.toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true}).replace(',', ' ·');
+}
+function claseScorePartido(p,lado){
+  if(!(p.finalizado&&p.resultado))return '';
+  const gl=Number(p.goles_local), gv=Number(p.goles_visitante);
+  if(Number.isNaN(gl)||Number.isNaN(gv))return '';
+  if(gl===gv)return 'score-draw';
+  const ganoLocal=gl>gv;
+  return (lado==='local') ? (ganoLocal?'score-win':'score-lose') : (ganoLocal?'score-lose':'score-win');
+}
+function scorePartido(p,lado){
+  const v = lado==='local' ? p.goles_local : p.goles_visitante;
+  return (p.finalizado&&p.resultado&&v!==null&&v!==undefined&&v!=='') ? v : '-';
+}
+function equipoMini(nombre,clase){
+  return `<div class="match-team ${clase}">${clase==='local'?`<span>${esc(nombre||'-')}</span>${escudo(nombre)}`:`${escudo(nombre)}<span>${esc(nombre||'-')}</span>`}</div>`;
+}
 function resFrom(gl,gv){gl=Number(gl);gv=Number(gv);if(Number.isNaN(gl)||Number.isNaN(gv))return null;return gl>gv?'L':gl<gv?'V':'E'}
 function estadoPartido(p){if(p.finalizado&&p.resultado)return['✅ Finalizado','estado-ok'];if(!p.fecha_partido)return['Sin fecha','estado-warn'];const now=new Date(),ini=new Date(p.fecha_partido),fin=new Date(ini.getTime()+120*60000);if(now<ini){let ms=ini-now, m=Math.floor(ms/60000),d=Math.floor(m/1440),h=Math.floor((m%1440)/60),mi=m%60;return[`Inicia en ${d?d+'d ':''}${h}h ${mi}m`,''];}if(now<=fin)return['<span class="led"></span>EN VIVO','estado-live'];return['⏳ En espera de resultados','estado-warn']}
 
@@ -268,7 +315,19 @@ function dibPartidos(){
 }
 function cardPartidoNormal(p){
   let e=estadoPartido(p);
-  return `<div class="partido-card"><div class="badge">Partido ${p.numero_partido}</div><div class="equipo">${equipoHtml(p.local)}</div><div class="vs">VS</div><div class="equipo">${equipoHtml(p.visitante)}</div><div class="small" style="text-align:center">${fecha(p.fecha_partido)}<br>${esc(p.estadio||'')}</div><div style="text-align:center;margin-top:8px"><span class="badge ${e[1]}">${e[0]}</span></div>${p.resultado?`<div style="text-align:center;margin-top:8px"><b>${p.goles_local} - ${p.goles_visitante}</b> (${p.resultado})</div>`:''}</div>`
+  return `<div class="partido-card match-card">
+    <div class="match-num"><span class="badge">Partido ${p.numero_partido}</span></div>
+    <div class="match-line">
+      ${equipoMini(p.local,'local')}
+      <div class="match-score ${claseScorePartido(p,'local')}">${scorePartido(p,'local')}</div>
+      <div class="match-vs">VS</div>
+      <div class="match-score ${claseScorePartido(p,'visita')}">${scorePartido(p,'visita')}</div>
+      ${equipoMini(p.visitante,'visita')}
+    </div>
+    <div class="match-date">${fechaCortaPartido(p.fecha_partido)}</div>
+    ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
+    <div class="match-status"><span class="badge ${e[1]}">${e[0]}</span></div>
+  </div>`
 }
 function setFaseLiguilla(f){faseLiguillaVisible=f;dibPartidosLiguilla()}
 function partidosPorNums(nums){return nums.map(n=>partidos.find(p=>Number(p.numero_partido)===n)).filter(Boolean)}
