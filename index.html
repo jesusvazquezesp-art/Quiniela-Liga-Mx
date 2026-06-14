@@ -42,6 +42,19 @@
   .detalle-resultado{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
   .detalle-pill{background:white;border-radius:12px;padding:8px;text-align:center;font-weight:bold}
   .detalle-pill.ok{background:#c8e6c9;color:#0b5d1e}.detalle-pill.bad{background:#e0e0e0;color:#333}
+
+  .mobile-matrix-wrap{background:#fff;border-radius:18px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.10);overflow:auto;border:1px solid #e5e7eb}
+  .mobile-matrix{border-collapse:separate;border-spacing:0;min-width:850px;width:max-content;background:#fff}
+  .mobile-matrix th,.mobile-matrix td{border-bottom:1px solid #e5e7eb;border-right:1px solid #edf0f5;padding:0;text-align:center;vertical-align:middle}
+  .mobile-matrix th{position:sticky;top:0;background:#eef3fb;z-index:3}
+  .mobile-matrix .col-nombre{position:sticky;left:0;z-index:4;background:#fff;min-width:145px;width:145px;text-align:left;padding:8px}
+  .mobile-matrix th.col-nombre{background:#eef3fb;z-index:5}
+  .mh-partido{width:72px;height:92px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;font-size:11px;line-height:1.15;font-weight:bold;color:#172033;overflow:hidden}
+  .mh-partido .pnum{font-size:14px;color:#0d47a1}.mh-partido .res{margin-top:2px;padding:2px 6px;border-radius:999px;background:#fff;color:#0d47a1;font-size:11px}
+  .m-pick-cell{width:72px;height:64px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;border-radius:0}
+  .m-pick-cell.pendiente{background:#fff8e1;color:#795548}.m-pick-cell.acierto{background:#c8e6c9;color:#0b5d1e}.m-pick-cell.fallo{background:#e0e0e0;color:#333}
+  .m-row-name{font-size:14px;font-weight:900;line-height:1.15}.m-row-meta{font-size:11px;color:#667085;margin-top:3px}.m-row-actions{margin-top:6px}.m-row-actions button{padding:6px 8px;font-size:12px;width:100%}
+  .mobile-help{background:#fff;border-radius:16px;padding:12px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:13px;color:#667085}
 }
 
 </style>
@@ -167,46 +180,35 @@ function dibQuinielaMovil(lista){
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
   }else{html+=`<div class="boleto-form-card"><b>Quiniela cerrada.</b></div>`}
 
-  // Clasificación rápida arriba para que en celular se vea quién va ganando.
   let lugar=0,pos=0,ant=null;
   const lugares={};
   lista.forEach(u=>{pos++; if(ant===null||u.a<ant)lugar=pos; ant=u.a; lugares[u.id]=lugar;});
+
   if(lista.length){
-    html+=`<div class="ranking-mini"><h3 style="margin:0 0 8px">🏆 Clasificación en vivo</h3>`;
-    lista.slice(0,6).forEach(u=>{let l=lugares[u.id]; html+=`<div class="ranking-row"><span>${l===1?'🥇':l===2?'🥈':l===3?'🥉':l+'°'} ${esc(u.nombre)}</span><span>${u.a}/${u.c}</span></div>`});
-    html+=`</div>`;
-  }
-
-  lista.forEach((u,idx)=>{
-    const abierto = idx===0 || dueño(u) ? 'open' : '';
-    html+=`<details class="boleto-list-card" ${abierto}>
-      <summary class="boleto-summary">
-        <div><div class="boleto-title">${lugares[u.id]===1?'🥇':lugares[u.id]===2?'🥈':lugares[u.id]===3?'🥉':'🎟️'} ${esc(u.nombre)}</div><div class="small">${dueño(u)?'📱 Este celular':'Solo lectura'} · Lugar ${lugares[u.id]||'-'}</div></div>
-        <div class="boleto-score">${u.a}/${u.c}<div class="small">Ver detalles</div></div>
-      </summary>
-      <div class="boleto-body">`;
-
+    html+=`<div class="mobile-help"><b>Vista rápida:</b> arriba están los 9 partidos alineados; abajo cada boleto solo muestra L / E / V. Verde = acierto, gris = fallo, amarillo = pendiente. Desliza a la derecha para ver todos los partidos.</div>`;
+    html+=`<div class="mobile-matrix-wrap"><table class="mobile-matrix"><thead><tr><th class="col-nombre">Boleto</th>`;
     partidos.forEach(p=>{
-      const x=pr(u.id,p.id);
-      const cls=clase(x,p);
-      const est=estadoPartido(p);
-      const marcador=p.resultado?`${p.goles_local} - ${p.goles_visitante}`:'Pendiente';
-      const etiqueta=cls==='acierto'?'✅ ACIERTO':cls==='fallo'?'❌ FALLO':'⏳ PENDIENTE';
-      html+=`<div class="detalle-partido ${cls}">
-        <div class="detalle-head"><b>⚽ Partido ${p.numero_partido}</b><span class="badge ${est[1]}">${est[0]}</span></div>
-        <div class="detalle-equipos">${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}</div>
-        <div class="small" style="text-align:center">${fecha(p.fecha_partido)}${p.estadio?' · '+esc(p.estadio):''}</div>
-        <div class="detalle-resultado">
-          <div class="detalle-pill ${cls==='acierto'?'ok':cls==='fallo'?'bad':''}">Pronóstico<br><span style="font-size:22px">${x?.pronostico||'-'}</span></div>
-          <div class="detalle-pill">Resultado<br><span style="font-size:22px">${p.resultado||'-'}</span><br><span class="small">${marcador}</span></div>
-        </div>
-        <div style="text-align:center;margin-top:8px;font-weight:bold">${etiqueta}</div>
-      </div>`;
+      const marcador = p.resultado ? `${p.goles_local??''}-${p.goles_visitante??''}` : '-';
+      html+=`<th><div class="mh-partido"><div class="pnum">P${p.numero_partido}</div><div>${esc(p.local)}</div><div>vs</div><div>${esc(p.visitante)}</div><div class="res">${marcador}</div></div></th>`;
     });
+    html+=`<th><div class="mh-partido"><div class="pnum">Pts</div><div>Lugar</div></div></th></tr></thead><tbody>`;
 
-    if(!bloqueada()&&(dueño(u)||esAdmin)) html+=`<div class="mobile-actions"><button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar boleto</button></div>`;
-    html+=`</div></details>`;
-  });
+    lista.forEach(u=>{
+      const lugarTxt = lugares[u.id]===1?'🥇':lugares[u.id]===2?'🥈':lugares[u.id]===3?'🥉':lugares[u.id]+'°';
+      html+=`<tr><td class="col-nombre"><div class="m-row-name">${lugarTxt} ${esc(u.nombre)}</div><div class="m-row-meta">${dueño(u)?'📱 Este celular':'Solo lectura'} · ${u.a}/${u.c}</div>`;
+      if(!bloqueada()&&(dueño(u)||esAdmin)) html+=`<div class="m-row-actions"><button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar</button></div>`;
+      html+=`</td>`;
+      partidos.forEach(p=>{
+        const x=pr(u.id,p.id);
+        const cls=clase(x,p);
+        html+=`<td><div class="m-pick-cell ${cls}">${x?.pronostico||'-'}</div></td>`;
+      });
+      html+=`<td><div class="m-pick-cell pendiente">${u.a}/${u.c}</div></td></tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }else{
+    html+=`<div class="boleto-form-card"><b>Aún no hay boletos capturados.</b></div>`;
+  }
   cont.innerHTML=html;
 }
 function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('nuevoNombre').value=$('mNuevoNombre').value; $('nuevoTelefono').value=$('mNuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ds.value=ms.value}); }
