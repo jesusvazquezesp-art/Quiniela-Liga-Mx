@@ -517,6 +517,12 @@ body.dark .boleto-num{background:#263b57;color:#dbeafe}
     color:#b7c4d8!important;
   }
 }
+.header-logo .header-sub{
+    color:#ffffff !important;
+}
 
+body:not(.dark-mode) .header-logo .header-sub{
+    color:#ffffff !important;
+}
 </style>
 </head>
