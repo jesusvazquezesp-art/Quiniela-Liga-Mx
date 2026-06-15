@@ -31,14 +31,14 @@
 .header-logo img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
 .header-logo h1{margin:0;font-size:28px;line-height:1.05}
 .header-logo .header-sub{font-size:14px;opacity:.92;margin-top:3px}
-.contador-box{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.1;min-width:92px;max-width:120px;white-space:normal;text-align:center}
-.contador-label{display:block;font-size:12px;font-weight:900;line-height:1.1}
-.contador-tiempo{display:block;font-size:15px;font-weight:900;line-height:1.15;white-space:nowrap}
-.match-status .contador-box{padding:2px 0}
-.mh-partido .contador-box{min-width:64px;max-width:72px}
+.contador-box{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;line-height:1.1;min-width:132px;max-width:190px;white-space:normal;text-align:center;padding:7px 12px;border-radius:14px}
+.contador-label{display:block;font-size:13px;font-weight:900;line-height:1.1;white-space:normal}
+.contador-tiempo{display:block;font-size:18px;font-weight:900;line-height:1.15;white-space:nowrap;letter-spacing:.2px}
+.match-status .contador-box{padding:8px 12px;margin-top:2px}
+.mh-partido .contador-box{min-width:80px;max-width:104px;padding:5px 8px}
 .mh-partido .contador-label{font-size:10px}
-.mh-partido .contador-tiempo{font-size:11px}
-@media(max-width:760px){.header-logo img{width:58px;height:58px}.header-logo h1{font-size:22px}.header-logo .header-sub{font-size:12px}.contador-tiempo{font-size:14px}}
+.mh-partido .contador-tiempo{font-size:12px}
+@media(max-width:760px){.header-logo img{width:58px;height:58px}.header-logo h1{font-size:22px}.header-logo .header-sub{font-size:12px}.contador-box{min-width:145px;max-width:210px}.contador-tiempo{font-size:17px}.contador-label{font-size:13px}}
 body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25))}
 .logo-campeon{width:115px;height:115px;object-fit:contain;display:block;margin:0 auto 8px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
 .acciones{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.mobile-captura{display:none} .audit-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}.audit-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.audit-action{font-weight:900;color:#0d47a1;font-size:15px}.audit-time{font-size:12px;color:#667085}.audit-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef3fb;color:#0d47a1;font-size:12px;font-weight:bold;margin:3px 4px 3px 0}.audit-summary{margin-top:8px;font-size:14px;line-height:1.45}.audit-change{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin:6px 0}.audit-before{background:#fff8e1;color:#795548}.audit-after{background:#d7f5dd;color:#145a22}.audit-before,.audit-after{display:inline-block;padding:5px 9px;border-radius:8px;font-weight:bold;min-width:42px;text-align:center}.audit-arrow{font-weight:bold;color:#667085}.audit-json{background:#f8fafc;border-radius:10px;padding:8px;white-space:pre-wrap;overflow:auto;font-size:12px;margin-top:8px}.audit-details{margin-top:8px}.audit-details summary{cursor:pointer;color:#607d8b;font-weight:bold}.fama-card{background:#fff;border-left:5px solid #fbc02d;border-radius:12px;padding:12px;margin:8px 0}.selector-jornadas{display:flex;gap:8px;overflow:auto;padding:8px 0;margin:8px 0}.selector-jornadas button{background:#e3e8ef;color:#111}.selector-jornadas button.activo{background:#0d47a1;color:#fff}.auto-cierre-info{margin-top:8px;padding:9px 10px;border-radius:10px;background:#fff8e1;color:#795548;font-weight:bold;text-align:center}.liguilla-tag{background:#fbc02d!important;color:#111!important}@media(max-width:760px){header h1{font-size:22px}.resumen{grid-template-columns:repeat(2,1fr)}table{min-width:980px}.tabs{position:sticky;top:0;background:var(--fondo);z-index:9;padding:8px 0}.desktop-note{display:none}}
@@ -197,7 +197,7 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
     align-items:stretch;
   }
   #partidos .partido-card.match-card{
-    min-height:165px;
+    min-height:190px;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -264,7 +264,7 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
     align-items:stretch;
   }
   #partidos .liguilla-card.match-card{
-    min-height:150px;
+    min-height:178px;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -297,6 +297,15 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   #partidos .liguilla-grid{
     grid-template-columns:repeat(2, minmax(560px, 1fr));
   }
+}
+
+/* FIX29: contador más grande y detallado para captura a 7 días */
+#partidos .match-status .contador-box{min-width:160px;max-width:240px}
+#partidos .match-status .contador-tiempo{font-size:19px}
+#partidos .match-status .contador-label{font-size:13px}
+@media(max-width:760px){
+  #partidos .match-status .contador-box{min-width:165px;max-width:260px;padding:9px 14px}
+  #partidos .match-status .contador-tiempo{font-size:18px}
 }
 
 
@@ -403,11 +412,33 @@ body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;co
 
 
 /* FIX24: Compartir WhatsApp y Open Graph */
+
+.partido-dificil-box{
+  margin-top:14px;
+  background:linear-gradient(135deg,#fff7ed,#fffbeb);
+  border:1px solid #f59e0b;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+.partido-dificil-title{font-weight:900;color:#92400e;font-size:18px;margin-bottom:8px;text-align:center}
+.partido-dificil-match{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;font-weight:900;font-size:18px;text-align:center}
+.partido-dificil-score{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:10px;background:#0d47a1;color:white;font-weight:900}
+.partido-dificil-meta{margin-top:8px;text-align:center;color:#78350f;font-weight:700}
+.partido-dificil-empty{margin-top:14px;background:var(--card);border:1px dashed var(--borde);border-radius:14px;padding:12px;text-align:center;color:#667085}
+body.dark .partido-dificil-box{background:linear-gradient(135deg,#2a1c08,#332706)!important;border-color:#f59e0b!important;color:#fff!important}
+body.dark .partido-dificil-title,body.dark .partido-dificil-meta{color:#fde68a!important}
+body.dark .partido-dificil-empty{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
+
 .share-box{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
 .share-btn{background:#25D366!important;color:#fff!important;border:0;box-shadow:0 3px 10px rgba(37,211,102,.25)}
 .share-btn:hover{filter:brightness(.96)}
 .share-note{font-size:12px;color:#667085}
 body.dark .share-note{color:#c9d4e6}
+
+
+.boleto-num{display:inline-block;margin-left:4px;padding:2px 7px;border-radius:999px;background:#e3f2fd;color:#0d47a1;font-size:12px;font-weight:800;vertical-align:middle}
+body.dark .boleto-num{background:#263b57;color:#dbeafe}
 
 </style>
 </head>
@@ -439,7 +470,7 @@ body.dark .share-note{color:#c9d4e6}
  <div id="msg" class="mensaje"></div>
  <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card"><h2>Registrar boleto</h2><p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
- <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
+ <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div><div id="partidoDificil"></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
@@ -500,13 +531,20 @@ function equipoMini(nombre,clase){
 }
 function resFrom(gl,gv){gl=Number(gl);gv=Number(gv);if(Number.isNaN(gl)||Number.isNaN(gv))return null;return gl>gv?'L':gl<gv?'V':'E'}
 function textoFalta(ms){
-  if(ms<=0)return '0m';
-  let m=Math.floor(ms/60000), d=Math.floor(m/1440), h=Math.floor((m%1440)/60), mi=m%60;
-  let out=[];
-  if(d) out.push(d+'d');
-  if(h) out.push(h+'h');
-  out.push(mi+'m');
-  return out.join(' ');
+  if(ms<=0)return '0s';
+  const totalSeg=Math.floor(ms/1000);
+  const d=Math.floor(totalSeg/86400);
+  const h=Math.floor((totalSeg%86400)/3600);
+  const m=Math.floor((totalSeg%3600)/60);
+  const s=totalSeg%60;
+
+  // Normalmente la quiniela se llena hasta 7 días antes:
+  // ahí sí mostramos segundos para que el cierre se sienta vivo.
+  if(d>=7) return `${d}d ${h}h ${m}m`;
+  if(d>0) return `${d}d ${h}h ${m}m ${s}s`;
+  if(h>0) return `${h}h ${m}m ${s}s`;
+  if(m>0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 function estadoClavePartido(p){
   if(p.finalizado&&p.resultado)return 'finalizado';
@@ -560,6 +598,49 @@ function usuariosJornada(){
   const ids = new Set(pronosticos.filter(x=>x.jornada_id===jornada.id).map(x=>x.usuario_id));
   pagos.filter(x=>x.jornada_id===jornada.id).forEach(x=>ids.add(x.usuario_id));
   return usuarios.filter(u=>ids.has(u.id));
+}
+
+function nombreBaseBoleto(nombre){
+  return String(nombre||'').trim().replace(/\s+#\d+$/,'').trim();
+}
+function normalizarNombreBoleto(nombre){
+  return nombreBaseBoleto(nombre).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
+}
+function mapaNumerosBoletos(lista=null){
+  const arr=(lista||usuariosJornada()).slice().sort((a,b)=>new Date(a.fecha_registro||0)-new Date(b.fecha_registro||0));
+  const grupos={};
+  const mapa={};
+  arr.forEach(u=>{
+    const key=normalizarNombreBoleto(u.nombre);
+    if(!key) return;
+    grupos[key]=(grupos[key]||0)+1;
+    mapa[u.id]=grupos[key];
+  });
+  return {mapa,grupos};
+}
+function nombreBoleto(u,lista=null){
+  if(!u) return '';
+  const base=nombreBaseBoleto(u.nombre);
+  const info=mapaNumerosBoletos(lista);
+  const key=normalizarNombreBoleto(u.nombre);
+  const total=info.grupos[key]||1;
+  const num=info.mapa[u.id]||1;
+  return total>1 ? `${base} #${num}` : base;
+}
+function siguienteNumeroBoleto(nombre){
+  const key=normalizarNombreBoleto(nombre);
+  if(!key) return 1;
+  const existentes=usuariosJornada().filter(u=>normalizarNombreBoleto(u.nombre)===key);
+  return existentes.length+1;
+}
+function confirmarBoletoDuplicado(nombre){
+  if(editandoId) return true;
+  const base=nombreBaseBoleto(nombre);
+  const siguiente=siguienteNumeroBoleto(base);
+  if(siguiente<=1) return true;
+  return confirm(`Ya existe un boleto con el nombre ${base}.
+
+¿Deseas crear otro boleto como ${base} #${siguiente}?`);
 }
 function pr(usuarioId,partidoId){return pronosticos.find(x=>x.usuario_id===usuarioId && x.partido_id===partidoId)}
 function pago(usuarioId){return pagos.find(x=>x.usuario_id===usuarioId && x.jornada_id===jornada?.id)}
@@ -685,7 +766,12 @@ function dibQuiniela(){
     h+=`<tr><td class="nombre"><input id="nuevoNombre" placeholder="Nombre / boleto"><input id="nuevoTelefono" placeholder="Teléfono opcional" style="margin-top:6px"><div class="small" id="modo">Nuevo boleto</div></td>`+partidos.map(p=>`<td><select id="sel_${p.id}"><option value="">-</option><option value="L">Local</option><option value="E">Empate</option><option value="V">Visita</option></select></td>`).join('')+`<td>-</td><td><button class="btn-primary" onclick="guardarBoleto()" id="btnGuardar">Guardar</button><button class="btn-gray" onclick="limpiar()">Limpiar</button></td></tr>`
   }else{h+=`<tr><td colspan="12"><b>Quiniela cerrada.</b></td></tr>`}
   let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||new Date(a.fecha_registro)-new Date(b.fecha_registro));
-  lista.forEach(u=>{h+=`<tr><td class="nombre"><b>${esc(u.nombre)}</b><div class="small">${dueño(u)?'📱 Este celular':'Solo lectura'}</div></td>`;partidos.forEach(p=>{let x=pr(u.id,p.id);h+=`<td><span class="pick ${clase(x,p)}">${x?.pronostico||'-'}</span></td>`});h+=`<td><b>${u.a}</b> / ${u.c}</td><td>${!bloqueada()&&(dueño(u)||esAdmin)?`<button class="btn-yellow" onclick="editar('${u.id}')">Editar</button>`:'-'}</td></tr>`});
+  lista.forEach(u=>{h+=`<tr><td class="nombre"><b>${esc(nombreBoleto(u,lista))}</b><div class="small">${dueño(u)?'📱 Este celular':'Solo lectura'}</div></td>`;partidos.forEach(p=>{let x=pr(u.id,p.id);h+=`<td><span class="pick ${clase(x,p)}">${x?.pronostico||'-'}</span></td>`});h+=`<td><b>${u.a}</b> / ${u.c}</td><td>`;
+    let acciones=[];
+    if(!bloqueada()&&(dueño(u)||esAdmin)) acciones.push(`<button class="btn-yellow" onclick="editar('${u.id}')">Editar</button>`);
+    if(esAdmin) acciones.push(`<button class="btn-red" onclick="eliminarBoleto('${u.id}')">Eliminar</button>`);
+    h+=acciones.length?`<div class="acciones">${acciones.join('')}</div>`:'-';
+    h+=`</td></tr>`});
   h+='</tbody>';$('tablaQuiniela').innerHTML=h;
   dibQuinielaMovil(lista);
 }
@@ -715,8 +801,11 @@ function dibQuinielaMovil(lista){
 
     lista.forEach(u=>{
       const lugarTxt = lugares[u.id]===1?'🥇':lugares[u.id]===2?'🥈':lugares[u.id]===3?'🥉':lugares[u.id]+'°';
-      html+=`<tr><td class="col-nombre"><div class="m-row-name">${lugarTxt} ${esc(u.nombre)}</div><div class="m-row-meta">${dueño(u)?'📱 Este celular':'Solo lectura'} · ${u.a}/${u.c}</div>`;
-      if(!bloqueada()&&(dueño(u)||esAdmin)) html+=`<div class="m-row-actions"><button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar</button></div>`;
+      html+=`<tr><td class="col-nombre"><div class="m-row-name">${lugarTxt} ${esc(nombreBoleto(u,lista))}</div><div class="m-row-meta">${dueño(u)?'📱 Este celular':'Solo lectura'} · ${u.a}/${u.c}</div>`;
+      let accionesMovil=[];
+      if(!bloqueada()&&(dueño(u)||esAdmin)) accionesMovil.push(`<button class="btn-yellow" onclick="editarMovil('${u.id}')">Editar</button>`);
+      if(esAdmin) accionesMovil.push(`<button class="btn-red" onclick="eliminarBoleto('${u.id}')">Eliminar</button>`);
+      if(accionesMovil.length) html+=`<div class="m-row-actions">${accionesMovil.join('')}</div>`;
       html+=`</td>`;
       partidos.forEach(p=>{
         const x=pr(u.id,p.id);
@@ -735,6 +824,53 @@ function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return;
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
 function guardarBoletoMovil(){copiarMovilADesktop();guardarBoleto()}
 function limpiarMovil(){limpiar();copiarDesktopAMovil()}
+
+function datosPartidoMenosEsperado(){
+  const boletos=usuariosJornada();
+  if(!boletos.length) return null;
+  let candidatos=[];
+  partidos.forEach(p=>{
+    if(!p.resultado) return;
+    let total=0, acertaron=0;
+    boletos.forEach(u=>{
+      const x=pr(u.id,p.id);
+      if(!x) return;
+      total++;
+      if(x.pronostico===p.resultado) acertaron++;
+    });
+    if(total>0){
+      const porcentaje=acertaron/total;
+      candidatos.push({p,total,acertaron,porcentaje});
+    }
+  });
+  if(!candidatos.length) return null;
+  candidatos.sort((a,b)=>a.acertaron-b.acertaron || a.porcentaje-b.porcentaje || Number(a.p.numero_partido)-Number(b.p.numero_partido));
+  return candidatos[0];
+}
+function textoResultadoLEV(r){return r==='L'?'Ganó local':r==='V'?'Ganó visita':r==='E'?'Empate':'-'}
+function dibPartidoMenosEsperado(){
+  const cont=$('partidoDificil');
+  if(!cont) return;
+  const d=datosPartidoMenosEsperado();
+  if(!d){
+    cont.innerHTML='<div class="partido-dificil-empty">🎯 Partido menos esperado: aparecerá cuando captures resultados.</div>';
+    return;
+  }
+  const p=d.p;
+  const marcador=(p.goles_local!=null&&p.goles_visitante!=null)?`${p.goles_local} - ${p.goles_visitante}`:textoResultadoLEV(p.resultado);
+  cont.innerHTML=`<div class="partido-dificil-box">
+    <div class="partido-dificil-title">🎯 Partido con resultado menos esperado</div>
+    <div class="partido-dificil-match">
+      <span>${esc(p.local)}</span>
+      <span class="partido-dificil-score">${esc(String(p.goles_local??''))}</span>
+      <span>VS</span>
+      <span class="partido-dificil-score">${esc(String(p.goles_visitante??''))}</span>
+      <span>${esc(p.visitante)}</span>
+    </div>
+    <div class="partido-dificil-meta">Solo <b>${d.acertaron}</b> de <b>${d.total}</b> boletos acertaron · ${esc(textoResultadoLEV(p.resultado))}</div>
+  </div>`;
+}
+
 function dibClasificacion(){
   let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
   let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>';
@@ -742,11 +878,12 @@ function dibClasificacion(){
   lista.forEach(u=>{
     pos++; if(ant===null||u.a<ant)lugar=pos; ant=u.a;
     const med=lugar===1?'🥇':lugar===2?'🥈':lugar===3?'🥉':lugar;
-    h+=`<tr><td>${med}</td><td class="nombre"><b>${esc(u.nombre)}</b></td><td><b>${u.a}</b></td><td>${u.c}</td></tr>`;
-    cards+=`<div class="class-card"><div class="class-head"><div class="class-place">${med}</div><div class="class-name">${esc(u.nombre)}</div><div class="class-score">${u.a}/${u.c}</div></div><div class="class-meta"><span class="class-pill">Aciertos: ${u.a}</span><span class="class-pill">Calificados: ${u.c}</span></div></div>`;
+    h+=`<tr><td>${med}</td><td class="nombre"><b>${esc(nombreBoleto(u,lista))}</b></td><td><b>${u.a}</b></td><td>${u.c}</td></tr>`;
+    cards+=`<div class="class-card"><div class="class-head"><div class="class-place">${med}</div><div class="class-name">${esc(nombreBoleto(u,lista))}</div><div class="class-score">${u.a}/${u.c}</div></div><div class="class-meta"><span class="class-pill">Aciertos: ${u.a}</span><span class="class-pill">Calificados: ${u.c}</span></div></div>`;
   });
   $('tablaClasificacion').innerHTML=h+'</tbody>';
   if($('clasificacionMovil')) $('clasificacionMovil').innerHTML=cards||'<div class="class-card">No hay boletos todavía.</div>';
+  dibPartidoMenosEsperado();
 }
 let faseLiguillaVisible='cuartos';
 function dibPartidos(){
@@ -823,9 +960,73 @@ function dibPartidosLiguilla(){
 }
 function dibTablaLiga(){let h='<thead><tr><th>#</th><th class="nombre">Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Últimos</th><th>Fase</th></tr></thead><tbody>';tablaLiga.forEach(r=>h+=`<tr><td>${r.posicion||''}</td><td class="nombre">${equipoHtml(r.club)}</td><td>${r.pj||0}</td><td>${r.g||0}</td><td>${r.e||0}</td><td>${r.p||0}</td><td>${r.gf||0}</td><td>${r.gc||0}</td><td>${r.dg||0}</td><td><b>${r.pts||0}</b></td><td>${r.ultimos||r.ultimos5||''}</td><td>${r.fase||''}</td></tr>`);$('tablaGeneralLiga').innerHTML=h+'</tbody>';let mob=$('tablaGeneralLigaMobile');if(mob){mob.innerHTML=tablaLiga.map(r=>`<div class="liga-card-mobile"><div class="liga-head-mobile"><div class="liga-pos-mobile">${r.posicion||'-'}</div><div>${equipoHtml(r.club)}</div></div><div class="liga-stats-mobile"><div class="liga-stat"><span>PJ</span><b>${r.pj||0}</b></div><div class="liga-stat"><span>G</span><b>${r.g||0}</b></div><div class="liga-stat"><span>E</span><b>${r.e||0}</b></div><div class="liga-stat"><span>P</span><b>${r.p||0}</b></div><div class="liga-stat"><span>GF</span><b>${r.gf||0}</b></div><div class="liga-stat"><span>GC</span><b>${r.gc||0}</b></div><div class="liga-stat"><span>DG</span><b>${r.dg||0}</b></div><div class="liga-stat pts"><span>Pts</span><b>${r.pts||0}</b></div></div><div class="liga-extra-mobile"><div><b>Últimos:</b> ${esc(r.ultimos||r.ultimos5||'-')}</div><div><b>Fase:</b> ${esc(r.fase||'-')}</div></div></div>`).join('')}}
 function dibFama(){if(!fama.length){$('famaLista').innerHTML='<p>No hay ganadores todavía.</p>';return}$('famaLista').innerHTML=fama.map(f=>`<div class="fama-card"><b>👑 ${f.nombre}</b><div class="small">${f.aciertos} aciertos · Premio: ${money(f.premio)} · ${fecha(f.fecha)}</div></div>`).join('')}
-async function guardarBoleto(){if(!jornada||bloqueada())return msg('La jornada está cerrada o no hay jornada activa','error');let nombre=$('nuevoNombre').value.trim(),tel=$('nuevoTelefono').value.trim();if(!nombre)return msg('Escribe el nombre del boleto','error');let picks=[];for(const p of partidos){let v=$('sel_'+p.id).value;if(!v)return msg('Falta pronóstico del partido '+p.numero_partido,'error');picks.push({p,v})}try{let uid=editandoId,antes={};if(uid){let u=usuarios.find(x=>x.id===uid);if(!esAdmin&&!dueño(u))throw new Error('Este boleto solo se edita desde el celular donde se capturó');antes={usuario:u,pronosticos:pronosticos.filter(x=>x.usuario_id===uid)};await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid)}else{let r=await db.from('usuarios').insert({nombre,telefono:tel,dispositivo_id:deviceId(),activo:true}).select().single();if(r.error)throw r.error;uid=r.data.id;await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:false})}for(const x of picks){let old=pr(uid,x.p.id);if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);else await db.from('pronosticos').insert({usuario_id:uid,jornada_id:jornada.id,partido_id:x.p.id,pronostico:x.v})}await aud(uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',`${nombre} guardó boleto`,uid,antes,{nombre,picks:picks.map(x=>({partido:x.p.numero_partido,pronostico:x.v}))});limpiar();await cargar();msg('Boleto guardado correctamente','ok')}catch(e){msg('Error: '+e.message,'error')}}
-function editar(uid){let u=usuarios.find(x=>x.id===uid);if(!u)return;if(!esAdmin&&!dueño(u))return msg('Solo se puede editar desde el celular donde se capturó','error');editandoId=uid;$('nuevoNombre').value=u.nombre;$('nuevoTelefono').value=u.telefono||'';partidos.forEach(p=>{$('sel_'+p.id).value=pr(uid,p.id)?.pronostico||''});$('modo').textContent='Editando: '+u.nombre;$('btnGuardar').textContent='Actualizar';copiarDesktopAMovil();window.scrollTo({top:0,behavior:'smooth'})}
+async function guardarBoleto(){
+  if(!jornada||bloqueada())return msg('La jornada está cerrada o no hay jornada activa','error');
+  let nombre=nombreBaseBoleto($('nuevoNombre').value.trim()),tel=$('nuevoTelefono').value.trim();
+  if(!nombre)return msg('Escribe el nombre del boleto','error');
+  if(!confirmarBoletoDuplicado(nombre)) return;
+  let picks=[];
+  for(const p of partidos){
+    let v=$('sel_'+p.id).value;
+    if(!v)return msg('Falta pronóstico del partido '+p.numero_partido,'error');
+    picks.push({p,v});
+  }
+  try{
+    let uid=editandoId,antes={};
+    let nombreVisible=nombre;
+    if(uid){
+      let u=usuarios.find(x=>x.id===uid);
+      if(!esAdmin&&!dueño(u))throw new Error('Este boleto solo se edita desde el celular donde se capturó');
+      antes={usuario:u,pronosticos:pronosticos.filter(x=>x.usuario_id===uid)};
+      await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid);
+      nombreVisible=nombreBoleto({...u,nombre});
+    }else{
+      let r=await db.from('usuarios').insert({nombre,telefono:tel,dispositivo_id:deviceId(),activo:true}).select().single();
+      if(r.error)throw r.error;
+      uid=r.data.id;
+      await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:false});
+      nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
+    }
+    for(const x of picks){
+      let old=pr(uid,x.p.id);
+      if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
+      else await db.from('pronosticos').insert({usuario_id:uid,jornada_id:jornada.id,partido_id:x.p.id,pronostico:x.v});
+    }
+    await aud(uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',`${nombreVisible} guardó boleto`,uid,antes,{nombre:nombreVisible,nombre_base:nombre,picks:picks.map(x=>({partido:x.p.numero_partido,pronostico:x.v}))});
+    limpiar();await cargar();msg(`Boleto guardado correctamente: ${nombreVisible}`,'ok');
+  }catch(e){msg('Error: '+e.message,'error')}
+}
+function editar(uid){let u=usuarios.find(x=>x.id===uid);if(!u)return;if(!esAdmin&&!dueño(u))return msg('Solo se puede editar desde el celular donde se capturó','error');editandoId=uid;$('nuevoNombre').value=nombreBaseBoleto(u.nombre);$('nuevoTelefono').value=u.telefono||'';partidos.forEach(p=>{$('sel_'+p.id).value=pr(uid,p.id)?.pronostico||''});$('modo').textContent='Editando: '+nombreBoleto(u);$('btnGuardar').textContent='Actualizar';copiarDesktopAMovil();window.scrollTo({top:0,behavior:'smooth'})}
 function editarMovil(uid){editar(uid);setTimeout(()=>copiarDesktopAMovil(),50)}
+async function eliminarBoleto(uid){
+  if(!esAdmin) return msg('Solo el administrador puede eliminar boletos','error');
+  if(!jornada) return msg('No hay jornada seleccionada','error');
+  const lista=usuariosJornada();
+  const u=lista.find(x=>x.id===uid) || usuarios.find(x=>x.id===uid);
+  if(!u) return msg('No encontré ese boleto','error');
+  const nombre=nombreBoleto(u,lista);
+  const confirmar=prompt(`Vas a eliminar el boleto:\n\n${nombre}\n\nSe borrarán sus pronósticos y pago de esta jornada.\n\nEscribe ELIMINAR para confirmar:`);
+  if(confirmar!=='ELIMINAR') return;
+  const btn=event?.target;
+  const original=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent='⏳ Eliminando...'}
+  try{
+    const antes={usuario:u,pronosticos:pronosticos.filter(x=>x.usuario_id===uid),pago:pago(uid)||null,jornada:jornada?.nombre||''};
+    await aud('ELIMINAR_BOLETO',`${nombre} fue eliminado por administrador`,uid,antes,{});
+    let r;
+    r=await db.from('pronosticos').delete().eq('usuario_id',uid).eq('jornada_id',jornada.id); if(r.error) throw r.error;
+    r=await db.from('pagos').delete().eq('usuario_id',uid).eq('jornada_id',jornada.id); if(r.error) throw r.error;
+    await db.from('fama').delete().eq('usuario_id',uid).eq('jornada_id',jornada.id);
+    r=await db.from('usuarios').delete().eq('id',uid); if(r.error) throw r.error;
+    await recalcularTablaLiga(true);
+    await cargar();
+    msg(`Boleto eliminado correctamente: ${nombre}`,'ok');
+  }catch(e){
+    msg('Error al eliminar boleto: '+e.message,'error');
+    if(btn){btn.disabled=false;btn.textContent=original}
+  }
+}
+
 function limpiar(){editandoId=null;if($('nuevoNombre')){$('nuevoNombre').value='';$('nuevoTelefono').value='';partidos.forEach(p=>{let s=$('sel_'+p.id);if(s)s.value=''});$('modo').textContent='Nuevo boleto';$('btnGuardar').textContent='Guardar';copiarDesktopAMovil()}}
 function aplicarEstadoAdmin(){
   document.body.classList.toggle('admin-on', !!esAdmin);
@@ -837,40 +1038,24 @@ async function loginAdmin(){
   const usuario=($('adminUser')?.value||'').trim();
   const password=$('adminPass')?.value||'';
   if(!usuario||!password){msg('Escribe usuario y contraseña.','error');return}
-
-  let valido=false;
-  let errorRpc=null;
-
-  try{
-    const {data,error}=await db.rpc('validar_admin',{p_usuario:usuario,p_password:password});
-    if(error) errorRpc=error;
-    if(data===true) valido=true;
-  }catch(e){ errorRpc=e; }
-
-  if(!valido){
-    try{
-      const {data:cfg,error:cfgErr}=await db.from('configuracion')
-        .select('admin_usuario,pin_admin')
-        .limit(1)
-        .maybeSingle();
-      if(!cfgErr && cfg && String(cfg.admin_usuario||'admin')===usuario && String(cfg.pin_admin||'')===password){
-        valido=true;
-      }
-    }catch(e){ console.warn('Fallback configuracion falló:',e); }
+  const {data,error}=await db.rpc('validar_admin',{p_usuario:usuario,p_password:password});
+  if(error){
+    console.error(error);
+    msg('No se pudo validar admin. Revisa que ya corriste el SQL del PIN oculto.','error');
+    return;
   }
-
-  if(valido){
+  if(data===true){
     esAdmin=true;
     localStorage.setItem(ADMIN_SESSION_KEY,'1');
     aplicarEstadoAdmin();
     dibujar();
-    msg('Admin activo.','ok');
+    cargarPrivado(false);
+    $('adminPass').value='';
+    msg('Admin activo. Permanecerá abierto hasta que cierres sesión.','ok');
   }else{
-    if(errorRpc) console.warn('RPC validar_admin falló:',errorRpc);
-    msg('Usuario o contraseña incorrectos. Revisa admin_config o configuracion.pin_admin.','error');
+    msg('Usuario o contraseña incorrectos','error');
   }
 }
-
 function logoutAdmin(){
   esAdmin=false;
   localStorage.removeItem(ADMIN_SESSION_KEY);
@@ -896,7 +1081,7 @@ function prepararFormJornada(){
 }
 function dibJornadas(){let html='';jornadas.forEach(j=>html+=`<div class="partido-card"><b>${esc(j.nombre)}</b> ${j.activa?'✅ Activa':''} ${j.bloqueada?'🔒 Cerrada':'🟢 Abierta'}<div class="small">Apuesta ${money(j.costo)}</div><div class="acciones"><button class="btn-primary" onclick="activarJornada('${j.id}')">Activar</button><button class="btn-yellow" onclick="toggleJornada('${j.id}',${!j.bloqueada})">${j.bloqueada?'Abrir':'Cerrar'}</button><button class="btn-gray" onclick="cargarJornadaParaEditar('${j.id}')">Editar jornada</button><button class="btn-red" onclick="borrarJornada('${j.id}')">Borrar</button></div></div>`);$('jornadasLista').innerHTML=html||'No hay jornadas'}
 function dibResultados(){if(!jornada){$('formResultados').innerHTML='Sin jornada activa';return}$('formResultados').innerHTML=partidos.map(p=>`<div class="partido-card"><b>P${p.numero_partido}</b><div>${equipoHtml(p.local)}</div><div class="vs">VS</div><div>${equipoHtml(p.visitante)}</div><div class="grid"><div><label>Goles local</label><input id="gl_${p.id}" type="number" value="${p.goles_local??''}"></div><div><label>Goles visita</label><input id="gv_${p.id}" type="number" value="${p.goles_visitante??''}"></div></div><div class="small">Actual: ${p.resultado||'pendiente'}</div></div>`).join('')}
-function dibPagos(){let lista=usuariosJornada();let h='<thead><tr><th class="nombre">Boleto</th><th>Monto</th><th>Pagado</th><th>Observaciones</th></tr></thead><tbody>';lista.forEach(u=>{let pa=pago(u.id)||{};h+=`<tr><td class="nombre"><b>${u.nombre}</b></td><td>${money(pa.monto||jornada.costo||20)}</td><td><button class="${pa.pagado?'btn-green':'btn-gray'}" onclick="cambiarPago('${u.id}',${!pa.pagado})">${pa.pagado?'Pagado':'Pendiente'}</button></td><td><input id="obs_${u.id}" value="${pa.observaciones||''}" onchange="obsPago('${u.id}')"></td></tr>`});$('tablaPagos').innerHTML=h+'</tbody>'}
+function dibPagos(){let lista=usuariosJornada();let h='<thead><tr><th class="nombre">Boleto</th><th>Monto</th><th>Pagado</th><th>Observaciones</th></tr></thead><tbody>';lista.forEach(u=>{let pa=pago(u.id)||{};h+=`<tr><td class="nombre"><b>${esc(nombreBoleto(u,lista))}</b></td><td>${money(pa.monto||jornada.costo||20)}</td><td><button class="${pa.pagado?'btn-green':'btn-gray'}" onclick="cambiarPago('${u.id}',${!pa.pagado})">${pa.pagado?'Pagado':'Pendiente'}</button></td><td><input id="obs_${u.id}" value="${pa.observaciones||''}" onchange="obsPago('${u.id}')"></td></tr>`});$('tablaPagos').innerHTML=h+'</tbody>'}
 async function cargarPrivado(redib=true){if(!esAdmin)return;let a=await db.from('auditoria').select('*').order('fecha',{ascending:false}).limit(80);if(!a.error)auditoria=a.data||[];dibAuditoria();if(redib)dibPagos()}
 function dibAuditoria(){$('listaAuditoria').innerHTML=auditoria.map(a=>`<div class="audit-card"><b>${a.accion}</b><div class="small">${fecha(a.fecha)} · ${a.actor||''} · ${a.detalle||''}</div><div class="audit-json">ANTES: ${JSON.stringify(a.antes||{},null,2)}\nDESPUÉS: ${JSON.stringify(a.despues||{},null,2)}</div></div>`).join('')||'Sin movimientos'}
 async function leerFormJornada(){
@@ -1023,7 +1208,7 @@ async function reiniciarTorneo(){
     msg('Torneo reiniciado. Equipos y escudos se conservaron.','ok');
   }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
 }
-async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:g.nombre,aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>x.nombre).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
+async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
 const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx'];
 function inicioSemanaRespaldo(){
@@ -1173,7 +1358,7 @@ function listaClasificacionCompartir(limite=10){
     pos++;
     if(ant===null||u.a<ant)lugar=pos;
     ant=u.a;
-    return `${medallaLugar(lugar)} ${u.nombre} — ${u.a}/${u.c} pts`;
+    return `${medallaLugar(lugar)} ${nombreBoleto(u,lista)} — ${u.a}/${u.c} pts`;
   });
 }
 function resumenPartidosCompartir(){
@@ -1184,13 +1369,23 @@ function resumenPartidosCompartir(){
     return `P${p.numero_partido}: ${p.local} ${gl}-${gv} ${p.visitante}`;
   }).join('\n');
 }
+
+function textoPartidoMenosEsperadoCompartir(){
+  const d=datosPartidoMenosEsperado();
+  if(!d) return '';
+  const p=d.p;
+  const marcador=(p.goles_local!=null&&p.goles_visitante!=null)?`${p.goles_local}-${p.goles_visitante}`:textoResultadoLEV(p.resultado);
+  return `\n\n🎯 Partido menos esperado:\n${p.local} ${marcador} ${p.visitante}\nSolo ${d.acertaron} de ${d.total} acertaron`;
+}
+
 async function compartirClasificacionWhatsApp(){
   try{
     const lineas=listaClasificacionCompartir(10);
     if(!lineas.length){msg('Todavía no hay boletos para compartir.','info');return;}
     const titulo=`🏆 QUINIELA COPA MX V2`;
     const jornadaTxt=jornada?`\n${jornada.nombre}${jornada.activa?' ✅ Activa':''}${jornada.bloqueada?' 🔒 Cerrada':''}`:'';
-    const texto=`${titulo}${jornadaTxt}\n\n📊 Clasificación en vivo:\n${lineas.join('\n')}${resumenPartidosCompartir()}\n\n📲 Entra aquí:\n${URL_PUBLICA_QUINIELA}`;
+    const dificil=textoPartidoMenosEsperadoCompartir();
+    const texto=`${titulo}${jornadaTxt}\n\n📊 Clasificación en vivo:\n${lineas.join('\n')}${resumenPartidosCompartir()}${dificil}\n\n📲 Entra aquí:\n${URL_PUBLICA_QUINIELA}`;
     const url='https://wa.me/?text='+encodeURIComponent(texto);
     window.open(url,'_blank');
   }catch(e){msg('No se pudo generar el mensaje de WhatsApp: '+e.message,'error')}
@@ -1290,7 +1485,7 @@ aplicarEstadosABotones();
 
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
 
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();setInterval(async()=>{const cambio=await revisarCierreAutomatico();if(cambio)await cargar();else{dibResumen();dibPartidos()}},30000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
