@@ -1,6 +1,6 @@
 <script>
-const SUPABASE_URL="https://pijlscldaveqmcxlcebz.supabase.co";
-const SUPABASE_KEY="sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
+const SUPABASE_URL="...";
+const SUPABASE_KEY="...";
 const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[],respaldos=[],salonFama=[];
