@@ -148,3 +148,4 @@ async function restaurarRespaldo(tipo){
     await cargar();
     msg('Respaldo restaurado correctamente','ok');
   }catch(e){msg('Error al restaurar: '+e.message,'error')}
+}
