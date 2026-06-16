@@ -628,25 +628,38 @@ function aplicarEstadoAdmin(){
   if(panel) panel.style.display=esAdmin?'block':'none';
 }
 async function loginAdmin(){
-  const usuario=($('adminUser')?.value||'').trim();
-  const password=$('adminPass')?.value||'';
-  if(!usuario||!password){msg('Escribe usuario y contraseña.','error');return}
-  const {data,error}=await db.rpc('validar_admin',{p_usuario:usuario,p_password:password});
-  if(error){
-    console.error(error);
-    msg('No se pudo validar admin. Revisa que ya corriste el SQL del PIN oculto.','error');
+  const usuario = $('adminUser').value.trim();
+  const pass = $('adminPass').value.trim();
+
+  if(!usuario || !pass){
+    msg('Escribe usuario y contraseña.','error');
     return;
   }
-  if(data===true){
-    esAdmin=true;
-    localStorage.setItem(ADMIN_SESSION_KEY,'1');
-    aplicarEstadoAdmin();
-    dibujar();
-    cargarPrivado(false);
-    $('adminPass').value='';
-    msg('Admin activo. Permanecerá abierto hasta que cierres sesión.','ok');
-  }else{
-    msg('Usuario o contraseña incorrectos','error');
+
+  try{
+    // Validación segura por Supabase RPC
+    const { data, error } = await db.rpc('validar_admin', {
+      p_usuario: usuario,
+      p_password: pass
+    });
+
+    if(error) throw error;
+
+    if(data === true){
+      esAdmin = true;
+      localStorage.setItem(ADMIN_SESSION_KEY,'1');
+      $('login').style.display='none';
+      $('panelAdmin').style.display='block';
+      msg('Administrador activo.','ok');
+      await cargar();
+      return;
+    }
+
+    msg('Usuario o contraseña incorrectos.','error');
+
+  }catch(e){
+    console.error(e);
+    msg('No se pudo validar admin. Revisa conexión o función validar_admin.','error');
   }
 }
 function logoutAdmin(){
@@ -1084,4 +1097,3 @@ document.addEventListener('click',function(e){const box=document.querySelector('
 
 async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
-
