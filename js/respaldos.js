@@ -1,11 +1,13 @@
 const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx','salon_fama'];
+
 function inicioSemanaRespaldo(){
   const d=new Date();
-  const dia=d.getDay(); // domingo 0, lunes 1
+  const dia=d.getDay();
   const diff=(dia+6)%7;
   const ini=new Date(d.getFullYear(),d.getMonth(),d.getDate()-diff,8,0,0,0);
   return ini;
 }
+
 function semanaKeyRespaldo(fechaBase=new Date()){
   const ini=inicioSemanaRespaldo();
   const y=ini.getFullYear();
@@ -13,6 +15,7 @@ function semanaKeyRespaldo(fechaBase=new Date()){
   const week=Math.ceil((((ini-onejan)/86400000)+onejan.getDay()+1)/7);
   return `${y}-S${String(week).padStart(2,'0')}`;
 }
+
 async function obtenerDatosRespaldo(){
   const datos={meta:{app:'Quiniela Copa MX',version:'FIX23_BOTONES_ESTADO',fecha:new Date().toISOString(),semana:semanaKeyRespaldo()},tablas:{}};
   for(const t of TABLAS_RESPALDO){
@@ -24,53 +27,29 @@ async function obtenerDatosRespaldo(){
   datos.tablas.equipos=eq.error?[]:(eq.data||[]);
   return datos;
 }
+
 async function guardarRespaldo(tipo,automatico=false){
   const datos=await obtenerDatosRespaldo();
   datos.meta.tipo=tipo;
+  const payload={tipo,fecha:new Date().toISOString(),semana:semanaKeyRespaldo(),datos};
 
-  const payload={
-    tipo,
-    fecha:new Date().toISOString(),
-    semana:semanaKeyRespaldo(),
-    datos
-  };
+  const r=await db.from('respaldos').upsert(payload,{onConflict:'tipo'}).select().single();
 
-  const r=await db
-    .from('respaldos')
-    .upsert(payload,{onConflict:'tipo'})
-    .select()
-    .single();
-
-  if(r.error){
-    throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
-  }
+  if(r.error) throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
 
   try{
     if(automatico){
-      await audSistema(
-        'RESPALDO_AUTO',
-        'Sistema actualizó el respaldo automático semanal',
-        jornada?.id || null,
-        {},
-        {tipo, semana:payload.semana}
-      );
+      await audSistema('RESPALDO_AUTO','Sistema actualizó el respaldo automático semanal',jornada?.id||null,{}, {tipo,semana:payload.semana});
     }else{
-      await aud(
-        'RESPALDO_MANUAL',
-        'Admin creó respaldo manual',
-        jornada?.id || null,
-        {},
-        {tipo, semana:payload.semana}
-      );
+      await aud('RESPALDO_MANUAL','Admin creó respaldo manual',jornada?.id||null,{}, {tipo,semana:payload.semana});
     }
   }catch(e){
-    console.warn('No se pudo guardar auditoría del respaldo:', e.message);
+    console.warn('No se pudo guardar auditoría del respaldo:',e.message);
   }
 
   return r.data;
 }
-  
-    
+
 async function revisarRespaldoAutomatico(){
   try{
     const inicio=inicioSemanaRespaldo();
@@ -82,6 +61,8 @@ async function revisarRespaldoAutomatico(){
     await cargarEstadoRespaldos();
   }catch(e){console.warn('Respaldo automático:',e.message)}
 }
+
+
 async function cargarEstadoRespaldos(){
   const box=$('estadoRespaldos');
   try{
@@ -97,6 +78,8 @@ async function cargarEstadoRespaldos(){
     if(box) box.innerHTML='Falta correr el SQL de respaldos o revisar permisos: '+esc(e.message);
   }
 }
+
+
 async function crearRespaldoManual(){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -115,6 +98,8 @@ async function forzarRespaldoAutomatico(){
     msg('Respaldo automático actualizado manualmente.','ok');
   }catch(e){msg('Error respaldo automático: '+e.message,'error')}
 }
+
+
 async function obtenerRespaldoGuardado(tipo){
   const r=await db.from('respaldos').select('*').eq('tipo',tipo).maybeSingle();
   if(r.error) throw r.error;
@@ -133,6 +118,8 @@ async function descargarRespaldo(tipo){
     msg('Respaldo descargado','ok');
   }catch(e){msg('Error al descargar respaldo: '+e.message,'error')}
 }
+
+
 async function restaurarRespaldo(tipo){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -161,4 +148,3 @@ async function restaurarRespaldo(tipo){
     await cargar();
     msg('Respaldo restaurado correctamente','ok');
   }catch(e){msg('Error al restaurar: '+e.message,'error')}
-
