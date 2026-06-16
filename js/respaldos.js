@@ -30,10 +30,29 @@ async function guardarRespaldo(tipo,automatico=false){
   const payload={tipo,fecha:new Date().toISOString(),semana:semanaKeyRespaldo(),datos};
   const r=await db.from('respaldos').upsert(payload,{onConflict:'tipo'}).select().single();
   if(r.error) throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
-  if(automatico) await audSistema('RESPALDO_AUTO','Sistema actualizó el respaldo automático semanal',jornada?.id||null,{}, {tipo,semana:payload.semana});
-  else await aud('RESPALDO_MANUAL','Admin creó respaldo manual',null,{}, {tipo,semana:payload.semana});
-  return r.data;
+  try{
+  if(automatico){
+    await audSistema(
+      'RESPALDO_AUTO',
+      'Sistema actualizó el respaldo automático semanal',
+      jornada?.id || null,
+      {},
+      {tipo, semana: payload.semana}
+    );
+  }else{
+    await aud(
+      'RESPALDO_MANUAL',
+      'Admin creó respaldo manual',
+      jornada?.id || null,
+      {},
+      {tipo, semana: payload.semana}
+    );
+  }
+}catch(e){
+  console.warn('No se pudo guardar auditoría del respaldo:', e.message);
 }
+  
+    
 async function revisarRespaldoAutomatico(){
   try{
     const inicio=inicioSemanaRespaldo();
@@ -125,4 +144,3 @@ async function restaurarRespaldo(tipo){
     msg('Respaldo restaurado correctamente','ok');
   }catch(e){msg('Error al restaurar: '+e.message,'error')}
 }
-
