@@ -950,7 +950,22 @@ async function restaurarRespaldo(tipo){
 
 function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
 function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo);localStorage.setItem('quiniela_copamx_modo_oscuro',activo?'1':'0')}
-function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
+function aplicarModoOscuro(){
+    let valor = localStorage.getItem('quiniela_copamx_modo_oscuro');
+
+    // Si nunca ha elegido tema, usar oscuro
+    if(valor === null){
+        valor = '1';
+        localStorage.setItem('quiniela_copamx_modo_oscuro','1');
+    }
+
+    const activo = valor === '1';
+
+    document.body.classList.toggle('dark', activo);
+
+    const c = document.getElementById('modoOscuroCheck');
+    if(c) c.checked = activo;
+}
 
 
 /* =================== FIX24: COMPARTIR CLASIFICACIÓN WHATSAPP =================== */
