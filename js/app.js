@@ -22,6 +22,7 @@ function equiposSeleccionadosAdmin(){return [...document.querySelectorAll('.equi
 function actualizarSelectsPartidos(){let usados=equiposSeleccionadosAdmin();document.querySelectorAll('.equipo-select').forEach(sel=>{[...sel.options].forEach(op=>{if(!op.value){op.disabled=false;return}op.disabled=usados.includes(op.value)&&op.value!==sel.value})});let total=new Set(usados).size;let box=$('contadorEquiposUsados');if(box){box.textContent=`Equipos utilizados: ${total}/18`;box.className='equipos-usados '+(total===18?'equipos-ok':'equipos-bad')}}
 function validarEquiposJornada(regs){let usados=[];for(const r of regs){usados.push(r.local,r.visitante)}let rep=usados.filter((x,i)=>usados.indexOf(x)!==i);if(rep.length)throw new Error('Hay equipos repetidos: '+[...new Set(rep)].join(', '));if(usados.length!==18||new Set(usados).size!==18)throw new Error('Deben usarse exactamente 18 equipos sin repetir.')}
 function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(id==='admin'&&esAdmin)cargarPrivado()}
+function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(esAdmin)cargarPrivado()}
 function dtLocal(v){if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function toISO(v){return v?new Date(v).toISOString():null}
 function fecha(v){if(!v)return'-';const d=new Date(v);return d.toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
@@ -298,11 +299,28 @@ function dibQuinielaMovil(lista){
   if(!jornada){cont.innerHTML='<div class="boleto-form-card">No hay jornada activa.</div>';return}
   let html='';
 
+  // FIX: al unificar calendarios, la pestaña Quiniela móvil dependía de
+  // "Nuevo boleto" para mostrar partidos. Si la jornada estaba cerrada,
+  // bloqueada o no tenía exactamente 9 partidos, ya no se veía el calendario.
+  // Este bloque muestra SIEMPRE el calendario de la jornada en móvil,
+  // usando las mismas tarjetas que la pestaña Partidos.
+  if(partidos.length){
+    html+=`<div class="boleto-form-card">
+      <h3>📅 Calendario de la jornada</h3>
+      <div class="partidos-grid">${partidos.map(p=>cardPartidoNormal(p)).join('')}</div>
+    </div>`;
+  }else{
+    html+=`<div class="boleto-form-card"><b>📅 Calendario de la jornada</b><div class="small">Aún no hay partidos cargados para esta jornada.</div></div>`;
+  }
+
   if(!bloqueada()&&partidos.length===9){
     html+=`<div class="boleto-form-card"><h3>Nuevo boleto</h3><input id="mNuevoNombre" placeholder="Nombre / boleto"><input id="mNuevoTelefono" placeholder="Teléfono opcional"><div class="small" id="mModo">Nuevo boleto</div>`;
     partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
-  }else{html+=`<div class="boleto-form-card"><b>Quiniela cerrada.</b></div>`}
+  }else{
+    const motivo = bloqueada() ? 'Quiniela cerrada.' : `Faltan partidos para capturar boleto (${partidos.length}/9).`;
+    html+=`<div class="boleto-form-card"><b>${esc(motivo)}</b></div>`;
+  }
 
   let lugar=0,pos=0,ant=null;
   const lugares={};
@@ -338,6 +356,7 @@ function dibQuinielaMovil(lista){
   }
   cont.innerHTML=html;
 }
+
 function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('nuevoNombre').value=$('mNuevoNombre').value; $('nuevoTelefono').value=$('mNuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ds.value=ms.value}); }
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
 function guardarBoletoMovil(){copiarMovilADesktop();guardarBoleto()}
@@ -626,6 +645,52 @@ function aplicarEstadoAdmin(){
   if(login) login.style.display=esAdmin?'none':'block';
   if(panel) panel.style.display=esAdmin?'block':'none';
 }
+async function loginAdmin(){
+  const usuario = $('adminUser').value.trim();
+  const pass = $('adminPass').value.trim();
+
+  if(!usuario || !pass){
+    msg('Escribe usuario y contraseña.','error');
+    return;
+  }
+
+  try{
+    // Validación segura por Supabase RPC
+    const { data, error } = await db.rpc('validar_admin', {
+      p_usuario: usuario,
+      p_password: pass
+    });
+
+    if(error) throw error;
+
+    if(data === true){
+      esAdmin = true;
+      localStorage.setItem(ADMIN_SESSION_KEY,'1');
+      $('login').style.display='none';
+      $('panelAdmin').style.display='block';
+      msg('Administrador activo.','ok');
+      await cargar();
+      return;
+    }
+
+    msg('Usuario o contraseña incorrectos.','error');
+
+  }catch(e){
+    console.error(e);
+    msg('No se pudo validar admin. Revisa conexión o función validar_admin.','error');
+  }
+}
+function logoutAdmin(){
+  esAdmin=false;
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  editandoJornadaId=null;
+  aplicarEstadoAdmin();
+  cancelarEdicion(false);
+  dibujar();
+  msg('Admin cerrado. La página volvió a modo usuario.','info')
+}
+function dibAdmin(){let nums='';for(let i=1;i<=17;i++)nums+=`<option value="${i}">Jornada ${i}</option>`;nums+=`<option value="${NUM_LIGUILLA}">🏆 Liguilla</option>`;$('jNumero').innerHTML=nums;if(!$('jNombre').value)$('jNombre').value='Jornada 1'; if($('jNumero')) $('jNumero').setAttribute('onchange','prepararFormJornada()'); prepararFormJornada();dibJornadas();dibResultados();dibPagos()}
+function partidoLiguillaNombre(i){const nombres=['Cuartos ida 1','Cuartos ida 2','Cuartos ida 3','Cuartos ida 4','Cuartos vuelta 1','Cuartos vuelta 2','Cuartos vuelta 3','Cuartos vuelta 4','Semifinal ida 1','Semifinal ida 2','Semifinal vuelta 1','Semifinal vuelta 2','Final ida','Final vuelta'];return nombres[i-1]||('Partido '+i)}
 function totalPartidosForm(){return Number($('jNumero')?.value)===NUM_LIGUILLA?14:9}
 function prepararFormJornada(){
  const num=Number($('jNumero')?.value||1); if($('jNombre')) $('jNombre').value = num===NUM_LIGUILLA ? 'Liguilla' : 'Jornada '+num;
@@ -736,10 +801,170 @@ async function recalcularTablaLiga(){
   }
 }
 
+async function forzarRecalculoTabla(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    await recalcularTablaLiga();
+    await cargar();
+    await aud('RECALCULAR_TABLA','Admin forzó actualización de tabla general');
+    msg('Tabla general recalculada desde cero','ok');
+  }catch(e){msg('Error al recalcular tabla: '+e.message,'error')}
+}
 
-
+async function reiniciarTorneo(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    let c1=confirm('Esto borrará boletos, jornadas, partidos, resultados, pagos, fama y auditoría. Se conservan equipos y escudos. ¿Continuar?');
+    if(!c1)return;
+    let txt=prompt('Para confirmar escribe exactamente: REINICIAR TORNEO');
+    if(txt!=='REINICIAR TORNEO')return msg('Reinicio cancelado','info');
+    let temporada=prompt('Nombre de temporada para guardar en Salón de la Fama:', 'Apertura 2026') || ('Temporada '+new Date().getFullYear());
+    msg('Archivando Salón de la Fama antes de reiniciar...','info');
+    await archivarSalonFamaAntesDeReiniciar(temporada);
+    try{ await guardarRespaldo('PRE_REINICIO',false); }catch(e){ console.warn('No se pudo crear respaldo PRE_REINICIO:',e.message); }
+    // Orden por relaciones.
+    await db.from('pronosticos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('pagos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('fama').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('auditoria').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('partidos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('usuarios').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('jornadas').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    jornada=null;jornadas=[];partidos=[];usuarios=[];pronosticos=[];pagos=[];auditoria=[];fama=[];tablaLiga=[];
+    await cargar();
+    msg('Torneo reiniciado. Equipos y escudos se conservaron. Salón de la Fama archivado.','ok');
+  }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
+}
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
+const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx','salon_fama'];
+function inicioSemanaRespaldo(){
+  const d=new Date();
+  const dia=d.getDay(); // domingo 0, lunes 1
+  const diff=(dia+6)%7;
+  const ini=new Date(d.getFullYear(),d.getMonth(),d.getDate()-diff,8,0,0,0);
+  return ini;
+}
+function semanaKeyRespaldo(fechaBase=new Date()){
+  const ini=inicioSemanaRespaldo();
+  const y=ini.getFullYear();
+  const onejan=new Date(y,0,1);
+  const week=Math.ceil((((ini-onejan)/86400000)+onejan.getDay()+1)/7);
+  return `${y}-S${String(week).padStart(2,'0')}`;
+}
+async function obtenerDatosRespaldo(){
+  const datos={meta:{app:'Quiniela Copa MX',version:'FIX23_BOTONES_ESTADO',fecha:new Date().toISOString(),semana:semanaKeyRespaldo()},tablas:{}};
+  for(const t of TABLAS_RESPALDO){
+    const r=await db.from(t).select('*');
+    if(r.error) throw new Error(`No pude leer ${t}: ${r.error.message}`);
+    datos.tablas[t]=r.data||[];
+  }
+  const eq=await db.from('equipos').select('*').order('nombre');
+  datos.tablas.equipos=eq.error?[]:(eq.data||[]);
+  return datos;
+}
+async function guardarRespaldo(tipo,automatico=false){
+  const datos=await obtenerDatosRespaldo();
+  datos.meta.tipo=tipo;
+  const payload={tipo,fecha:new Date().toISOString(),semana:semanaKeyRespaldo(),datos};
+  const r=await db.from('respaldos').upsert(payload,{onConflict:'tipo'}).select().single();
+  if(r.error) throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
+  if(automatico) await audSistema('RESPALDO_AUTO','Sistema actualizó el respaldo automático semanal',jornada?.id||null,{}, {tipo,semana:payload.semana});
+  else await aud('RESPALDO_MANUAL','Admin creó respaldo manual',null,{}, {tipo,semana:payload.semana});
+  return r.data;
+}
+async function revisarRespaldoAutomatico(){
+  try{
+    const inicio=inicioSemanaRespaldo();
+    if(Date.now()<inicio.getTime()) return;
+    const r=await db.from('respaldos').select('*').eq('tipo','AUTO_SEMANAL').maybeSingle();
+    if(r.error) return console.warn('Respaldos no disponibles:',r.error.message);
+    if(r.data && new Date(r.data.fecha).getTime()>=inicio.getTime()) return;
+    await guardarRespaldo('AUTO_SEMANAL',true);
+    await cargarEstadoRespaldos();
+  }catch(e){console.warn('Respaldo automático:',e.message)}
+}
+async function cargarEstadoRespaldos(){
+  const box=$('estadoRespaldos');
+  try{
+    const r=await db.from('respaldos').select('tipo,fecha,semana').order('tipo');
+    if(r.error) throw r.error;
+    respaldos=r.data||[];
+    if(box){
+      const auto=respaldos.find(x=>x.tipo==='AUTO_SEMANAL');
+      const man=respaldos.find(x=>x.tipo==='MANUAL');
+      box.innerHTML=`Último automático: <b>${auto?fecha(auto.fecha)+' · '+esc(auto.semana||''):'No existe'}</b><br>Último manual: <b>${man?fecha(man.fecha)+' · '+esc(man.semana||''):'No existe'}</b>`;
+    }
+  }catch(e){
+    if(box) box.innerHTML='Falta correr el SQL de respaldos o revisar permisos: '+esc(e.message);
+  }
+}
+async function crearRespaldoManual(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    msg('Creando respaldo manual...','info');
+    await guardarRespaldo('MANUAL',false);
+    await cargarEstadoRespaldos();
+    msg('Respaldo manual creado. Se reescribió el respaldo manual anterior.','ok');
+  }catch(e){msg('Error respaldo: '+e.message,'error')}
+}
+async function forzarRespaldoAutomatico(){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    msg('Actualizando respaldo automático...','info');
+    await guardarRespaldo('AUTO_SEMANAL',true);
+    await cargarEstadoRespaldos();
+    msg('Respaldo automático actualizado manualmente.','ok');
+  }catch(e){msg('Error respaldo automático: '+e.message,'error')}
+}
+async function obtenerRespaldoGuardado(tipo){
+  const r=await db.from('respaldos').select('*').eq('tipo',tipo).maybeSingle();
+  if(r.error) throw r.error;
+  if(!r.data) throw new Error('No existe respaldo '+tipo);
+  return r.data;
+}
+async function descargarRespaldo(tipo){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    const r=await obtenerRespaldoGuardado(tipo);
+    const blob=new Blob([JSON.stringify(r.datos,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`quiniela_copamx_${tipo}_${(r.semana||'respaldo')}.json`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(a.href);
+    msg('Respaldo descargado','ok');
+  }catch(e){msg('Error al descargar respaldo: '+e.message,'error')}
+}
+async function restaurarRespaldo(tipo){
+  try{
+    if(!esAdmin)return msg('Solo administrador','error');
+    const r=await obtenerRespaldoGuardado(tipo);
+    if(!confirm(`Restaurar respaldo ${tipo} del ${fecha(r.fecha)}? Esto reemplazará jornadas, boletos, partidos, pronósticos, pagos, fama, auditoría y tabla general. Equipos y escudos se conservan.`))return;
+    const txt=prompt('Para confirmar escribe: RESTAURAR RESPALDO');
+    if(txt!=='RESTAURAR RESPALDO')return msg('Restauración cancelada','info');
+    const datos=r.datos?.tablas||{};
+    await db.from('pronosticos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('pagos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('fama').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('auditoria').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('partidos').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('usuarios').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('jornadas').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
+    const orden=['jornadas','usuarios','partidos','pronosticos','pagos','fama','tabla_liga_mx','auditoria'];
+    for(const t of orden){
+      const arr=datos[t]||[];
+      if(arr.length){
+        const ins=await db.from(t).insert(arr);
+        if(ins.error) throw new Error(`Error restaurando ${t}: ${ins.error.message}`);
+      }
+    }
+    jornadaVistaId=null;editandoId=null;editandoJornadaId=null;
+    await cargar();
+    msg('Respaldo restaurado correctamente','ok');
+  }catch(e){msg('Error al restaurar: '+e.message,'error')}
+}
 
 function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
 function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo);localStorage.setItem('quiniela_copamx_modo_oscuro',activo?'1':'0')}
@@ -871,7 +1096,6 @@ async function ejecutarConEstadoBoton(textoTrabajo, tarea){
     throw e;
   }
 }
-    function partidoLiguillaNombre(i){const nombres=['Cuartos ida 1','Cuartos ida 2','Cuartos ida 3','Cuartos ida 4','Cuartos vuelta 1','Cuartos vuelta 2','Cuartos vuelta 3','Cuartos vuelta 4','Semifinal ida 1','Semifinal ida 2','Semifinal vuelta 1','Semifinal vuelta 2','Final ida','Final vuelta'];return nombres[i-1]||('Partido '+i)}
 
 function aplicarEstadosABotones(){
   const envolver=(nombre,texto)=>{
