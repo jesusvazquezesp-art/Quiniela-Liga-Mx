@@ -27,29 +27,47 @@ async function obtenerDatosRespaldo(){
 async function guardarRespaldo(tipo,automatico=false){
   const datos=await obtenerDatosRespaldo();
   datos.meta.tipo=tipo;
-  const payload={tipo,fecha:new Date().toISOString(),semana:semanaKeyRespaldo(),datos};
-  const r=await db.from('respaldos').upsert(payload,{onConflict:'tipo'}).select().single();
-  if(r.error) throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
-  try{
-  if(automatico){
-    await audSistema(
-      'RESPALDO_AUTO',
-      'Sistema actualizó el respaldo automático semanal',
-      jornada?.id || null,
-      {},
-      {tipo, semana: payload.semana}
-    );
-  }else{
-    await aud(
-      'RESPALDO_MANUAL',
-      'Admin creó respaldo manual',
-      jornada?.id || null,
-      {},
-      {tipo, semana: payload.semana}
-    );
+
+  const payload={
+    tipo,
+    fecha:new Date().toISOString(),
+    semana:semanaKeyRespaldo(),
+    datos
+  };
+
+  const r=await db
+    .from('respaldos')
+    .upsert(payload,{onConflict:'tipo'})
+    .select()
+    .single();
+
+  if(r.error){
+    throw new Error('No pude guardar respaldo. ¿Ya corriste el SQL de respaldos? '+r.error.message);
   }
-}catch(e){
-  console.warn('No se pudo guardar auditoría del respaldo:', e.message);
+
+  try{
+    if(automatico){
+      await audSistema(
+        'RESPALDO_AUTO',
+        'Sistema actualizó el respaldo automático semanal',
+        jornada?.id || null,
+        {},
+        {tipo, semana:payload.semana}
+      );
+    }else{
+      await aud(
+        'RESPALDO_MANUAL',
+        'Admin creó respaldo manual',
+        jornada?.id || null,
+        {},
+        {tipo, semana:payload.semana}
+      );
+    }
+  }catch(e){
+    console.warn('No se pudo guardar auditoría del respaldo:', e.message);
+  }
+
+  return r.data;
 }
   
     
@@ -143,5 +161,4 @@ async function restaurarRespaldo(tipo){
     await cargar();
     msg('Respaldo restaurado correctamente','ok');
   }catch(e){msg('Error al restaurar: '+e.message,'error')}
-  }
-}
+
