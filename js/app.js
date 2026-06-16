@@ -22,7 +22,6 @@ function equiposSeleccionadosAdmin(){return [...document.querySelectorAll('.equi
 function actualizarSelectsPartidos(){let usados=equiposSeleccionadosAdmin();document.querySelectorAll('.equipo-select').forEach(sel=>{[...sel.options].forEach(op=>{if(!op.value){op.disabled=false;return}op.disabled=usados.includes(op.value)&&op.value!==sel.value})});let total=new Set(usados).size;let box=$('contadorEquiposUsados');if(box){box.textContent=`Equipos utilizados: ${total}/18`;box.className='equipos-usados '+(total===18?'equipos-ok':'equipos-bad')}}
 function validarEquiposJornada(regs){let usados=[];for(const r of regs){usados.push(r.local,r.visitante)}let rep=usados.filter((x,i)=>usados.indexOf(x)!==i);if(rep.length)throw new Error('Hay equipos repetidos: '+[...new Set(rep)].join(', '));if(usados.length!==18||new Set(usados).size!==18)throw new Error('Deben usarse exactamente 18 equipos sin repetir.')}
 function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(id==='admin'&&esAdmin)cargarPrivado()}
-function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(esAdmin)cargarPrivado()}
 function dtLocal(v){if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function toISO(v){return v?new Date(v).toISOString():null}
 function fecha(v){if(!v)return'-';const d=new Date(v);return d.toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
@@ -627,52 +626,6 @@ function aplicarEstadoAdmin(){
   if(login) login.style.display=esAdmin?'none':'block';
   if(panel) panel.style.display=esAdmin?'block':'none';
 }
-async function loginAdmin(){
-  const usuario = $('adminUser').value.trim();
-  const pass = $('adminPass').value.trim();
-
-  if(!usuario || !pass){
-    msg('Escribe usuario y contraseña.','error');
-    return;
-  }
-
-  try{
-    // Validación segura por Supabase RPC
-    const { data, error } = await db.rpc('validar_admin', {
-      p_usuario: usuario,
-      p_password: pass
-    });
-
-    if(error) throw error;
-
-    if(data === true){
-      esAdmin = true;
-      localStorage.setItem(ADMIN_SESSION_KEY,'1');
-      $('login').style.display='none';
-      $('panelAdmin').style.display='block';
-      msg('Administrador activo.','ok');
-      await cargar();
-      return;
-    }
-
-    msg('Usuario o contraseña incorrectos.','error');
-
-  }catch(e){
-    console.error(e);
-    msg('No se pudo validar admin. Revisa conexión o función validar_admin.','error');
-  }
-}
-function logoutAdmin(){
-  esAdmin=false;
-  localStorage.removeItem(ADMIN_SESSION_KEY);
-  editandoJornadaId=null;
-  aplicarEstadoAdmin();
-  cancelarEdicion(false);
-  dibujar();
-  msg('Admin cerrado. La página volvió a modo usuario.','info')
-}
-function dibAdmin(){let nums='';for(let i=1;i<=17;i++)nums+=`<option value="${i}">Jornada ${i}</option>`;nums+=`<option value="${NUM_LIGUILLA}">🏆 Liguilla</option>`;$('jNumero').innerHTML=nums;if(!$('jNombre').value)$('jNombre').value='Jornada 1'; if($('jNumero')) $('jNumero').setAttribute('onchange','prepararFormJornada()'); prepararFormJornada();dibJornadas();dibResultados();dibPagos()}
-function partidoLiguillaNombre(i){const nombres=['Cuartos ida 1','Cuartos ida 2','Cuartos ida 3','Cuartos ida 4','Cuartos vuelta 1','Cuartos vuelta 2','Cuartos vuelta 3','Cuartos vuelta 4','Semifinal ida 1','Semifinal ida 2','Semifinal vuelta 1','Semifinal vuelta 2','Final ida','Final vuelta'];return nombres[i-1]||('Partido '+i)}
 function totalPartidosForm(){return Number($('jNumero')?.value)===NUM_LIGUILLA?14:9}
 function prepararFormJornada(){
  const num=Number($('jNumero')?.value||1); if($('jNombre')) $('jNombre').value = num===NUM_LIGUILLA ? 'Liguilla' : 'Jornada '+num;
@@ -783,41 +736,8 @@ async function recalcularTablaLiga(){
   }
 }
 
-async function forzarRecalculoTabla(){
-  try{
-    if(!esAdmin)return msg('Solo administrador','error');
-    await recalcularTablaLiga();
-    await cargar();
-    await aud('RECALCULAR_TABLA','Admin forzó actualización de tabla general');
-    msg('Tabla general recalculada desde cero','ok');
-  }catch(e){msg('Error al recalcular tabla: '+e.message,'error')}
-}
 
-async function reiniciarTorneo(){
-  try{
-    if(!esAdmin)return msg('Solo administrador','error');
-    let c1=confirm('Esto borrará boletos, jornadas, partidos, resultados, pagos, fama y auditoría. Se conservan equipos y escudos. ¿Continuar?');
-    if(!c1)return;
-    let txt=prompt('Para confirmar escribe exactamente: REINICIAR TORNEO');
-    if(txt!=='REINICIAR TORNEO')return msg('Reinicio cancelado','info');
-    let temporada=prompt('Nombre de temporada para guardar en Salón de la Fama:', 'Apertura 2026') || ('Temporada '+new Date().getFullYear());
-    msg('Archivando Salón de la Fama antes de reiniciar...','info');
-    await archivarSalonFamaAntesDeReiniciar(temporada);
-    try{ await guardarRespaldo('PRE_REINICIO',false); }catch(e){ console.warn('No se pudo crear respaldo PRE_REINICIO:',e.message); }
-    // Orden por relaciones.
-    await db.from('pronosticos').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('pagos').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('fama').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('auditoria').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('partidos').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('usuarios').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('jornadas').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    await db.from('tabla_liga_mx').delete().neq('id','00000000-0000-0000-0000-000000000000');
-    jornada=null;jornadas=[];partidos=[];usuarios=[];pronosticos=[];pagos=[];auditoria=[];fama=[];tablaLiga=[];
-    await cargar();
-    msg('Torneo reiniciado. Equipos y escudos se conservaron. Salón de la Fama archivado.','ok');
-  }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
-}
+
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
 
@@ -951,6 +871,7 @@ async function ejecutarConEstadoBoton(textoTrabajo, tarea){
     throw e;
   }
 }
+    function partidoLiguillaNombre(i){const nombres=['Cuartos ida 1','Cuartos ida 2','Cuartos ida 3','Cuartos ida 4','Cuartos vuelta 1','Cuartos vuelta 2','Cuartos vuelta 3','Cuartos vuelta 4','Semifinal ida 1','Semifinal ida 2','Semifinal vuelta 1','Semifinal vuelta 2','Final ida','Final vuelta'];return nombres[i-1]||('Partido '+i)}
 
 function aplicarEstadosABotones(){
   const envolver=(nombre,texto)=>{
