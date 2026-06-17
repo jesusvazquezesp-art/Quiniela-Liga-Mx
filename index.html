@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela Copa MX</title>
-  <title>Torneo Apertura 2026</title>
+<title>Quiniela Copa MX / Torneo Apertura 2026</title>
 <meta name="description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
-<meta property="og:title" content="🏆 Quiniela Copa MX V2">
+<meta property="og:title" content="🏆 Quiniela Copa MX">
 <meta property="og:description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
 <meta property="og:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
 <meta property="og:image:secure_url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
@@ -16,7 +15,7 @@
 <meta property="og:url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🏆 Quiniela Copa MX V2">
+<meta name="twitter:title" content="🏆 Quiniela Copa MX">
 <meta name="twitter:description" content="Clasificación en vivo y liguilla">
 <meta name="twitter:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
 <link rel="icon" type="image/png" href="logo.png">
@@ -30,7 +29,27 @@
 .estado-flow span.activo{background:#0d47a1;color:#fff;border-color:#0d47a1;box-shadow:0 2px 8px rgba(13,71,161,.25)}
 .header-logo{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
 .header-logo img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
-.header-logo h1{margin:0;font-size:28px;line-height:1.05}
+.header-logo h1{
+  margin:0;
+  font-size:28px;
+  line-height:1.05;
+  transform:translateX(-18px);
+}
+
+.header-logo .torneo-sub{
+  font-size:15px;
+  color:#ffd54f;
+  font-weight:bold;
+  margin-top:4px;
+  transform:translateX(-18px);
+}
+
+.header-logo .header-sub{
+  font-size:14px;
+  opacity:.92;
+  margin-top:3px;
+  transform:translateX(-18px);
+}
 .header-logo .header-sub{font-size:14px;opacity:.92;margin-top:3px}
 .contador-box{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;line-height:1.1;min-width:132px;max-width:190px;white-space:normal;text-align:center;padding:7px 12px;border-radius:14px}
 .contador-label{display:block;font-size:13px;font-weight:900;line-height:1.1;white-space:normal}
@@ -775,7 +794,27 @@ body.dark .footer-stat{
   </div>
 </div>
 
-<header><div class="header-logo"><img src="logo.png" alt="Logo Quiniela Copa MX"><div><h1>Quiniela Copa MX</h1><div class="header-sub" id="subtitulo">Cargando...</div></div></div></header>
+  <header>
+  <div class="header-logo">
+    <img src="logo.png" alt="Logo Quiniela Copa MX">
+    <div>
+      <h1 style="margin-left:-18px;">Quiniela Copa MX</h1>
+
+      <div style="
+        margin-left:-18px;
+        color:#ffd54f;
+        font-size:15px;
+        font-weight:bold;
+        margin-top:4px;">
+        Torneo Apertura 2026
+      </div>
+
+      <div class="header-sub" id="subtitulo" style="margin-left:-18px;">
+        Cargando...
+      </div>
+    </div>
+  </div>
+</header>
 <div class="contenedor">
  <div class="resumen">
   <div class="box"><div class="small">Jornada activa</div><div class="num" id="rJornada">-</div></div>
