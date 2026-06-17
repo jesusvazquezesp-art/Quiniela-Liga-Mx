@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiniela Copa MX V2</title>
 <meta name="description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
@@ -22,29 +21,12 @@
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Quiniela Copa MX V2</title>
-
+<title>Quiniela Copa MX</title>
 <link rel="stylesheet" href="css/estilos.css">
-
 </head>
-
 <body>
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
 <div class="menu-flotante">
   <button class="menu-btn" onclick="toggleMenuOpciones()" title="Opciones">☰</button>
   <div id="menuOpciones" class="menu-panel">
@@ -55,7 +37,6 @@
     </div>
   </div>
 </div>
-
 <header><div class="header-logo"><img src="logo.png" alt="Logo Quiniela Copa MX"><div><h1>Quiniela Copa MX</h1><div class="header-sub" id="subtitulo">Cargando...</div></div></div></header>
 <div class="contenedor">
  <div class="resumen">
@@ -78,19 +59,19 @@
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
  <section id="salon" class="seccion"><div class="card"><h2>🏛️ Salón de la Fama histórico</h2><p class="small">Se guarda por temporada antes de reiniciar torneo. Usa apodo visible, teléfono opcional enmascarado, usuario_id y dispositivo para no confundir personas con el mismo nombre.</p><div id="salonLista"></div></div></section>
  <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Respaldo manual</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button><button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button><button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div>
-
 <div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div></section>
 </div>
- 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/app.js"></script>
+<script src="js/partidos.js"></script>
+<script src="js/clasificacion.js"></script>
+<script src="js/tabla-liga.js"></script>
+<script src="js/salon-fama.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/respaldos.js"></script>
-<script src="js/tabla-liga.js"></script>
-
-
+<script src="js/whatsapp.js"></script>
+<script src="js/boot.js"></script>
 </body>
 </html>
