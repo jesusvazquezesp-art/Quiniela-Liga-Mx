@@ -707,6 +707,54 @@ body.dark .ayuda-tabla div:nth-child(odd){background:#132b4a;color:#4da3ff}
   .ayuda-tabla{grid-template-columns:58px 1fr}
 }
 
+
+/* FIX36: Pie de página con estadísticas automáticas */
+.footer-quiniela{
+  max-width:1350px;
+  margin:34px auto 0;
+  padding:24px 14px 28px;
+  text-align:center;
+  font-size:14px;
+  line-height:1.65;
+  color:var(--texto);
+  border-top:1px solid rgba(128,128,128,.28);
+}
+.footer-quiniela .footer-title{
+  font-size:18px;
+  font-weight:900;
+  color:var(--azul);
+  margin-bottom:6px;
+}
+.footer-stats{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:14px auto;
+}
+.footer-stat{
+  background:var(--card);
+  border:1px solid var(--borde);
+  border-radius:14px;
+  padding:9px 12px;
+  min-width:150px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.footer-stat b{
+  font-size:18px;
+  color:var(--azul);
+}
+.footer-version{
+  margin-top:9px;
+  font-size:12px;
+  opacity:.72;
+}
+body.dark .footer-stat{
+  background:var(--card)!important;
+  border-color:var(--borde)!important;
+  color:var(--texto)!important;
+}
+
 </style>
 </head>
 <body>
@@ -753,6 +801,33 @@ body.dark .ayuda-tabla div:nth-child(odd){background:#132b4a;color:#4da3ff}
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div></section>
 </div>
+
+
+<footer class="footer-quiniela">
+  <div class="footer-title">🏆 Quiniela Copa MX V2</div>
+
+  <div>
+    Sistema de pronósticos deportivos,<br>
+    clasificación en vivo, liguilla y salón de la fama.
+  </div>
+
+  <div class="footer-stats">
+    <div class="footer-stat">👥 Personas<br><b id="ftPersonas">0</b></div>
+    <div class="footer-stat">🎟️ Boletos<br><b id="ftBoletos">0</b></div>
+    <div class="footer-stat">📅 Jornadas<br><b id="ftJornadas">0</b></div>
+  </div>
+
+  <div>
+    © 2026 Jesús Vázquez<br>
+    Ciudad Juárez, Chihuahua, México
+  </div>
+
+  <div>Todos los derechos reservados.</div>
+
+  <div class="footer-version">
+    Versión FIX36 • Actualización automática • Supabase Cloud
+  </div>
+</footer>
 
 <div id="ayudaQuinielaModal" class="ayuda-modal" onclick="cerrarAyudaQuiniela(event)">
   <div class="ayuda-contenido" onclick="event.stopPropagation()">
@@ -1102,7 +1177,7 @@ async function cargar(){
   if(p.error||u.error||pr.error||pa.error)throw (p.error||u.error||pr.error||pa.error);
   partidos=p.data||[];usuarios=u.data||[];pronosticos=pr.data||[];pagos=pa.data||[];fama=f.data||[];tablaLiga=t.data||[];
  }else{partidos=[];usuarios=[];pronosticos=[];pagos=[]}
- dibujar()
+ dibujar();actualizarEstadisticasFooter();
 }
 function dibujar(){dibSelectorJornadas();dibResumen();dibQuiniela();dibClasificacion();dibPartidos();dibTablaLiga();dibFama();dibSalonFama();if(esAdmin){dibAdmin();cargarPrivado(false)}}
 function dibSelectorJornadas(){
@@ -1946,6 +2021,45 @@ function cerrarAyudaQuiniela(ev){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')cerrarAyudaQuiniela();
 });
+
+
+async function actualizarEstadisticasFooter(){
+  try{
+    const [uRes,jRes]=await Promise.all([
+      db.from('usuarios').select('id,nombre,telefono,activo'),
+      db.from('jornadas').select('id')
+    ]);
+
+    const usuariosFooter = (!uRes.error && uRes.data) ? uRes.data.filter(u=>u.activo!==false) : (usuarios||[]);
+    const jornadasFooter = (!jRes.error && jRes.data) ? jRes.data : (jornadas||[]);
+
+    const personasSet=new Set();
+
+    usuariosFooter.forEach(u=>{
+      const tel=String(u.telefono||'').replace(/\D/g,'').trim();
+      const nombre=String(u.nombre||'').trim().toLowerCase();
+
+      if(tel){
+        personasSet.add('tel:'+tel);
+      }else if(nombre){
+        personasSet.add('nombre:'+nombre);
+      }else{
+        personasSet.add('id:'+u.id);
+      }
+    });
+
+    const p=document.getElementById('ftPersonas');
+    const b=document.getElementById('ftBoletos');
+    const j=document.getElementById('ftJornadas');
+
+    if(p) p.textContent=personasSet.size;
+    if(b) b.textContent=usuariosFooter.length;
+    if(j) j.textContent=jornadasFooter.length;
+
+  }catch(e){
+    console.warn('Estadísticas footer:',e);
+  }
+}
 
 </script>
 </body>
