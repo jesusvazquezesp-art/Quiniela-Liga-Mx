@@ -1,7 +1,6 @@
 async function loginAdmin(){
   const usuario = $('adminUser').value.trim();
   const pass = $('adminPass').value.trim();
-
   if(!usuario || !pass){
     msg('Escribe usuario y contraseña.','error');
     return;
@@ -43,9 +42,7 @@ function logoutAdmin(){
   msg('Admin cerrado. La página volvió a modo usuario.','info')
 }
 function dibAdmin(){let nums='';for(let i=1;i<=17;i++)nums+=`<option value="${i}">Jornada ${i}</option>`;nums+=`<option value="${NUM_LIGUILLA}">🏆 Liguilla</option>`;$('jNumero').innerHTML=nums;if(!$('jNombre').value)$('jNombre').value='Jornada 1'; if($('jNumero')) $('jNumero').setAttribute('onchange','prepararFormJornada()'); prepararFormJornada();dibJornadas();dibResultados();dibPagos()}
-
 function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(esAdmin)cargarPrivado()}
-
 async function reiniciarTorneo(){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -71,7 +68,6 @@ async function reiniciarTorneo(){
     msg('Torneo reiniciado. Equipos y escudos se conservaron. Salón de la Fama archivado.','ok');
   }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
 }
-
 async function forzarRecalculoTabla(){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -81,5 +77,48 @@ async function forzarRecalculoTabla(){
     msg('Tabla general recalculada desde cero','ok');
   }catch(e){msg('Error al recalcular tabla: '+e.message,'error')}
 }
+function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(esAdmin)cargarPrivado()}
+async function loginAdmin(){
+  const usuario = $('adminUser').value.trim();
+  const pass = $('adminPass').value.trim();
 
+  if(!usuario || !pass){
+    msg('Escribe usuario y contraseña.','error');
+    return;
+  }
 
+  try{
+    // Validación segura por Supabase RPC
+    const { data, error } = await db.rpc('validar_admin', {
+      p_usuario: usuario,
+      p_password: pass
+    });
+
+    if(error) throw error;
+
+    if(data === true){
+      esAdmin = true;
+      localStorage.setItem(ADMIN_SESSION_KEY,'1');
+      $('login').style.display='none';
+      $('panelAdmin').style.display='block';
+      msg('Administrador activo.','ok');
+      await cargar();
+      return;
+    }
+
+    msg('Usuario o contraseña incorrectos.','error');
+
+  }catch(e){
+    console.error(e);
+    msg('No se pudo validar admin. Revisa conexión o función validar_admin.','error');
+  }
+}
+function logoutAdmin(){
+  esAdmin=false;
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  editandoJornadaId=null;
+  aplicarEstadoAdmin();
+  cancelarEdicion(false);
+  dibujar();
+  msg('Admin cerrado. La página volvió a modo usuario.','info')
+}
