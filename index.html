@@ -594,6 +594,119 @@ body:not(.dark) .num{
   }
 }
 
+
+/* FIX35: Ayuda de usuario */
+.menu-click{cursor:pointer}
+.menu-click b{color:var(--azul)}
+.ayuda-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.58);
+  z-index:10000;
+  padding:16px;
+  overflow:auto;
+}
+.ayuda-modal.abierto{display:block}
+.ayuda-contenido{
+  max-width:760px;
+  margin:24px auto;
+  background:var(--card);
+  color:var(--texto);
+  border:1px solid var(--borde);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.35);
+  position:relative;
+}
+.ayuda-cerrar{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#c62828;
+  color:#fff;
+  font-size:26px;
+  line-height:1;
+  padding:0;
+}
+.ayuda-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:10px 44px 14px 4px;
+  border-bottom:1px solid var(--borde);
+}
+.ayuda-icono{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#fbc02d,#0d47a1);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  flex:0 0 58px;
+}
+.ayuda-header h2{margin:0;font-size:26px}
+.ayuda-header p{margin:4px 0 0;color:#667085}
+.ayuda-seccion{
+  background:rgba(13,71,161,.06);
+  border:1px solid var(--borde);
+  border-radius:16px;
+  padding:14px;
+  margin:12px 0;
+}
+.ayuda-seccion h3{margin:0 0 8px;color:var(--azul)}
+.ayuda-seccion p{margin:7px 0;line-height:1.45}
+.ayuda-seccion ol{margin:8px 0 0 20px;line-height:1.55}
+.ayuda-destacado{
+  background:#fff8e1;
+  border-color:#fbc02d;
+  color:#5f3f00;
+}
+.ayuda-consejo{
+  background:#e8f5e9;
+  border-color:#81c784;
+  color:#0b5d1e;
+}
+.ayuda-tabla{
+  display:grid;
+  grid-template-columns:70px 1fr;
+  border:1px solid var(--borde);
+  border-radius:12px;
+  overflow:hidden;
+  background:var(--card);
+}
+.ayuda-tabla div{
+  padding:9px 10px;
+  border-bottom:1px solid var(--borde);
+}
+.ayuda-tabla div:nth-child(odd){
+  background:rgba(13,71,161,.10);
+  color:var(--azul);
+  text-align:center;
+}
+.ayuda-tabla div:nth-last-child(-n+2){border-bottom:0}
+body.dark .ayuda-header p{color:#b7c4d8}
+body.dark .ayuda-seccion{background:#101f35;border-color:#26364c}
+body.dark .ayuda-destacado{background:#3b2d0b;color:#fff0bd;border-color:#fbc02d}
+body.dark .ayuda-consejo{background:#0f2d1d;color:#dcfce7;border-color:#2e7d32}
+body.dark .ayuda-tabla{background:#0f1b2d;border-color:#26364c}
+body.dark .ayuda-tabla div{border-color:#26364c}
+body.dark .ayuda-tabla div:nth-child(odd){background:#132b4a;color:#4da3ff}
+@media(max-width:760px){
+  .ayuda-modal{padding:10px}
+  .ayuda-contenido{margin:12px auto;padding:14px;border-radius:18px}
+  .ayuda-header{align-items:flex-start;padding-right:42px}
+  .ayuda-icono{width:48px;height:48px;font-size:24px;flex-basis:48px}
+  .ayuda-header h2{font-size:22px}
+  .ayuda-tabla{grid-template-columns:58px 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -605,6 +718,11 @@ body:not(.dark) .num{
       <span>🌙 Modo oscuro</span>
       <label class="switch"><input id="modoOscuroCheck" type="checkbox" onchange="cambiarModoOscuro(this.checked)"><span class="slider"></span></label>
     </div>
+    <div class="menu-row menu-click" onclick="abrirAyudaQuiniela()">
+      <span>❓ Cómo jugar</span>
+      <b>Ver</b>
+    </div>
+
   </div>
 </div>
 
@@ -635,6 +753,88 @@ body:not(.dark) .num{
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div></section>
 </div>
+
+<div id="ayudaQuinielaModal" class="ayuda-modal" onclick="cerrarAyudaQuiniela(event)">
+  <div class="ayuda-contenido" onclick="event.stopPropagation()">
+    <button class="ayuda-cerrar" onclick="cerrarAyudaQuiniela()">×</button>
+
+    <div class="ayuda-header">
+      <div class="ayuda-icono">🏆</div>
+      <div>
+        <h2>Cómo jugar la Quiniela MX</h2>
+        <p>Guía rápida para registrar tu boleto, revisar resultados y entender la tabla.</p>
+      </div>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>🎟️ ¿Cómo participo?</h3>
+      <ol>
+        <li>Escribe tu nombre o apodo.</li>
+        <li>Elige un pronóstico para cada partido.</li>
+        <li>Guarda tu boleto.</li>
+        <li>Realiza el pago correspondiente con el organizador.</li>
+      </ol>
+    </div>
+
+    <div class="ayuda-seccion ayuda-destacado">
+      <h3>💰 Costo del boleto</h3>
+      <p>El costo del boleto se publica en cada jornada y puede variar según la dinámica del torneo.</p>
+      <p>Consulta siempre el recuadro <b>“Apuesta”</b> que aparece en la parte superior de la quiniela.</p>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>⚽ Pronósticos</h3>
+      <div class="ayuda-tabla">
+        <div><b>L</b></div><div>Gana el equipo local</div>
+        <div><b>E</b></div><div>Empate</div>
+        <div><b>V</b></div><div>Gana el equipo visitante</div>
+      </div>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>⏰ Cierre de registros</h3>
+      <p>La quiniela se cierra automáticamente <b>10 minutos antes del primer partido</b> de la jornada.</p>
+      <p>Después del cierre ya no se pueden registrar ni modificar boletos.</p>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>🏅 ¿Cómo se gana?</h3>
+      <p>Cada acierto suma un punto. Al finalizar la jornada, gana quien tenga más aciertos.</p>
+      <p>Si hay empate, los participantes empatados comparten lugar según la regla establecida por el organizador.</p>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>📊 Tabla general de equipos</h3>
+      <p>Esta tabla ayuda a analizar cómo viene cada equipo antes de hacer tus pronósticos.</p>
+      <div class="ayuda-tabla ayuda-tabla-compacta">
+        <div><b>PJ</b></div><div>Partidos jugados</div>
+        <div><b>G</b></div><div>Ganados</div>
+        <div><b>E</b></div><div>Empatados</div>
+        <div><b>P</b></div><div>Perdidos</div>
+        <div><b>GA</b></div><div>Goles a favor</div>
+        <div><b>GR</b></div><div>Goles recibidos</div>
+        <div><b>DIF</b></div><div>Diferencia de goles</div>
+        <div><b>PTS</b></div><div>Puntos</div>
+      </div>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>👑 Trono de la Fama</h3>
+      <p>Muestra los ganadores de cada jornada.</p>
+    </div>
+
+    <div class="ayuda-seccion">
+      <h3>🏛️ Salón de la Fama</h3>
+      <p>Guarda el historial de temporadas, campeones, boletos perfectos y mejores participantes.</p>
+    </div>
+
+    <div class="ayuda-seccion ayuda-consejo">
+      <h3>📱 Consejo</h3>
+      <p>Antes de guardar tu boleto, revisa que los 9 partidos tengan pronóstico. Una vez cerrada la jornada, ya no se podrá modificar.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL="https://pijlscldaveqmcxlcebz.supabase.co";
 const SUPABASE_KEY="sb_publishable_kXg9gyEon_VEprcarCgEGg_HmwRdEMq";
@@ -1731,6 +1931,22 @@ document.addEventListener('click',function(e){const box=document.querySelector('
 
 async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
+
+function abrirAyudaQuiniela(){
+  const m=document.getElementById('ayudaQuinielaModal');
+  if(m)m.classList.add('abierto');
+  const panel=document.getElementById('menuOpciones');
+  if(panel)panel.classList.remove('abierto');
+}
+function cerrarAyudaQuiniela(ev){
+  if(ev && ev.target && ev.target.id!=='ayudaQuinielaModal')return;
+  const m=document.getElementById('ayudaQuinielaModal');
+  if(m)m.classList.remove('abierto');
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')cerrarAyudaQuiniela();
+});
+
 </script>
 </body>
 </html>
