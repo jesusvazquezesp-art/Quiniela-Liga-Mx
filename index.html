@@ -520,6 +520,80 @@ body.dark .boleto-num{background:#263b57;color:#dbeafe}
   }
 }
 
+
+/* FIX34: modo claro legible y contador visible en Quiniela móvil */
+body:not(.dark) header{
+  background:linear-gradient(135deg,#0d47a1,#1565c0)!important;
+  color:#ffffff!important;
+}
+body:not(.dark) .header-logo h1,
+body:not(.dark) .header-logo .header-sub{
+  color:#ffffff!important;
+  opacity:1!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.28);
+}
+body:not(.dark) .card,
+body:not(.dark) .box,
+body:not(.dark) .partido-card,
+body:not(.dark) .boleto-form-card,
+body:not(.dark) .pronostico-card,
+body:not(.dark) .backup-card,
+body:not(.dark) .salon-card,
+body:not(.dark) .fama-card,
+body:not(.dark) .audit-card{
+  background:#ffffff!important;
+  color:#172033!important;
+  border-color:#d9e1ec!important;
+}
+body:not(.dark) .small,
+body:not(.dark) .share-note,
+body:not(.dark) .m-row-meta{
+  color:#475467!important;
+}
+body:not(.dark) .tabs button,
+body:not(.dark) .subtabs button,
+body:not(.dark) .selector-jornadas button,
+body:not(.dark) .liguilla-tabs button{
+  background:#e3e8ef!important;
+  color:#111827!important;
+}
+body:not(.dark) .tabs button.activo,
+body:not(.dark) .subtabs button.activo,
+body:not(.dark) .selector-jornadas button.activo,
+body:not(.dark) .liguilla-tabs button.activo,
+body:not(.dark) .btn-primary{
+  background:#0d47a1!important;
+  color:#ffffff!important;
+}
+body:not(.dark) .btn-green{background:#2e7d32!important;color:#fff!important}
+body:not(.dark) .btn-red{background:#c62828!important;color:#fff!important}
+body:not(.dark) .btn-yellow{background:#fbc02d!important;color:#111!important}
+body:not(.dark) .btn-gray{background:#607d8b!important;color:#fff!important}
+body:not(.dark) .pronostico-card .titulo-p,
+body:not(.dark) .vs,
+body:not(.dark) .match-vs,
+body:not(.dark) .num{
+  color:#0d47a1!important;
+}
+@media(max-width:760px){
+  #quiniela .pronostico-card .match-status{
+    display:flex!important;
+    justify-content:center!important;
+    margin:8px 0 10px!important;
+  }
+  #quiniela .pronostico-card .contador-box{
+    min-width:165px!important;
+    max-width:260px!important;
+    padding:9px 14px!important;
+  }
+  #quiniela .pronostico-card .contador-tiempo{
+    font-size:18px!important;
+  }
+  #quiniela .pronostico-card .contador-label{
+    font-size:13px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -864,7 +938,7 @@ function dibQuinielaMovil(lista){
 
   if(!bloqueada()&&partidos.length===9){
     html+=`<div class="boleto-form-card"><h3>Nuevo boleto</h3><input id="mNuevoNombre" placeholder="Nombre / boleto"><input id="mNuevoTelefono" placeholder="Teléfono opcional"><div class="small" id="mModo">Nuevo boleto</div>`;
-    partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
+    partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><div class="match-status">${estadoPartidoHTML(p)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
   }else{html+=`<div class="boleto-form-card"><b>Quiniela cerrada.</b></div>`}
 
@@ -1500,7 +1574,17 @@ async function restaurarRespaldo(tipo){
 
 function toggleMenuOpciones(){const m=document.getElementById('menuOpciones');if(m)m.classList.toggle('abierto')}
 function cambiarModoOscuro(activo){document.body.classList.toggle('dark',activo);localStorage.setItem('quiniela_copamx_modo_oscuro',activo?'1':'0')}
-function aplicarModoOscuro(){const activo=localStorage.getItem('quiniela_copamx_modo_oscuro')==='1';document.body.classList.toggle('dark',activo);const c=document.getElementById('modoOscuroCheck');if(c)c.checked=activo}
+function aplicarModoOscuro(){
+  let valor=localStorage.getItem('quiniela_copamx_modo_oscuro');
+  if(valor===null){
+    valor='1';
+    localStorage.setItem('quiniela_copamx_modo_oscuro','1');
+  }
+  const activo=valor==='1';
+  document.body.classList.toggle('dark',activo);
+  const c=document.getElementById('modoOscuroCheck');
+  if(c)c.checked=activo;
+}
 
 
 /* =================== FIX24: COMPARTIR CLASIFICACIÓN WHATSAPP =================== */
@@ -1613,6 +1697,7 @@ async function ejecutarConEstadoBoton(textoTrabajo, tarea){
     throw e;
   }
 }
+
 function aplicarEstadosABotones(){
   const envolver=(nombre,texto)=>{
     const fn=window[nombre];
