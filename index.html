@@ -780,6 +780,32 @@ body.dark .footer-stat{
   border-color:var(--borde)!important;
   color:var(--texto)!important;
 }
+    
+    .noticias-box{
+    background:black;
+    border:2px solid #ddd;
+    border-left:6px solid #000;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:15px;
+    max-height:140px;
+    overflow-y:auto;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.noticias-titulo{
+    font-weight:bold;
+    color:white;
+    margin-bottom:8px;
+    font-size:18px;
+}
+
+.noticias-fecha{
+    color:#666;
+    font-size:12px;
+    margin-top:8px;
+}
+    
 
 </style>
 </head>
@@ -835,17 +861,130 @@ body.dark .footer-stat{
  </div>
  <div id="msg" class="mensaje"></div>
  <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div></div>
- <section id="quiniela" class="seccion activa"><div class="card"><h2>Registrar boleto</h2><p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
+ <section id="quiniela" class="seccion activa"><div class="card">
+     
+      <div class="noticias-box">
+
+    <div class="noticias-titulo">
+        📰 Noticias Oficiales
+    </div>
+
+    <div id="textoNoticias">
+        No hay noticias por el momento.
+    </div>
+
+</div>
+     
+     <h2>Registrar boleto</h2>
+     
+    
+     <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
  <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div><div id="partidoDificil"></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
  <section id="salon" class="seccion"><div class="card"><h2>🏛️ Salón de la Fama histórico</h2><p class="small">Se guarda por temporada antes de reiniciar torneo. Usa apodo visible, teléfono opcional enmascarado, usuario_id y dispositivo para no confundir personas con el mismo nombre.</p><div id="salonLista"></div></div></section>
- <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Respaldo manual</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs"><button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button><button onclick="adminSub('admResultados',this)">⚽ Resultados</button><button onclick="adminSub('admPagos',this)">💰 Pagos</button><button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button><button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button><button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button></div><div id="admJornadas" class="admin-sub activa"><div class="card"><h3>Crear / activar jornada</h3><div class="grid"><div><label>Número</label><select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select></div><div><label>Nombre</label><input id="jNombre" placeholder="Jornada 1"></div><div><label>Apuesta</label><input id="jCosto" type="number" value="20"></div></div><h3>9 partidos</h3><div id="formPartidos" class="partidos-grid"></div><br><button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button><button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button><hr><h3>Jornadas existentes</h3><div id="jornadasLista"></div></div></div><div id="admResultados" class="admin-sub"><div class="card"><h3>Capturar resultados</h3><div id="formResultados" class="partidos-grid"></div><br><button class="btn-green" onclick="guardarResultados()">Guardar resultados</button><button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button></div></div><div id="admPagos" class="admin-sub"><div class="card"><h3>Pagos</h3><div class="tabla-wrap"><table id="tablaPagos"></table></div></div></div><div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria"></div></div></div>
+ <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Respaldo manual</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs">
+     
+     <button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button>
+     <button onclick="adminSub('admResultados',this)">⚽ Resultados</button>
+     <button onclick="adminSub('admPagos',this)">💰 Pagos</button>
+     <button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button>
+     <button onclick="adminSub('admNoticias',this)">📰 Noticias</button>
+     <button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button>
+     <button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button>
+     </div>
+     
+     <div id="admJornadas" class="admin-sub activa">
+         <div class="card">
+             <h3>Crear / activar jornada</h3>
+             <div class="grid">
+                 <div>
+                     <label>Número</label>
+                     <select id="jNumero" onchange="$('jNombre').value='Jornada '+this.value"></select>
+                 </div>
+                 <div>
+                     <label>Nombre</label>
+                     <input id="jNombre" placeholder="Jornada 1">
+                 </div>
+                 <div>
+                     <label>Apuesta</label>
+                     <input id="jCosto" type="number" value="50">
+                 </div>
+             </div>
+             <h3>9 partidos</h3>
+             <div id="formPartidos" class="partidos-grid"></div>
+             <br>
+             <button class="btn-primary" onclick="crearJornada()" id="btnCrearJornada">Crear jornada y activarla</button>
+             <button class="btn-gray" onclick="cancelarEdicionJornada()" id="btnCancelarJornada" style="display:none">Cancelar edición</button>
+             <hr>
+             <h3>Jornadas existentes</h3>
+             <div id="jornadasLista"></div>
+         </div>
+     </div
+         
+         
+         ><div id="admResultados" class="admin-sub">
+     <div class="card">
+         <h3>Capturar resultados</h3>
+         <div id="formResultados" class="partidos-grid"></div>
+         <br>
+         <button class="btn-green" onclick="guardarResultados()">Guardar resultados</button>
+         <button class="btn-yellow" onclick="cerrarYFama()">Cerrar jornada y pasar ganadores a fama</button>
+         <button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button>
+     </div>
+     </div>
+     
+     
+     <div id="admPagos" class="admin-sub">
+         <div class="card">
+             <h3>Pagos</h3>
+             <div class="tabla-wrap">
+                 <table id="tablaPagos"></table>
+             </div>
+         </div>
+     </div>
+     
+     <div id="admNoticias" class="admin-sub">
+    <div class="card">
 
-<div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
+        <h3>📰 Noticias oficiales</h3>
+
+        <input id="noticiaTitulo" placeholder="Título">
+
+        <textarea id="noticiaMensaje"
+                  rows="6"
+                  placeholder="Escribe aquí la noticia..."></textarea>
+
+        <br><br>
+
+        <button class="btn-primary"
+                onclick="guardarNoticia()">
+            Publicar
+        </button>
+        <hr>
+        <h3>Noticias publicadas</h3>
+        <div id="listaNoticiasAdmin"></div>
+
+
+    </div>
+</div>
+
+     
+     <div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria">
+    
+     
+     </div></div></div>
+     <div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
-</div></section>
+</div>
+      <div id="admRespaldos" class="admin-sub">
+    <div class="card">
+        <h3>💾 Respaldos</h3>
+        ...
+    </div>
+</div>
+     </section>
 </div>
 
 
@@ -1148,6 +1287,85 @@ function proximaJornadaDespues(jActual){
     .sort((a,b)=>Number(a.numero||0)-Number(b.numero||0))[0] || null;
 }
 
+
+async function guardarNoticia(){
+ const titulo=document.getElementById('noticiaTitulo')?.value.trim();
+ const mensaje=document.getElementById('noticiaMensaje')?.value.trim();
+ if(!titulo||!mensaje){alert('Escribe el título y la noticia.');return;}
+ const {error}=await db.from('noticias').insert([{titulo,mensaje}]);
+ if (error) {
+    console.error(error);
+    alert(error.message);
+    return;
+}
+ document.getElementById('noticiaTitulo').value='';
+ document.getElementById('noticiaMensaje').value='';
+ if(typeof cargarNoticias==='function') await cargarNoticias();
+    if(typeof listarNoticiasAdmin==='function') await listarNoticiasAdmin();
+ alert('Noticia publicada correctamente.');
+}
+
+
+async function listarNoticiasAdmin(){
+ const {data,error}=await db.from('noticias').select('*').order('fecha_publicacion',{ascending:false});
+ if(error)return;
+ const c=document.getElementById('listaNoticiasAdmin'); if(!c)return;
+ c.innerHTML=data.map(n=>`<div class="card" style="margin:8px 0">
+ <b>${n.titulo}</b><br><small>${new Date(n.fecha_publicacion).toLocaleString()}</small><br>
+ <button class="btn-yellow" onclick="editarNoticia('${n.id}')">✏️ Editar</button>
+ <button class="btn-red" onclick="eliminarNoticia('${n.id}')">🗑 Eliminar</button>
+ </div>`).join('');
+}
+async function editarNoticia(id){
+ const {data}=await db.from('noticias').select('*').eq('id',id).single();
+ if(!data)return;
+ const t=prompt('Título',data.titulo); if(t===null)return;
+ const m=prompt('Mensaje',data.mensaje); if(m===null)return;
+ const {error}=await db.from('noticias').update({titulo:t,mensaje:m}).eq('id',id);
+ if(error){alert(error.message);return;}
+ await cargarNoticias(); await listarNoticiasAdmin();
+}
+async function eliminarNoticia(id){
+ if(!confirm('¿Eliminar la noticia?'))return;
+ const {error}=await db.from('noticias').delete().eq('id',id);
+ if(error){alert(error.message);return;}
+ await cargarNoticias(); await listarNoticiasAdmin();
+}
+async function cargarNoticias(){
+
+    const { data, error } = await db
+        .from("noticias")
+        .select("*")
+        .eq("activa", true)
+        .order("fecha_publicacion", { ascending: false })
+        .limit(1);
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    const cont = document.getElementById("textoNoticias");
+
+    if(!cont) return;
+
+    if(!data || data.length === 0){
+        cont.innerHTML = "No hay noticias por el momento.";
+        return;
+    }
+
+    const n = data[0];
+
+    cont.innerHTML = `
+        <b>${n.titulo}</b><br><br>
+        ${n.mensaje.replace(/\n/g,"<br>")}
+        <div class="noticias-fecha">
+            ${new Date(n.fecha_publicacion).toLocaleString("es-MX")}
+        </div>
+    `;
+}                                           
+                                           
+                                           
 async function audSistema(accion,detalle,jornadaId=null,antes={},despues={}){
   try{
     await db.from('auditoria').insert({
@@ -2050,7 +2268,7 @@ aplicarEstadosABotones();
 
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
 
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 
 function abrirAyudaQuiniela(){
