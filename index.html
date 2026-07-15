@@ -1812,8 +1812,7 @@ if (existente.data) {
         
         
         
-        nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
-    }
+        
     for(const x of picks){
       let old=pr(uid,x.p.id);
       if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
