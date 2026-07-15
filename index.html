@@ -1750,11 +1750,69 @@ async function guardarBoleto(){
       await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid);
       nombreVisible=nombreBoleto({...u,nombre});
     }else{
-      let r=await db.from('usuarios').insert({nombre,telefono:tel,dispositivo_id:deviceId(),activo:true}).select().single();
-      if(r.error)throw r.error;
-      uid=r.data.id;
-      await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:false});
-      nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
+      
+        
+        // Buscar si este celular ya está registrado
+let existente = await db
+  .from('usuarios')
+  .select('*')
+  .eq('dispositivo_id', deviceId())
+  .maybeSingle();
+
+if (existente.data) {
+
+  // Ya existe: reutilizar el usuario
+  uid = existente.data.id;
+
+  await db
+    .from('usuarios')
+    .update({
+      nombre,
+      telefono: tel,
+      ultima_actividad: new Date().toISOString()
+    })
+    .eq('id', uid);
+
+  nombreVisible = nombreBoleto(
+    { ...existente.data, nombre },
+    usuariosJornada()
+  );
+
+} else {
+
+  // No existe: crear usuario
+  let r = await db
+    .from('usuarios')
+    .insert({
+      nombre,
+      telefono: tel,
+      dispositivo_id: deviceId(),
+      activo: true
+    })
+    .select()
+    .single();
+
+  if (r.error) throw r.error;
+
+  uid = r.data.id;
+
+  await db.from('pagos').insert({
+    usuario_id: uid,
+    jornada_id: jornada.id,
+    monto: jornada.costo || 20,
+    pagado: false
+  });
+
+  nombreVisible = nombreBoleto(
+    r.data,
+    [...usuariosJornada(), r.data]
+  );
+
+}
+        
+        
+        
+        nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
     }
     for(const x of picks){
       let old=pr(uid,x.p.id);
