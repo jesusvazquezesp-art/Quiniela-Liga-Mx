@@ -1750,68 +1750,20 @@ async function guardarBoleto(){
       await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid);
       nombreVisible=nombreBoleto({...u,nombre});
     }else{
-      
-        
-        // Buscar si este celular ya está registrado
-let existente = await db
-  .from('usuarios')
-  .select('*')
-  .eq('dispositivo_id', deviceId())
-  .maybeSingle();
-
-if (existente.data) {
-
-  // Ya existe: reutilizar el usuario
-  uid = existente.data.id;
-
-  await db
-    .from('usuarios')
-    .update({
-      nombre,
-      telefono: tel,
-      ultima_actividad: new Date().toISOString()
-    })
-    .eq('id', uid);
-
-  nombreVisible = nombreBoleto(
-    { ...existente.data, nombre },
-    usuariosJornada()
-  );
-
-} else {
-
-  // No existe: crear usuario
-  let r = await db
-    .from('usuarios')
-    .insert({
-      nombre,
-      telefono: tel,
-      dispositivo_id: deviceId(),
-      activo: true
-    })
-    .select()
-    .single();
-
-  if (r.error) throw r.error;
-
-  uid = r.data.id;
-
-  await db.from('pagos').insert({
-    usuario_id: uid,
-    jornada_id: jornada.id,
-    monto: jornada.costo || 20,
-    pagado: false
-  });
-} 
-}
-      for(const x of picks){
+      let r=await db.from('usuarios').insert({nombre,telefono:tel,dispositivo_id:deviceId(),activo:true}).select().single();
+      if(r.error)throw r.error;
+      uid=r.data.id;
+      await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:false});
+      nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
+    }
+    for(const x of picks){
       let old=pr(uid,x.p.id);
       if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
       else await db.from('pronosticos').insert({usuario_id:uid,jornada_id:jornada.id,partido_id:x.p.id,pronostico:x.v});
     }
     await aud(uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',`${nombreVisible} guardó boleto`,uid,antes,{nombre:nombreVisible,nombre_base:nombre,picks:picks.map(x=>({partido:x.p.numero_partido,pronostico:x.v}))});
     limpiar();await cargar();msg(`Boleto guardado correctamente: ${nombreVisible}`,'ok');
-}catch(e){msg('Error: '+e.message,'error')}
+  }catch(e){msg('Error: '+e.message,'error')}
 }
 function editar(uid){let u=usuarios.find(x=>x.id===uid);if(!u)return;if(!esAdmin&&!dueño(u))return msg('Solo se puede editar desde el celular donde se capturó','error');editandoId=uid;$('nuevoNombre').value=nombreBaseBoleto(u.nombre);$('nuevoTelefono').value=u.telefono||'';partidos.forEach(p=>{$('sel_'+p.id).value=pr(uid,p.id)?.pronostico||''});$('modo').textContent='Editando: '+nombreBoleto(u);$('btnGuardar').textContent='Actualizar';copiarDesktopAMovil();window.scrollTo({top:0,behavior:'smooth'})}
 function editarMovil(uid){editar(uid);setTimeout(()=>copiarDesktopAMovil(),50)}
