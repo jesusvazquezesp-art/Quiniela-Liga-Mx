@@ -1834,14 +1834,21 @@ async function guardarBoleto(){
   for(const p of partidos){
 
     let sel = $('sel_'+p.id);
+let mSel = $('mSel_'+p.id);
     let v = sel.value;
 
     // Quitar rojo por si ya estaba
     sel.classList.remove("pronostico-error");
 
     if(!v){
-        sel.classList.add("pronostico-error");
-        sel.focus();
+        sel?.classList.add("pronostico-error");
+mSel?.classList.add("pronostico-error");
+
+if (mSel && window.innerWidth < 768) {
+    mSel.focus();
+} else {
+    sel?.focus();
+}
         msg('Falta pronóstico del partido '+p.numero_partido,'error');
         return;
     }
