@@ -806,7 +806,72 @@ body.dark .footer-stat{
     margin-top:8px;
 }
     
+    .modal-msg{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
 
+.modal-msg-contenido{
+    background:#ffffff;
+    width:min(420px,90%);
+    border-radius:16px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+    color:#1f2937;
+}
+
+
+.modal-msg h2{
+    margin:0 0 15px;
+    color:#d97706;      /* Naranja */
+    font-size:30px;
+    font-weight:700;
+}
+
+#modalTexto{
+    color:#111827;      /* Negro */
+    font-size:18px;
+    font-weight:500;
+    margin-bottom:24px;
+    line-height:1.5;
+}
+
+    
+    /* Pronóstico seleccionado */
+select.pronostico-ok{
+    background:#16a34a !important;
+    color:#fff !important;
+    border:2px solid #15803d !important;
+    font-weight:bold;
+    appearance:none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, white 50%),
+      linear-gradient(135deg, white 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 13px) calc(50% - 3px);
+    background-size:5px 5px,5px 5px;
+    background-repeat:no-repeat;
+}
+select.pronostico-ok option{
+    color:#000;
+    background:#fff;
+}
+    
+    /* Pronóstico faltante */
+select.pronostico-error{
+    background:#dc2626 !important;
+    color:#fff !important;
+    border:2px solid #991b1b !important;
+    font-weight:bold;
+}
+    
 </style>
 </head>
 <body>
@@ -1106,7 +1171,36 @@ const MINUTOS_CIERRE_AUTOMATICO = 10;
 let revisandoCierreAutomatico = false;
 const NUM_LIGUILLA=18;
 const $=id=>document.getElementById(id);
-function msg(t,tipo='info'){const m=$('msg');m.textContent=t;m.className='mensaje '+tipo;setTimeout(()=>m.className='mensaje',6000)}
+
+    
+   function msg(texto,tipo='info'){
+
+    const titulos={
+        ok:'✅ Correcto',
+        error:'⚠️ Atención',
+        info:'ℹ️ Información'
+    };
+
+    const titulo = document.getElementById('modalTitulo');
+
+    titulo.textContent = titulos[tipo] || 'Mensaje';
+
+    titulo.style.color =
+        tipo === 'error' ? '#dc2626' :
+        tipo === 'ok'    ? '#16a34a' :
+                           '#2563eb';
+
+    document.getElementById('modalTexto').textContent = texto;
+
+    document.getElementById('modalMensaje').style.display = 'flex';
+}
+
+function cerrarModalMensaje(){
+    document.getElementById('modalMensaje').style.display='none';
+}
+    
+    
+    
 function money(n){return '$'+Number(n||0).toLocaleString('es-MX')}
 function deviceId(){let id=localStorage.getItem('quiniela_copamx_device');if(!id){id='dev_'+Date.now()+'_'+Math.random().toString(36).slice(2);localStorage.setItem('quiniela_copamx_device',id)}return id}
 function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]||c))}
@@ -1468,6 +1562,7 @@ function dibQuiniela(){
     h+=acciones.length?`<div class="acciones">${acciones.join('')}</div>`:'-';
     h+=`</td></tr>`});
   h+='</tbody>';$('tablaQuiniela').innerHTML=h;
+  actualizarColorPronosticos();
   dibQuinielaMovil(lista);
 }
 function dibQuinielaMovil(lista){
@@ -1514,6 +1609,7 @@ function dibQuinielaMovil(lista){
     html+=`<div class="boleto-form-card"><b>Aún no hay boletos capturados.</b></div>`;
   }
   cont.innerHTML=html;
+        actualizarColorPronosticos();
 }
 function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('nuevoNombre').value=$('mNuevoNombre').value; $('nuevoTelefono').value=$('mNuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ds.value=ms.value}); }
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
@@ -1736,10 +1832,22 @@ async function guardarBoleto(){
   if(!confirmarBoletoDuplicado(nombre)) return;
   let picks=[];
   for(const p of partidos){
-    let v=$('sel_'+p.id).value;
-    if(!v)return msg('Falta pronóstico del partido '+p.numero_partido,'error');
+
+    let sel = $('sel_'+p.id);
+    let v = sel.value;
+
+    // Quitar rojo por si ya estaba
+    sel.classList.remove("pronostico-error");
+
+    if(!v){
+        sel.classList.add("pronostico-error");
+        sel.focus();
+        msg('Falta pronóstico del partido '+p.numero_partido,'error');
+        return;
+    }
+
     picks.push({p,v});
-  }
+}
   try{
     let uid=editandoId,antes={};
     let nombreVisible=nombre;
@@ -2285,8 +2393,47 @@ function cerrarAyudaQuiniela(ev){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')cerrarAyudaQuiniela();
 });
+    
+    function pintar(){
 
+    sel.classList.remove("pronostico-error");
 
+    if(sel.value){
+        sel.classList.add("pronostico-ok");
+    }else{
+        sel.classList.remove("pronostico-ok");
+    }
+
+}
+
+function actualizarColorPronosticos(){
+
+    document.querySelectorAll("select[id^='sel_'], select[id^='mSel_']").forEach(sel=>{
+
+        function pintar(){
+
+            if(sel.value){
+
+                sel.classList.remove("pronostico-error");
+                sel.classList.add("pronostico-ok");
+
+            }else{
+
+                sel.classList.remove("pronostico-ok");
+
+            }
+
+        }
+
+        pintar();
+
+        sel.removeEventListener("change", pintar);
+        sel.addEventListener("change", pintar);
+
+    });
+
+}
+    
 async function actualizarEstadisticasFooter(){
   try{
     const [uRes,jRes]=await Promise.all([
@@ -2326,5 +2473,17 @@ async function actualizarEstadisticasFooter(){
 }
 
 </script>
+    <div id="modalMensaje" class="modal-msg" style="display:none;">
+    <div class="modal-msg-contenido">
+        <h2 id="modalTitulo">Mensaje</h2>
+        <div id="modalTexto"></div>
+
+        <button class="btn-primary" onclick="cerrarModalMensaje()">
+            Aceptar
+        </button>
+    </div>
+</div>
+    
+    
 </body>
 </html>
