@@ -893,6 +893,29 @@ select.pronostico-error{
     font-weight:800;
 }
     
+    .match-date{
+    margin:10px 0;
+    padding:10px;
+    border-radius:12px;
+    background:#eef4ff;
+    border:1px solid #d6e4ff;
+    text-align:center;
+}
+
+.match-date div:first-child{
+    color:#1565c0;
+    font-size:15px;
+    font-weight:700;
+}
+
+.match-date div:last-child{
+    color:#f59e0b;
+    font-size:18px;
+    font-weight:800;
+    margin-top:4px;
+}
+    
+    
 </style>
 </head>
 <body>
@@ -1733,6 +1756,26 @@ function dibPartidos(){
   if(Number(jornada.numero)===NUM_LIGUILLA){dibPartidosLiguilla();return}
   $('listaPartidos').innerHTML=partidos.map(p=>cardPartidoNormal(p)).join('')
 }
+        function fechaSolo(v){
+  if(!v) return '-';
+  const d = new Date(v);
+  return d.toLocaleDateString('es-MX',{
+    weekday:'short',
+    day:'2-digit',
+    month:'short'
+  });
+}
+
+function horaSolo(v){
+  if(!v) return '-';
+  const d = new Date(v);
+  return d.toLocaleTimeString('es-MX',{
+    hour:'2-digit',
+    minute:'2-digit',
+    hour12:true
+  });
+}
+        
 function cardPartidoNormal(p){
   let e=estadoPartido(p);
   return `<div class="partido-card match-card">
@@ -1744,7 +1787,12 @@ function cardPartidoNormal(p){
       <div class="match-score ${claseScorePartido(p,'visita')}">${scorePartido(p,'visita')}</div>
       ${equipoMini(p.visitante,'visita')}
     </div>
-    <div class="match-date">${fechaCortaPartido(p.fecha_partido)}</div>
+    
+   <div class="match-date">
+    <div>📅 ${fechaSolo(p.fecha_partido)}</div>
+    <div>🕒 ${horaSolo(p.fecha_partido)}</div>
+</div>
+    
     ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
     <div class="match-status">${estadoPartidoHTML(p)}</div>
     ${flujoPartidoHTML(p)}
