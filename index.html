@@ -990,7 +990,11 @@ select.pronostico-error{
   <button class="activo" onclick="tab('quiniela',this)">📝 Quiniela</button><button onclick="tab('clasificacion',this)">🏆 Clasificación</button><button onclick="tab('partidos',this)">⚽ Partidos</button><button onclick="tab('tablaLiga',this)">📊 Tabla general</button><button onclick="tab('fama',this)">👑 Fama</button><button onclick="tab('salon',this)">🏛️ Salón</button><button onclick="tab('admin',this)">🔒 Admin</button>
  </div>
  <div id="msg" class="mensaje"></div>
- <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div></div>
+ <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div>
+    <div class="auto-cierre-info">Depositos
+
+Cuenta para depositar: 4189 1433 3829 7644
+Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al WhatsApp 6566703156.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card">
      
       <div class="noticias-box">
@@ -2695,7 +2699,16 @@ async function actualizarEstadisticasFooter(){
     
    function descargarExcel(){
 
-    const tabla = document.getElementById("tablaQuiniela");
+    const tablaOriginal = document.getElementById("tablaQuiniela");
+
+    // Clonar la tabla para no modificar la pantalla
+    const tabla = tablaOriginal.cloneNode(true);
+
+    // Eliminar la fila de captura (la primera del tbody)
+    const tbody = tabla.querySelector("tbody");
+    if(tbody && tbody.rows.length){
+        tbody.deleteRow(0);
+    }
 
     const libro = XLSX.utils.table_to_book(tabla,{
         sheet:"Jornada"
