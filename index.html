@@ -1758,6 +1758,19 @@ function dibQuinielaMovil(lista){
 
   if(lista.length){
     html+=`<div class="mobile-help"><b>Vista rápida:</b> arriba están los 9 partidos alineados; abajo cada boleto solo muestra L / E / V. Verde = acierto, gris = fallo, amarillo = pendiente. Desliza a la derecha para ver todos los partidos.</div>`;
+  
+  if(bloqueada()){
+    html += `
+    <div class="descargas-tabla">
+        <div class="descargas-titulo">Descargar tabla</div>
+
+        <div class="descargas-botones">
+            <button class="btn-descarga" onclick="descargarExcel()">Excel</button>
+            <button class="btn-descarga" onclick="descargarPDF()">PDF</button>
+        </div>
+    </div>`;
+}
+  
     html+=`<div class="mobile-matrix-wrap"><table class="mobile-matrix"><thead><tr><th class="col-nombre">Boleto</th>`;
     partidos.forEach(p=>{
       const marcador = p.resultado ? `${p.goles_local??''}-${p.goles_visitante??''}` : '-';
@@ -2680,10 +2693,17 @@ async function actualizarEstadisticasFooter(){
   }
 }
     
-    function descargarExcel(){
-    alert("Aquí se descargará el archivo de Excel.");
-}
+   function descargarExcel(){
 
+    const tabla = document.getElementById("tablaQuiniela");
+
+    const libro = XLSX.utils.table_to_book(tabla,{
+        sheet:"Jornada"
+    });
+
+    XLSX.writeFile(libro,`Quiniela_${jornada.nombre}.xlsx`);
+
+}
 function descargarPDF(){
     alert("Aquí se descargará el archivo PDF.");
 }
