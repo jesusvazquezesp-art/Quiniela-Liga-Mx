@@ -1564,6 +1564,7 @@ function headerPartido(p){const e=estadoPartido(p);return `<div><strong>P${p.num
     <div class="fecha-dia">📅 ${fechaDia(p.fecha_partido)}</div>
     <div class="fecha-hora">🕖 ${fechaHora(p.fecha_partido)}</div>
 </div>
+        
         ${estadoPartidoHTML(p)}${p.resultado?`<div class="small"><b>${p.goles_local}-${p.goles_visitante}</b> Resultado ${p.resultado}</div>`:''}`}
 function clase(x,p){if(!x)return'pendiente';if(!p.resultado)return'pendiente';return x.pronostico===p.resultado?'acierto':'fallo'}
 function dibQuiniela(){
@@ -1595,7 +1596,7 @@ function dibQuinielaMovil(lista){
       <div class="fecha-partido">
     <div class="fecha-dia">📅 ${fechaDia(p.fecha_partido)}</div>
     <div class="fecha-hora">🕖 ${fechaHora(p.fecha_partido)}</div>
-
+</div>
       
       <div class="match-status">${estadoPartidoHTML(p)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
@@ -2515,7 +2516,5 @@ async function actualizarEstadisticasFooter(){
         </button>
     </div>
 </div>
-    
-    
 </body>
 </html>
