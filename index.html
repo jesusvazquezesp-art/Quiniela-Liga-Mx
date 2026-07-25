@@ -915,6 +915,27 @@ select.pronostico-error{
     margin-top:4px;
 }
     
+    .descargas-titulo{
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.descargas-botones{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn-descarga{
+    padding:6px 14px;
+    border-radius:8px;
+    font-size:13px;
+    cursor:pointer;
+}
+    
+    
+    
     
 </style>
 </head>
@@ -1635,7 +1656,30 @@ function dibQuiniela(){
     if(esAdmin) acciones.push(`<button class="btn-red" onclick="eliminarBoleto('${u.id}')">Eliminar</button>`);
     h+=acciones.length?`<div class="acciones">${acciones.join('')}</div>`:'-';
     h+=`</td></tr>`});
-  h+='</tbody>';$('tablaQuiniela').innerHTML=h;
+ h += '</tbody>';
+
+if(bloqueada()){
+    h += `
+    <tr>
+        <td colspan="12" style="text-align:center;padding:15px;">
+
+            <div class="descargas-titulo">Descargar tabla</div>
+
+            <div class="descargas-botones">
+                <button class="btn-descarga" onclick="descargarExcel()">
+                    Excel
+                </button>
+
+                <button class="btn-descarga" onclick="descargarPDF()">
+                    PDF
+                </button>
+            </div>
+
+        </td>
+    </tr>`;
+}
+
+$('tablaQuiniela').innerHTML = h;
   actualizarColorPronosticos();
   dibQuinielaMovil(lista);
 }
@@ -2635,6 +2679,14 @@ async function actualizarEstadisticasFooter(){
     console.warn('Estadísticas footer:',e);
   }
 }
+    
+    function descargarExcel(){
+    alert("Aquí se descargará el archivo de Excel.");
+}
+
+function descargarPDF(){
+    alert("Aquí se descargará el archivo PDF.");
+}
 
 </script>
     <div id="modalMensaje" class="modal-msg" style="display:none;">
@@ -2648,6 +2700,7 @@ async function actualizarEstadisticasFooter(){
     </div>
 </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     
 </body>
 </html>
