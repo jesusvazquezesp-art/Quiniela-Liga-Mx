@@ -782,7 +782,7 @@ body.dark .footer-stat{
 }
     
     .noticias-box{
-    background:black;
+    background:#d97706;
     border:2px solid #ddd;
     border-left:6px solid #000;
     border-radius:10px;
@@ -801,7 +801,7 @@ body.dark .footer-stat{
 }
 
 .noticias-fecha{
-    color:#666;
+    color:;
     font-size:12px;
     margin-top:8px;
 }
@@ -1721,6 +1721,10 @@ function dibQuinielaMovil(lista){
                 <div>📅 ${fechaSolo(p.fecha_partido)}</div>
                 <div>🕒 ${horaSolo(p.fecha_partido)}</div>
             </div>
+  
+ <div class="match-status">
+    ${estadoPartidoHTML(p)}
+</div>
 
                 <select id="mSel_${p.id}">
                 <option value="">Elegir pronóstico</option>
