@@ -1667,16 +1667,14 @@ function dibQuinielaMovil(lista){
 
             <div class="vs">VS</div>
 
-            <div style="background:red;color:#fff">PRUEBA</div>
+            ${equipoHtml(p.visitante)}
 
             <div class="match-date">
                 <div>📅 ${fechaSolo(p.fecha_partido)}</div>
                 <div>🕒 ${horaSolo(p.fecha_partido)}</div>
             </div>
 
-           ${estadoPartidoHTML(p)}
-
-            <select id="mSel_${p.id}">
+                <select id="mSel_${p.id}">
                 <option value="">Elegir pronóstico</option>
                 <option value="L">Gana local</option>
                 <option value="E">Empate</option>
