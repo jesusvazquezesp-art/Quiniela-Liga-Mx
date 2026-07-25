@@ -1646,7 +1646,14 @@ function dibQuinielaMovil(lista){
 
   if(!bloqueada()&&partidos.length===9){
     html+=`<div class="boleto-form-card"><h3>Nuevo boleto</h3><input id="mNuevoNombre" placeholder="Nombre / boleto"><input id="mNuevoTelefono" placeholder="Teléfono opcional"><div class="small" id="mModo">Nuevo boleto</div>`;
-    partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}<div class="small">${fecha(p.fecha_partido)}</div><div class="match-status">${estadoPartidoHTML(p)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
+    partidos.forEach(p=>{html+=`<div class="pronostico-card"><div class="titulo-p">P${p.numero_partido}</div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}
+      
+     <div class="match-date">
+    <div>📅 ${fechaSolo(p.fecha_partido)}</div>
+    <div>🕒 ${horaSolo(p.fecha_partido)}</div>
+</div>
+  
+    class="match-status">${estadoPartidoHTML(p)}</div><select id="mSel_${p.id}"><option value="">Elegir pronóstico</option><option value="L">Gana local</option><option value="E">Empate</option><option value="V">Gana visita</option></select></div>`});
     html+=`<div class="mobile-actions"><button class="btn-primary" onclick="guardarBoletoMovil()" id="mBtnGuardar">Guardar boleto</button><button class="btn-gray" onclick="limpiarMovil()">Limpiar</button></div></div>`;
   }else{html+=`<div class="boleto-form-card"><b>Quiniela cerrada.</b></div>`}
 
