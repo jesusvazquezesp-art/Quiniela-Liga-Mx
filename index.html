@@ -1607,7 +1607,19 @@ console.log("Pronósticos:", pronosticos.length);
                                            
     console.log("Tiene boleto:", tieneBoleto);
 
-    if(!tieneBoleto) return false;
+  //  if(!tieneBoleto) return false;
+    if(!tieneBoleto){
+
+    msg(
+        "No tiene boleto\n\n"+
+        "Jornada: "+jornada.nombre+"\n"+
+        "Usuario: "+Chat.usuario.nombre+"\n"+
+        "Pronósticos: "+pronosticos.length,
+        "error"
+    );
+
+    return false;
+}
 
     // Mientras la jornada no esté archivada,
     // la Tribuna permanece visible.
