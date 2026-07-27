@@ -1611,7 +1611,11 @@ console.log("Pronósticos:", pronosticos.length);
     if(!jornada.archivada){
         return true;
     }
-
+msg(
+    `Jornada: ${jornada.nombre}
+Usuario: ${Chat.usuario?.nombre}
+Tiene boleto: ${tieneBoleto}`
+);
     return true;
 
 }
