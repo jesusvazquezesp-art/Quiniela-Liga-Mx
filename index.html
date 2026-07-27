@@ -1607,16 +1607,16 @@ console.log("Pronósticos:", pronosticos.length);
                                            
     console.log("Tiene boleto:", tieneBoleto);
 
-  //  if(!tieneBoleto) return false;
+   if(!tieneBoleto) return false;
     if(!tieneBoleto){
 
-    msg(
-        "No tiene boleto\n\n"+
-        "Jornada: "+jornada.nombre+"\n"+
-        "Usuario: "+Chat.usuario.nombre+"\n"+
-        "Pronósticos: "+pronosticos.length,
-        "error"
-    );
+   // msg(
+     //   "No tiene boleto\n\n"+
+    //    "Jornada: "+jornada.nombre+"\n"+
+    //    "Usuario: "+Chat.usuario.nombre+"\n"+
+    //    "Pronósticos: "+pronosticos.length,
+    //    "error"
+    //   );
 
     return false;
 }
@@ -2866,7 +2866,7 @@ const Chat = {
     reacciones: [],
     canal: null,
 
-    iniciar(){
+   async iniciar(){
 
         console.log("💬 Chat iniciado");
 
@@ -2887,20 +2887,18 @@ this.emojis = document.getElementById("chatEmojis");
             }
         });
         
-        this.usuario = null;
+      
 
-this.obtenerUsuario().then(u=>{
+this.usuario = await this.obtenerUsuario();
 
-    this.usuario = u;
-
-   Promise.all([
+await Promise.all([
     this.cargarMensajes(),
     this.cargarReacciones()
-]).then(()=>{
+]);
 
-    this.mostrar();
-       
-       const sala = document.getElementById("salaJornada");
+this.mostrar();
+
+const sala = document.getElementById("salaJornada");
 
 if(sala){
     sala.style.display = puedeVerTribuna()
@@ -2908,11 +2906,8 @@ if(sala){
         : "none";
 }
 
-    this.escucharMensajes();
+this.escucharMensajes();
 
-});
-
-});
 
     },
 
@@ -2997,7 +2992,9 @@ if(sala){
             color_chat
         )
     `)
-    .eq("jornada_id", jornada.id)
+   
+.eq("jornada_id", jornada.id)
+        
     .order("fecha", { ascending: true })
     .limit(30);
 
