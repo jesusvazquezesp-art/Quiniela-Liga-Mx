@@ -935,6 +935,61 @@ select.pronostico-error{
 }
     
     
+    /* ===========================
+   CHAT DE LA JORNADA
+=========================== */
+
+.chat-card{
+    margin:15px 0;
+}
+
+.chat-estadisticas{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin:10px 0 15px;
+    font-weight:bold;
+}
+
+.chat-lista{
+    height:550px;
+    overflow-y:auto;
+    border:1px solid var(--borde);
+    border-radius:12px;
+    padding:12px;
+    background:var(--card);
+}
+
+.chat-emojis{
+    display:flex;
+    gap:10px;
+    font-size:26px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.chat-emojis span{
+    cursor:pointer;
+    transition:.15s;
+}
+
+.chat-emojis span:hover{
+    transform:scale(1.2);
+}
+
+.chat-input{
+    display:flex;
+    gap:8px;
+}
+
+.chat-input input{
+    flex:1;
+}
+
+.chat-input button{
+    min-width:90px;
+}
+    
     
     
 </style>
@@ -1012,7 +1067,76 @@ Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al
      <h2>Registrar boleto</h2>
      
     
-     <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p></div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
+     <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
+     
+    
+     <div id="salaJornada" class="card chat-card" style="display:block;">
+
+    <h2>💬 Tribuna</h2>
+         
+         <div style="
+display:flex;
+justify-content:flex-end;
+margin-bottom:10px;
+">
+
+<button
+    class="btn-secondary"
+    onclick="Chat.abrirMiColor()">
+    🎨 Mi color
+</button>
+
+</div>
+
+    <div class="chat-estadisticas">
+        
+        
+        <span>👥 <span id="chatParticipantes">0</span></span>
+        <span>🟢 <span id="chatEnLinea">0</span></span>
+        <span>💬 <span id="chatMensajes">0</span></span>
+    </div>
+
+    <div id="chatLista" class="chat-lista">
+        
+        
+        <div style="text-align:center;color:#777;padding:40px 0;">
+            Aún no hay mensajes.
+        </div>
+    </div>
+         
+         
+<div id="chatEmojis" class="chat-emojis">
+
+    <span onclick="Chat.agregarEmoji('😀')">😀</span>
+
+    <span onclick="Chat.agregarEmoji('😂')">😂</span>
+
+    <span onclick="Chat.agregarEmoji('❤️')">❤️</span>
+
+    <span onclick="Chat.agregarEmoji('⚽')">⚽</span>
+
+    <span onclick="Chat.agregarEmoji('🔥')">🔥</span>
+
+    <span onclick="Chat.agregarEmoji('👍')">👍</span>
+
+</div>
+
+   <div class="chat-input">
+        <input
+            id="chatTexto"
+            placeholder="Escribe un mensaje..."
+            maxlength="350"
+            style="flex:1;"
+        >
+
+        <button id="btnChatEnviar" class="btn-primary">
+    Enviar
+</button>
+    </div>
+
+</div>
+     
+     </div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
  <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div><div id="partidoDificil"></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
@@ -1629,14 +1753,58 @@ async function cargar(){
  }else{partidos=[];usuarios=[];pronosticos=[];pagos=[]}
  dibujar();actualizarEstadisticasFooter();
 }
-function dibujar(){dibSelectorJornadas();dibResumen();dibQuiniela();dibClasificacion();dibPartidos();dibTablaLiga();dibFama();dibSalonFama();if(esAdmin){dibAdmin();cargarPrivado(false)}}
+    
+   
+function dibujar(){
+
+    dibSelectorJornadas();
+    dibResumen();
+    dibQuiniela();
+    dibClasificacion();
+    dibPartidos();
+    dibTablaLiga();
+    dibFama();
+    dibSalonFama();
+
+    const sala = document.getElementById("salaJornada");
+
+    if(sala){
+        sala.style.display = jornada?.activa ? "block" : "none";
+    }
+
+    if(esAdmin){
+        dibAdmin();
+        cargarPrivado(false);
+    }
+
+}
+    
+    
 function dibSelectorJornadas(){
  const cont=$('selectorJornadas'); if(!cont) return;
  let html='';
  jornadas.forEach(j=>{html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`});
  cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
 }
-async function verJornada(id){jornadaVistaId=id;await cargar()}
+async function verJornada(id){
+
+    jornadaVistaId=id;
+
+    await cargar();
+
+    if(typeof Chat!=="undefined"){
+
+        Chat.mensajes=[];
+        Chat.reacciones=[];
+
+        await Chat.cargarMensajes();
+        await Chat.cargarReacciones();
+
+        Chat.mostrar();
+
+    }
+
+}
 function dibResumen(){let us=usuariosJornada(),pag=pagos.filter(x=>x.pagado).length,costo=jornada?.costo||20;$('subtitulo').textContent=jornada?`${jornada.nombre} · ${bloqueada()?'CERRADA':'ABIERTA'}`:'Sin jornada activa';$('rJornada').textContent=jornada?.nombre||'-';$('rCosto').textContent=money(costo);$('rBoletos').textContent=us.length;$('rPagados').textContent=pag;$('rBolsa').textContent=money(pag*costo);$('rEstado').textContent=bloqueada()?'Cerrada':'Abierta'}
 function headerPartido(p){const e=estadoPartido(p);return `<div><strong>P${p.numero_partido}</strong></div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}
     
@@ -2605,7 +2773,562 @@ aplicarEstadosABotones();
 
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
 
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+ /* =====================================================
+   CHAT DE LA JORNADA
+===================================================== */
+
+const Chat = {
+
+    mensajes: [],
+    reacciones: [],
+    canal: null,
+
+    iniciar(){
+
+        console.log("💬 Chat iniciado");
+
+        this.txt = document.getElementById("chatTexto");
+        this.lista = document.getElementById("chatLista");
+        this.contador = document.getElementById("chatMensajes");
+        this.btn = document.getElementById("btnChatEnviar");
+this.emojis = document.getElementById("chatEmojis");
+
+        
+
+        this.btn.addEventListener("click",()=>this.enviar());
+
+        this.txt.addEventListener("keydown",(e)=>{
+            if(e.key==="Enter"){
+                e.preventDefault();
+                this.enviar();
+            }
+        });
+        
+        this.usuario = null;
+
+this.obtenerUsuario().then(u=>{
+
+    this.usuario = u;
+
+   Promise.all([
+    this.cargarMensajes(),
+    this.cargarReacciones()
+]).then(()=>{
+
+    this.mostrar();
+
+    this.escucharMensajes();
+
+});
+
+});
+
+    },
+
+    
+    
+    async enviar(){
+
+    const texto = this.txt.value.trim();
+
+    if(!texto) return;
+
+    if(!this.usuario){
+        alert("Primero debes registrar un boleto para participar en el chat.");
+        return;
+    }
+
+    const { error } = await db
+    .from("chat_mensajes")
+    .insert({
+    jornada_id: jornada.id,
+    usuario_id: this.usuario.id,
+    nombre: this.usuario.nombre,
+    mensaje: texto,
+    color_chat: this.usuario.color_chat
+});
+        
+        
+    if(error){
+        console.error("💬 Error al guardar:", error);
+        alert("No pude enviar el mensaje.");
+        return;
+    }
+
+   this.txt.value="";
+
+    console.log("💬 Mensaje enviado");
+
+},
+    
+    
+    
+ 
+    async obtenerUsuario(){
+
+    const { data, error } = await db
+        .from("usuarios")
+        .select("id,nombre,color_chat")
+        .eq("dispositivo_id", deviceId())
+        .eq("activo", true)
+        .limit(1)
+        .maybeSingle();
+
+    if(error){
+        console.error("💬 Error obteniendo usuario:", error);
+        return null;
+    }
+
+    if(!data){
+        console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
+        return null;
+    }
+
+    console.log("💬 Usuario del chat:", data);
+        
+        if(!data.color_chat){
+    data.color_chat = "#3b82f6";
+}
+
+    return data;
+
+},
+    
+    
+    async cargarMensajes(){
+
+    const { data, error } = await db
+    .from("chat_mensajes")
+    .select(`
+        *,
+        usuarios (
+            color_chat
+        )
+    `)
+    .eq("jornada_id", jornada.id)
+    .order("fecha", { ascending: true })
+    .limit(30);
+
+    if(error){
+        console.error("💬 Error cargando mensajes:", error);
+        return;
+    }
+
+    this.mensajes = (data || []).map(function(m){
+    return {
+        id: m.id,
+        nombre: m.nombre,
+        texto: m.mensaje,
+        fecha: new Date(m.fecha),
+        usuario_id: m.usuario_id,
+        color: m.usuarios?.color_chat || "#3b82f6"
+    };
+});
+
+    this.mostrar();
+
+    console.log("💬 Historial cargado:", this.mensajes.length);
+
+},
+        
+        
+        escucharMensajes(){
+        
+        if(this.canal){
+    db.removeChannel(this.canal);
+    this.canal = null;
+}
+
+    this.canal = db.channel("chat-"+jornada.id)
+    .on(
+        "postgres_changes",
+        {
+            event: "INSERT",
+            schema: "public",
+            table: "chat_mensajes",
+            filter: "jornada_id=eq."+jornada.id
+        },
+        (payload)=>{
+
+            const m = payload.new;
+        
+        console.log("💬 Color recibido:", m.color_chat);
+console.table(m);
+
+            this.mensajes.push({
+    id: m.id,
+    nombre: m.nombre,
+    texto: m.mensaje,
+    fecha: new Date(m.fecha),
+    usuario_id: m.usuario_id,
+    color: m.color_chat || "#3b82f6"
+});
+
+            this.mostrar();
+
+            console.log("💬 Nuevo mensaje:",m.nombre);
+
+        }
+    )
+    this.canal.subscribe((estado)=>{
+    console.log("💬 Estado Realtime:", estado);
+});
+
+},
+                                     
+                                     
+        
+ abrirReacciones(div,id){
+
+    document.querySelectorAll(".chat-reacciones-menu").forEach(e=>e.remove());
+
+    const menu=document.createElement("div");
+
+    menu.className="chat-reacciones-menu";
+
+   menu.innerHTML=`
+    <span onclick="Chat.guardarReaccion('${id}','👍')">👍</span>
+    <span onclick="Chat.guardarReaccion('${id}','❤️')">❤️</span>
+    <span onclick="Chat.guardarReaccion('${id}','😂')">😂</span>
+    <span onclick="Chat.guardarReaccion('${id}','😮')">😮</span>
+    <span onclick="Chat.guardarReaccion('${id}','😢')">😢</span>
+    <span onclick="Chat.guardarReaccion('${id}','🔥')">🔥</span>
+    <span onclick="Chat.guardarReaccion('${id}','👏')">👏</span>
+`;
+
+    menu.style.position="absolute";
+    menu.style.background="#fff";
+    menu.style.borderRadius="30px";
+    menu.style.padding="8px 12px";
+    menu.style.boxShadow="0 4px 12px rgba(0,0,0,.30)";
+    menu.style.display="flex";
+    menu.style.gap="10px";
+    menu.style.zIndex="9999";
+
+    const r=div.getBoundingClientRect();
+
+    menu.style.left=(window.scrollX+r.left)+"px";
+    menu.style.top=(window.scrollY+r.top-55)+"px";
+
+    document.body.appendChild(menu);
+        
+        setTimeout(()=>{
+
+    document.addEventListener("click",function cerrar(e){
+
+        if(menu.contains(e.target)) return;
+
+        menu.remove();
+
+        document.removeEventListener("click",cerrar);
+
+    });
+
+},100);
+
+},
+    
+    async cargarReacciones(){
+
+    const { data, error } = await db
+       .from("chat_reacciones")
+.select(`
+    *,
+    chat_mensajes!inner(
+        jornada_id
+    )
+`)
+.eq("chat_mensajes.jornada_id", jornada.id);
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    this.reacciones = data || [];
+
+},
+    
+
+   async guardarReaccion(mensajeId,emoji){
+
+    const { data, error } = await db
+    .from("chat_reacciones")
+    .select("id,emoji")
+    .eq("mensaje_id", mensajeId)
+    .eq("usuario_id", this.usuario.id)
+    .maybeSingle();
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    if(!data){
+
+        await db
+            .from("chat_reacciones")
+            .insert({
+                mensaje_id: mensajeId,
+                usuario_id: this.usuario.id,
+                emoji: emoji
+            });
+
+    }else if(data.emoji===emoji){
+
+        await db
+            .from("chat_reacciones")
+            .delete()
+            .eq("id", data.id);
+
+    }else{
+
+        await db
+            .from("chat_reacciones")
+            .update({
+                emoji: emoji
+            })
+            .eq("id", data.id);
+
+    }
+
+    document.querySelectorAll(".chat-reacciones-menu").forEach(e=>e.remove());
+
+    await this.cargarReacciones();
+
+    this.mostrar();
+
+},
+    
+   abrirMiColor(){
+
+    const colores=[
+        "#3b82f6",
+        "#22c55e",
+        "#ef4444",
+        "#f59e0b",
+        "#8b5cf6",
+        "#06b6d4",
+        "#ec4899",
+        "#eab308",
+        "#14b8a6",
+        "#f97316",
+        "#84cc16",
+        "#6366f1"
+    ];
+
+    document.getElementById("modalTitulo").textContent="🎨 Elige tu color";
+
+    let html=`
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:14px;
+        padding:10px;
+    ">
+    `;
+
+    colores.forEach(c=>{
+
+        html+=`
+        <div
+            onclick="Chat.seleccionarColor('${c}')"
+            style="
+                width:48px;
+                height:48px;
+                border-radius:50%;
+                background:${c};
+                cursor:pointer;
+                margin:auto;
+                border:3px solid white;
+                box-shadow:0 2px 6px rgba(0,0,0,.35);
+            ">
+        </div>
+        `;
+
+    });
+
+    html+=`</div>`;
+
+    document.getElementById("modalTexto").innerHTML=html;
+
+    document.getElementById("modalMensaje").style.display="flex";
+
+},
+    
+    
+    
+    async seleccionarColor(color){
+
+    const { error } = await db
+        .from("usuarios")
+        .update({
+            color_chat: color
+        })
+        .eq("id", this.usuario.id);
+
+    if(error){
+        console.error(error);
+        msg("No pude guardar el color.","error");
+        return;
+    }
+
+    this.usuario.color_chat = color;
+
+    document.getElementById("modalMensaje").style.display="none";
+
+    msg("Color actualizado.","ok");
+
+},
+    
+    agregarEmoji(emoji){
+
+    const txt = this.txt;
+
+    const inicio = txt.selectionStart;
+
+    const fin = txt.selectionEnd;
+
+    txt.value =
+        txt.value.substring(0,inicio) +
+        emoji +
+        txt.value.substring(fin);
+
+    txt.focus();
+
+    txt.selectionStart = txt.selectionEnd =
+        inicio + emoji.length;
+
+},
+    
+    
+    mostrar(){
+
+        if(this.mensajes.length===0){
+
+            this.lista.innerHTML=`
+                <div style="text-align:center;color:#777;padding:40px 0;">
+                    Aún no hay mensajes.
+                </div>
+            `;
+
+            this.contador.textContent="0";
+
+            return;
+
+        }
+
+        this.lista.innerHTML="";
+
+        this.mensajes.forEach(m=>{
+
+            const div=document.createElement("div");
+            div.dataset.id = m.id;
+        const mio = m.usuario_id === this.usuario?.id;
+
+            div.style.marginBottom="12px";
+div.style.padding="10px";
+div.style.borderRadius="10px";
+div.style.maxWidth="82%";
+div.style.wordBreak="break-word";
+
+if(mio){
+
+    div.style.marginLeft="auto";
+    div.style.background="#2563eb";
+    div.style.border="1px solid #3b82f6";
+
+}else{
+
+    div.style.marginRight="auto";
+    div.style.background="#1e293b";
+    div.style.border="1px solid #334155";
+
+}
+
+            const hora = new Date(m.fecha).toLocaleTimeString("es-MX",{
+    hour:"numeric",
+    minute:"2-digit"
+});
+        div.onclick = () => this.abrirReacciones(div, m.id);
+
+div.innerHTML=`
+
+<div style="
+font-weight:bold;
+margin-bottom:4px;
+color:${m.color};
+">
+${m.nombre}
+</div>
+
+<div style="
+white-space:pre-wrap;
+overflow-wrap:anywhere;
+margin-bottom:8px;
+">
+${m.texto}
+</div>
+
+
+
+<div style="
+display:flex;
+justify-content:${mio ? "flex-end" : "space-between"};
+align-items:center;
+margin-top:6px;
+">
+
+<div style="
+font-size:11px;
+opacity:.75;
+">
+${hora}
+</div>
+
+
+
+</div>
+`;            
+        
+        const reacciones = this.reacciones.filter(r => r.mensaje_id === m.id);
+
+if(reacciones.length){
+
+    const barra = document.createElement("div");
+
+    barra.style.marginTop = "6px";
+    barra.style.fontSize = "13px";
+
+    const conteo = {};
+
+    reacciones.forEach(r=>{
+        conteo[r.emoji] = (conteo[r.emoji] || 0) + 1;
+    });
+
+    barra.innerHTML = Object.entries(conteo)
+        .map(([emoji,total])=>`${emoji} ${total}`)
+        .join("&nbsp;&nbsp;");
+
+    div.appendChild(barra);
+
+}
+        
+        
+        
+        this.lista.appendChild(div);
+
+        });
+
+        this.lista.scrollTop=this.lista.scrollHeight;
+
+        this.contador.textContent=this.mensajes.length;
+
+    }
+
+};
+    
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 
 function abrirAyudaQuiniela(){
