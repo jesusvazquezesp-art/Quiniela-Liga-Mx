@@ -1069,12 +1069,12 @@ Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al
     
      <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
      
-    
+   <div id="salaJornada" class="card chat-card" style="display:none;"> 
     
 
     <h2>💬 Tribuna</h2>
      
-      <div id="salaJornada" class="card chat-card" style="display:none;">
+      
          
          <div style="
 display:flex;
@@ -2887,6 +2887,14 @@ this.obtenerUsuario().then(u=>{
 ]).then(()=>{
 
     this.mostrar();
+       
+       const sala = document.getElementById("salaJornada");
+
+if(sala){
+    sala.style.display = puedeVerTribuna()
+        ? "block"
+        : "none";
+}
 
     this.escucharMensajes();
 
