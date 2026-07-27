@@ -1070,9 +1070,11 @@ Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al
      <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
      
     
-     <div id="salaJornada" class="card chat-card" style="display:block;">
+    
 
     <h2>💬 Tribuna</h2>
+     
+      <div id="salaJornada" class="card chat-card" style="display:none;">
          
          <div style="
 display:flex;
@@ -1568,6 +1570,7 @@ function confirmarBoletoDuplicado(nombre){
 ¿Deseas crear otro boleto como ${base} #${siguiente}?`);
 }
 function pr(usuarioId,partidoId){return pronosticos.find(x=>x.usuario_id===usuarioId && x.partido_id===partidoId)}
+    
 function pago(usuarioId){return pagos.find(x=>x.usuario_id===usuarioId && x.jornada_id===jornada?.id)}
                                            
                                            
