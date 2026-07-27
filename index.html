@@ -2896,6 +2896,7 @@ this.obtenerUsuario().then(u=>{
     
     
     async cargarMensajes(){
+        console.log("📢 Cargando chat de jornada:", jornada.id, jornada.nombre);
 
     const { data, error } = await db
     .from("chat_mensajes")
@@ -2910,6 +2911,7 @@ this.obtenerUsuario().then(u=>{
     .limit(30);
 
     if(error){
+        
         console.error("💬 Error cargando mensajes:", error);
         return;
     }
