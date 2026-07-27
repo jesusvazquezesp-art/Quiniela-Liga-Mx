@@ -1610,12 +1610,7 @@ console.log("Pronósticos:", pronosticos.length);
     // la Tribuna permanece visible.
     if(!jornada.archivada){
                                            
-                                           msg(
-    `Jornada: ${jornada.nombre}
-Usuario: ${Chat.usuario?.nombre}
-Tiene boleto: ${tieneBoleto}`
-);
-
+                                          
 
         return true;
     }
@@ -1860,8 +1855,12 @@ async function verJornada(id){
 
         await Chat.cargarMensajes();
         await Chat.cargarReacciones();
+        
+       
 
         Chat.mostrar();
+        
+         Chat.escucharMensajes();
 
         const sala = document.getElementById("salaJornada");
 
