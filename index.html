@@ -1575,7 +1575,7 @@ function pago(usuarioId){return pagos.find(x=>x.usuario_id===usuarioId && x.jorn
 function dueño(u){
 return !!u && u.dispositivo_id===deviceId()
 }
-                                           
+   /*                                       
 function tieneBoletoJornada(){
 
     if(!Chat?.usuario || !jornada) return false;
@@ -1586,7 +1586,28 @@ function tieneBoletoJornada(){
     );
 
 }
+*/
+                                           
+function puedeVerTribuna(){
 
+    if(!Chat?.usuario || !jornada) return false;
+
+    const tieneBoleto = pronosticos.some(p =>
+        p.jornada_id === jornada.id &&
+        p.usuario_id === Chat.usuario.id
+    );
+
+    if(!tieneBoleto) return false;
+
+    // Mientras la jornada no esté archivada,
+    // la Tribuna permanece visible.
+    if(!jornada.archivada){
+        return true;
+    }
+
+    return true;
+
+}
                                            
 function aciertos(usuarioId){
   let a=0,c=0;
