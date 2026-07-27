@@ -1591,11 +1591,18 @@ function tieneBoletoJornada(){
 function puedeVerTribuna(){
 
     if(!Chat?.usuario || !jornada) return false;
+                                           
+    console.log("Jornada:", jornada.nombre);
+console.log("Usuario:", Chat.usuario?.nombre);
+console.log("Pronósticos:", pronosticos.length);
 
     const tieneBoleto = pronosticos.some(p =>
         p.jornada_id === jornada.id &&
         p.usuario_id === Chat.usuario.id
+                                           
     );
+                                           
+    console.log("Tiene boleto:", tieneBoleto);
 
     if(!tieneBoleto) return false;
 
