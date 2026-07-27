@@ -1569,7 +1569,25 @@ function confirmarBoletoDuplicado(nombre){
 }
 function pr(usuarioId,partidoId){return pronosticos.find(x=>x.usuario_id===usuarioId && x.partido_id===partidoId)}
 function pago(usuarioId){return pagos.find(x=>x.usuario_id===usuarioId && x.jornada_id===jornada?.id)}
-function dueño(u){return !!u && u.dispositivo_id===deviceId()}
+                                           
+                                           
+                                           
+function dueño(u){
+return !!u && u.dispositivo_id===deviceId()
+}
+                                           
+function tieneBoletoJornada(){
+
+    if(!Chat?.usuario || !jornada) return false;
+
+    return pronosticos.some(p =>
+        p.jornada_id === jornada.id &&
+        p.usuario_id === Chat.usuario.id
+    );
+
+}
+
+                                           
 function aciertos(usuarioId){
   let a=0,c=0;
   partidos.forEach(p=>{
@@ -1765,12 +1783,16 @@ function dibujar(){
     dibTablaLiga();
     dibFama();
     dibSalonFama();
+    
+    /*
 
     const sala = document.getElementById("salaJornada");
 
     if(sala){
         sala.style.display = jornada?.activa ? "block" : "none";
     }
+    */
+    
 
     if(esAdmin){
         dibAdmin();
@@ -1788,19 +1810,27 @@ function dibSelectorJornadas(){
 }
 async function verJornada(id){
 
-    jornadaVistaId=id;
+    jornadaVistaId = id;
 
     await cargar();
 
     if(typeof Chat!=="undefined"){
 
-        Chat.mensajes=[];
-        Chat.reacciones=[];
+        Chat.mensajes = [];
+        Chat.reacciones = [];
 
         await Chat.cargarMensajes();
         await Chat.cargarReacciones();
 
         Chat.mostrar();
+
+        const sala = document.getElementById("salaJornada");
+
+        if(sala){
+            sala.style.display = tieneBoletoJornada()
+                ? "block"
+                : "none";
+        }
 
     }
 
