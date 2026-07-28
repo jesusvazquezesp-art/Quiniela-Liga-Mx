@@ -1830,14 +1830,6 @@ function dibujar(){
     dibFama();
     dibSalonFama();
     
-    /*
-
-    const sala = document.getElementById("salaJornada");
-
-    if(sala){
-        sala.style.display = jornada?.activa ? "block" : "none";
-    }
-    */
     
 
     if(esAdmin){
@@ -1881,12 +1873,7 @@ async function verJornada(id){
 
     const sala = document.getElementById("salaJornada");
 
-    if(sala){
-        sala.style.display = puedeVerTribuna()
-            ? "block"
-            : "none";
-    }
-
+    
 });
 
         if(sala){
