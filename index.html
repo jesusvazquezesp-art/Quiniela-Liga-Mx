@@ -1663,18 +1663,18 @@ function proximaJornadaDespues(jActual){
 async function guardarNoticia(){
  const titulo=document.getElementById('noticiaTitulo')?.value.trim();
  const mensaje=document.getElementById('noticiaMensaje')?.value.trim();
- if(!titulo||!mensaje){alert('Escribe el título y la noticia.');return;}
+ if(!titulo||!mensaje){msg('Escribe el título y la noticia.');return;}
  const {error}=await db.from('noticias').insert([{titulo,mensaje}]);
  if (error) {
     console.error(error);
-    alert(error.message);
+    msg(error.message);
     return;
 }
  document.getElementById('noticiaTitulo').value='';
  document.getElementById('noticiaMensaje').value='';
  if(typeof cargarNoticias==='function') await cargarNoticias();
     if(typeof listarNoticiasAdmin==='function') await listarNoticiasAdmin();
- alert('Noticia publicada correctamente.');
+ msg('Noticia publicada correctamente.');
 }
 
 
@@ -2991,7 +2991,7 @@ if(oculto==="1"){
     async enviar(){
         
          if(jornada.chat_bloqueado){
-    alert("La Tribuna de esta jornada ya fue cerrada.");
+    msg("La Tribuna de esta jornada ya fue cerrada.");
     return;
 }
 
@@ -3000,7 +3000,7 @@ if(oculto==="1"){
     if(!texto) return;
 
     if(!this.usuario){
-        alert("Primero debes registrar un boleto para participar en el chat.");
+        msg("Primero debes registrar un boleto para participar en el chat.");
         return;
     }
 
@@ -3017,7 +3017,7 @@ if(oculto==="1"){
         
     if(error){
         console.error("💬 Error al guardar:", error);
-        alert("No pude enviar el mensaje.");
+        msg("No pude enviar el mensaje.");
         return;
     }
 
