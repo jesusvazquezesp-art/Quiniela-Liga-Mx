@@ -1595,9 +1595,25 @@ function puedeVerTribuna(){
 
     if(!Chat?.usuario || !jornada) return false;
 
-    return pronosticos.some(p =>
-        p.usuario_id === Chat.usuario.id
+    const tieneBoleto = pronosticos.some(
+        p => p.usuario_id === Chat.usuario.id
     );
+
+    if(!tieneBoleto) return false;
+
+    // Jornada abierta
+    if(!jornada.bloqueada && !jornada.archivada){
+        return true;
+    }
+
+    // Jornada cerrada: solo pagados
+    if(jornada.bloqueada && !jornada.archivada){
+        const pa = pago(Chat.usuario.id);
+        return !!(pa && pa.pagado);
+    }
+
+    // Jornada archivada (campeón)
+    return false;
 
 }
                                            
