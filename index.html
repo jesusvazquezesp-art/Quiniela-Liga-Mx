@@ -1831,40 +1831,32 @@ function dibSelectorJornadas(){
  jornadas.forEach(j=>{html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`});
  cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
 }
-async function verJornada(id){
+function puedeVerTribuna(){
 
-    jornadaVistaId = id;
+    if(!jornada) return false;
 
-    await cargar();
-    
-    Chat.txt = document.getElementById("chatTexto");
-Chat.lista = document.getElementById("chatLista");
-Chat.contador = document.getElementById("chatMensajes");
-Chat.btn = document.getElementById("btnChatEnviar");
+    const miUsuario = usuarios.find(u =>
+        u.dispositivo_id === deviceId()
+    );
 
-    if(typeof Chat!=="undefined"){
+    if(!miUsuario) return false;
 
-        Chat.usuario = await Chat.obtenerUsuario();
+    const tieneBoleto = pronosticos.some(p =>
+        p.usuario_id === miUsuario.id
+    );
 
-        Chat.mensajes = [];
-        Chat.reacciones = [];
+    if(!tieneBoleto) return false;
 
-        await Chat.cargarMensajes();
-        await Chat.cargarReacciones();
-
-        Chat.mostrar();
-
-        Chat.escucharMensajes();
-
-        const sala = document.getElementById("salaJornada");
-
-        if(sala){
-            sala.style.display = puedeVerTribuna()
-                ? "block"
-                : "none";
-        }
-
+    if(!jornada.bloqueada && !jornada.archivada){
+        return true;
     }
+
+    if(jornada.bloqueada && !jornada.archivada){
+        const pa = pago(miUsuario.id);
+        return !!(pa && pa.pagado);
+    }
+
+    return false;
 
 }
 function dibResumen(){let us=usuariosJornada(),pag=pagos.filter(x=>x.pagado).length,costo=jornada?.costo||20;$('subtitulo').textContent=jornada?`${jornada.nombre} · ${bloqueada()?'CERRADA':'ABIERTA'}`:'Sin jornada activa';$('rJornada').textContent=jornada?.nombre||'-';$('rCosto').textContent=money(costo);$('rBoletos').textContent=us.length;$('rPagados').textContent=pag;$('rBolsa').textContent=money(pag*costo);$('rEstado').textContent=bloqueada()?'Cerrada':'Abierta'}
