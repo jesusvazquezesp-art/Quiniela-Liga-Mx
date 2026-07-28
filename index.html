@@ -1138,7 +1138,9 @@ margin-bottom:10px;
 
 </div>
      
-     </div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div><div id="vistaMovilQuiniela" class="vista-movil"></div></section>
+     </div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div>
+     
+     <div id="vistaMovilQuiniela" class="vista-movil"></div></section>
  <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div><div id="partidoDificil"></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
  <section id="tablaLiga" class="seccion"><div class="card"><h2>Tabla general acumulada</h2><p class="small">Se recalcula con todos los resultados capturados.</p></div><div id="tablaGeneralLigaMobile" class="tabla-liga-mobile"></div><div class="tabla-wrap"><table id="tablaGeneralLiga"></table></div></section>
@@ -1834,6 +1836,11 @@ async function verJornada(id){
     jornadaVistaId = id;
 
     await cargar();
+    
+    Chat.txt = document.getElementById("chatTexto");
+Chat.lista = document.getElementById("chatLista");
+Chat.contador = document.getElementById("chatMensajes");
+Chat.btn = document.getElementById("btnChatEnviar");
 
     if(typeof Chat!=="undefined"){
 
