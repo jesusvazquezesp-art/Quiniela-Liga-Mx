@@ -1873,11 +1873,21 @@ async function verJornada(id){
         
        
 
-        Chat.mostrar();
-        
-         Chat.escucharMensajes();
+       requestAnimationFrame(() => {
 
-        const sala = document.getElementById("salaJornada");
+    Chat.mostrar();
+
+    Chat.escucharMensajes();
+
+    const sala = document.getElementById("salaJornada");
+
+    if(sala){
+        sala.style.display = puedeVerTribuna()
+            ? "block"
+            : "none";
+    }
+
+});
 
         if(sala){
             sala.style.display = puedeVerTribuna()
