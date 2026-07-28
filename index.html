@@ -1834,10 +1834,9 @@ async function verJornada(id){
     jornadaVistaId = id;
 
     await cargar();
-    
 
     if(typeof Chat!=="undefined"){
-        
+
         Chat.usuario = await Chat.obtenerUsuario();
 
         Chat.mensajes = [];
@@ -1845,19 +1844,12 @@ async function verJornada(id){
 
         await Chat.cargarMensajes();
         await Chat.cargarReacciones();
-        
-       
 
-       requestAnimationFrame(() => {
+        Chat.mostrar();
 
-    Chat.mostrar();
+        Chat.escucharMensajes();
 
-    Chat.escucharMensajes();
-
-    const sala = document.getElementById("salaJornada");
-
-    
-});
+        const sala = document.getElementById("salaJornada");
 
         if(sala){
             sala.style.display = puedeVerTribuna()
