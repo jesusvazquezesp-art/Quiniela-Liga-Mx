@@ -1597,17 +1597,17 @@ function puedeVerTribuna(){
 
     if(!jornada) return false;
 
-    const miUsuario = usuarios.find(u =>
+    const misUsuarios = usuarios.filter(u =>
         u.dispositivo_id === deviceId()
     );
 
-    if(!miUsuario) return false;
+    if(!misUsuarios.length) return false;
 
-    const tieneBoleto = pronosticos.some(p =>
-        p.usuario_id === miUsuario.id
+    const miUsuario = misUsuarios.find(u =>
+        pronosticos.some(p => p.usuario_id === u.id)
     );
 
-    if(!tieneBoleto) return false;
+    if(!miUsuario) return false;
 
     if(!jornada.bloqueada && !jornada.archivada){
         return true;
@@ -1620,7 +1620,7 @@ function puedeVerTribuna(){
 
     return false;
 
-}                                           
+}                        
 function aciertos(usuarioId){
   let a=0,c=0;
   partidos.forEach(p=>{
