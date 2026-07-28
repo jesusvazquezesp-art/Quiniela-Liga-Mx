@@ -2606,7 +2606,14 @@ async function reiniciarTorneo(){
     msg('Torneo reiniciado. Equipos y escudos se conservaron. Salón de la Fama archivado.','ok');
   }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
 }
-async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}await db.from('jornadas').update({bloqueada:true,archivada:true}).eq('id',jornada.id);await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
+async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}
+
+await db.from('jornadas').update({
+bloqueada:true,
+
+}).eq('id',jornada.id);
+
+await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
 
 const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx','salon_fama'];
 function inicioSemanaRespaldo(){
@@ -2982,6 +2989,11 @@ if(oculto==="1"){
 },
     
     async enviar(){
+        
+         if(bloqueada()){
+        alert("La Tribuna de esta jornada ya está cerrada.");
+        return;
+    }
 
     const texto = this.txt.value.trim();
 
