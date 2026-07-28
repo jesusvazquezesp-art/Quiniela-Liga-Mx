@@ -1072,9 +1072,19 @@ Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al
    <div id="salaJornada" class="card chat-card" style="display:none;"> 
     
 
-    <h2>💬 Tribuna</h2>
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+
+    <h2 style="margin:0;">💬 Tribuna</h2>
+
+    <button
+        class="btn-secondary"
+        onclick="Chat.toggle()">
+        ▲
+    </button>
+
+</div>
      
-      
+   <div id="chatContenido">   
          
          <div style="
 display:flex;
@@ -1137,6 +1147,8 @@ margin-bottom:10px;
     </div>
 
 </div>
+       
+       </div>
      
      </div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div>
      
@@ -2892,6 +2904,8 @@ const Chat = {
     canal: null,
 
    async iniciar(){
+       
+       
 
         console.log("💬 Chat iniciado");
 
@@ -2933,10 +2947,39 @@ if(sala){
 
 this.escucharMensajes();
 
+       const oculto = localStorage.getItem("chatOculto");
+
+if(oculto==="1"){
+
+    const c = document.getElementById("chatContenido");
+
+    if(c){
+        c.style.display="none";
+    }
+
+}
 
     },
 
-    
+    toggle(){
+
+    const c = document.getElementById("chatContenido");
+
+    if(!c) return;
+
+    if(c.style.display==="none"){
+
+        c.style.display="block";
+        localStorage.setItem("chatOculto","0");
+
+    }else{
+
+        c.style.display="none";
+        localStorage.setItem("chatOculto","1");
+
+    }
+
+},
     
     async enviar(){
 
@@ -3319,6 +3362,12 @@ console.table(m);
 
 },
     
+    obtenerInsignias(usuarioId){
+
+    return "";
+
+},
+    
     
     mostrar(){
 
@@ -3377,7 +3426,7 @@ font-weight:bold;
 margin-bottom:4px;
 color:${m.color};
 ">
-${m.nombre}
+${this.obtenerInsignias(m.usuario_id)}${m.nombre}
 </div>
 
 <div style="
