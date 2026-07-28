@@ -1595,30 +1595,32 @@ function tieneBoletoJornada(){
                                            
 function puedeVerTribuna(){
 
-    if(!Chat?.usuario || !jornada) return false;
+    if(!jornada) return false;
 
-    const tieneBoleto = pronosticos.some(
-        p => p.usuario_id === Chat.usuario.id
+    const miUsuario = usuarios.find(u =>
+        u.dispositivo_id === deviceId()
+    );
+
+    if(!miUsuario) return false;
+
+    const tieneBoleto = pronosticos.some(p =>
+        p.usuario_id === miUsuario.id
     );
 
     if(!tieneBoleto) return false;
 
-    // Jornada abierta
     if(!jornada.bloqueada && !jornada.archivada){
         return true;
     }
 
-    // Jornada cerrada: solo pagados
     if(jornada.bloqueada && !jornada.archivada){
-        const pa = pago(Chat.usuario.id);
+        const pa = pago(miUsuario.id);
         return !!(pa && pa.pagado);
     }
 
-    // Jornada archivada (campeón)
     return false;
 
-}
-                                           
+}                                           
 function aciertos(usuarioId){
   let a=0,c=0;
   partidos.forEach(p=>{
@@ -1831,32 +1833,36 @@ function dibSelectorJornadas(){
  jornadas.forEach(j=>{html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`});
  cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
 }
-function puedeVerTribuna(){
+async function verJornada(id){
 
-    if(!jornada) return false;
+    jornadaVistaId = id;
 
-    const miUsuario = usuarios.find(u =>
-        u.dispositivo_id === deviceId()
-    );
+    await cargar();
+    
+   
+    if(typeof Chat!=="undefined"){
 
-    if(!miUsuario) return false;
+        Chat.usuario = await Chat.obtenerUsuario();
 
-    const tieneBoleto = pronosticos.some(p =>
-        p.usuario_id === miUsuario.id
-    );
+        Chat.mensajes = [];
+        Chat.reacciones = [];
 
-    if(!tieneBoleto) return false;
+        await Chat.cargarMensajes();
+        await Chat.cargarReacciones();
 
-    if(!jornada.bloqueada && !jornada.archivada){
-        return true;
+        Chat.mostrar();
+
+        Chat.escucharMensajes();
+
+        const sala = document.getElementById("salaJornada");
+
+        if(sala){
+            sala.style.display = puedeVerTribuna()
+                ? "block"
+                : "none";
+        }
+
     }
-
-    if(jornada.bloqueada && !jornada.archivada){
-        const pa = pago(miUsuario.id);
-        return !!(pa && pa.pagado);
-    }
-
-    return false;
 
 }
 function dibResumen(){let us=usuariosJornada(),pag=pagos.filter(x=>x.pagado).length,costo=jornada?.costo||20;$('subtitulo').textContent=jornada?`${jornada.nombre} · ${bloqueada()?'CERRADA':'ABIERTA'}`:'Sin jornada activa';$('rJornada').textContent=jornada?.nombre||'-';$('rCosto').textContent=money(costo);$('rBoletos').textContent=us.length;$('rPagados').textContent=pag;$('rBolsa').textContent=money(pag*costo);$('rEstado').textContent=bloqueada()?'Cerrada':'Abierta'}
