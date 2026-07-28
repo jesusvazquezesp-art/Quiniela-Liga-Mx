@@ -2490,8 +2490,48 @@ async function activarJornada(id){if(!esAdmin)return msg('Solo administrador','e
 async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrador','error');await db.from('jornadas').update({bloqueada:cerrar}).eq('id',id);await aud(cerrar?'CERRAR_QUINIELA':'ABRIR_QUINIELA',cerrar?'Admin cerró quiniela':'Admin abrió quiniela');await cargar();msg(cerrar?'Quiniela cerrada':'Quiniela abierta','ok')}
 async function guardarResultados(){try{if(!esAdmin)return msg('Solo administrador','error');let antes=JSON.parse(JSON.stringify(partidos));for(const p of partidos){let gl=$('gl_'+p.id).value,gv=$('gv_'+p.id).value;if(gl===''||gv==='')continue;let r=resFrom(gl,gv);await db.from('partidos').update({goles_local:+gl,goles_visitante:+gv,resultado:r,finalizado:true}).eq('id',p.id)}await actualizarAciertos();await recalcularTablaLiga();await aud('CAPTURAR_RESULTADOS','Admin guardó resultados',null,antes,{});await cargar();msg('Resultados guardados','ok')}catch(e){msg('Error: '+e.message,'error')}}
 async function actualizarAciertos(){let ps=await db.from('partidos').select('*').eq('jornada_id',jornada.id);let prs=await db.from('pronosticos').select('*').eq('jornada_id',jornada.id);for(const x of prs.data||[]){let p=(ps.data||[]).find(y=>y.id===x.partido_id);if(p&&p.resultado)await db.from('pronosticos').update({acierto:x.pronostico===p.resultado}).eq('id',x.id)}}
-async function cambiarPago(uid,val){if(!esAdmin)return msg('Solo administrador','error');let pa=pago(uid);if(pa)await db.from('pagos').update({pagado:val,fecha_pago:val?new Date().toISOString():null,observaciones:$('obs_'+uid)?.value||pa.observaciones||''}).eq('id',pa.id);else await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:val,fecha_pago:val?new Date().toISOString():null});await aud(val?'MARCAR_PAGADO':'QUITAR_PAGO','Admin modificó pago',uid);await cargar();msg('Pago actualizado','ok')}
-async function obsPago(uid){let pa=pago(uid);if(pa)await db.from('pagos').update({observaciones:$('obs_'+uid).value}).eq('id',pa.id)}
+async function cambiarPago(uid,val){
+
+    if(!esAdmin)
+        return msg('Solo administrador','error');
+
+    let pa = pago(uid);
+
+    if(pa){
+        await db.from('pagos')
+        .update({
+            pagado: val,
+            fecha_pago: val ? new Date().toISOString() : null,
+            observaciones: $('obs_'+uid)?.value || pa.observaciones || ''
+        })
+        .eq('id', pa.id);
+
+    }else{
+
+        await db.from('pagos')
+        .insert({
+            usuario_id: uid,
+            jornada_id: jornada.id,
+            monto: jornada.costo || 50,
+            pagado: val,
+            fecha_pago: val ? new Date().toISOString() : null
+        });
+
+    }
+
+    await aud(
+        val ? 'MARCAR_PAGADO' : 'QUITAR_PAGO',
+        'Admin modificó pago',
+        uid
+    );
+
+    await cargar();
+
+    actualizarTribuna();
+
+    msg('Pago actualizado','ok');
+
+}
 async function recalcularTablaLiga(){
   // Recalcula desde cero para evitar que se quede información vieja cuando se borran resultados o jornadas.
   let all=await db.from('partidos').select('*').eq('finalizado',true);
