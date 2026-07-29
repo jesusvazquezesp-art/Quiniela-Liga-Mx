@@ -3328,21 +3328,47 @@ console.table(m);
     
    abrirMiColor(){
 
-    const colores=[
-        "#3b82f6",
-        "#22c55e",
-        "#ef4444",
-        "#f59e0b",
-        "#8b5cf6",
-        "#06b6d4",
-        "#ec4899",
-        "#eab308",
-        "#14b8a6",
-        "#f97316",
-        "#84cc16",
-        "#6366f1"
-    ];
+ const colores=[
+"#2563eb", // Azul
+"#16a34a", // Verde
+"#dc2626", // Rojo
+"#f59e0b", // Naranja
+"#7c3aed", // Morado
+"#0891b2", // Cian
+"#db2777", // Rosa
+"#ca8a04", // Dorado
+"#0f766e", // Turquesa
+"#ea580c", // Naranja oscuro
+"#65a30d", // Lima
+"#4338ca", // Índigo
 
+"#0284c7",
+"#059669",
+"#be123c",
+"#a21caf",
+"#c2410c",
+"#0d9488",
+"#4f46e5",
+"#b45309",
+"#166534",
+"#1d4ed8",
+
+"#e11d48",
+"#7e22ce",
+"#155e75",
+"#854d0e",
+"#365314",
+"#9f1239",
+"#581c87",
+"#9a3412",
+
+"#312e81",
+"#164e63",
+"#713f12",
+"#14532d",
+"#991b1b",
+"#1e3a8a"
+];
     document.getElementById("modalTitulo").textContent="🎨 Elige tu color";
 
     let html=`
@@ -3354,10 +3380,13 @@ console.table(m);
     ">
     `;
        
+       console.log("Mi color:", this.usuario.color_chat);
+console.log("Colores:", Chat.colores);
+       
       
     const usados = Object.values(Chat.colores);
        
-       
+       console.table(Chat.colores);
       
     colores.forEach(c=>{
 
@@ -3375,7 +3404,8 @@ console.table(m);
             border-radius:50%;
             background:${c};
             margin:auto;
-            border:3px solid white;
+            border:${c===this.usuario.color_chat ? "5px solid #22c55e" : "3px solid white"};
+transform:${c===this.usuario.color_chat ? "scale(1.15)" : "scale(1)"};
             box-shadow:0 2px 6px rgba(0,0,0,.35);
             cursor:${ocupado?"not-allowed":"pointer"};
             opacity:${ocupado?0.35:1};
@@ -3629,7 +3659,9 @@ if(reacciones.length){
 
         });
 
-        this.lista.scrollTop=this.lista.scrollHeight;
+        requestAnimationFrame(() => {
+    this.lista.scrollTop = this.lista.scrollHeight;
+});
 
         this.contador.textContent=this.mensajes.length;
 
