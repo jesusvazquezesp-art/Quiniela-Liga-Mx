@@ -2908,6 +2908,7 @@ const Chat = {
 
     mensajes: [],
     reacciones: [],
+     colores: {},
     canal: null,
 
    async iniciar(){
@@ -2936,6 +2937,7 @@ this.emojis = document.getElementById("chatEmojis");
       
 
 this.usuario = await this.obtenerUsuario();
+       await this.cargarColores();
 
 await Promise.all([
     this.cargarMensajes(),
@@ -3006,12 +3008,14 @@ if(oculto==="1"){
 
     const { error } = await db
     .from("chat_mensajes")
-    .insert({
+    
+    
+   .insert({
     jornada_id: jornada.id,
     usuario_id: this.usuario.id,
+    dispositivo_id: this.usuario.dispositivo_id,
     nombre: this.usuario.nombre,
-    mensaje: texto,
-    color_chat: this.usuario.color_chat
+    mensaje: texto
 });
         
         
@@ -3030,13 +3034,15 @@ if(oculto==="1"){
     
     
  
-    async obtenerUsuario(){
+   async obtenerUsuario(){
 
-    const { data, error } = await db
+    // Buscar el boleto de esta jornada
+    const { data: usuario, error } = await db
         .from("usuarios")
-        .select("id,nombre,color_chat")
+        .select("id,nombre,dispositivo_id")
         .eq("dispositivo_id", deviceId())
         .eq("activo", true)
+        .in("id", pronosticos.map(p=>p.usuario_id))
         .limit(1)
         .maybeSingle();
 
@@ -3045,18 +3051,68 @@ if(oculto==="1"){
         return null;
     }
 
-    if(!data){
+    if(!usuario){
         console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
         return null;
     }
 
-    console.log("💬 Usuario del chat:", data);
-        
-        if(!data.color_chat){
-    data.color_chat = "#3b82f6";
+    // Buscar perfil del chat
+    let { data: perfil } = await db
+        .from("chat_usuarios")
+        .select("*")
+        .eq("dispositivo_id", usuario.dispositivo_id)
+        .maybeSingle();
+
+    // Si no existe, crearlo automáticamente
+    if(!perfil){
+
+        const { data: nuevo, error: errNuevo } = await db
+    .from("chat_usuarios")
+    .insert({
+        dispositivo_id: usuario.dispositivo_id,
+        nombre: usuario.nombre
+    })
+    .select()
+    .single();
+
+if(errNuevo){
+    console.error("Error creando perfil del chat:", errNuevo);
+    return null;
 }
 
-    return data;
+perfil = nuevo;
+    }
+
+    usuario.color_chat = perfil.color_chat;
+
+    console.log("💬 Usuario del chat:", usuario);
+
+    return usuario;
+
+},
+    
+    
+    async cargarColores(){
+
+    const { data, error } = await db
+        .from("chat_usuarios")
+        .select("dispositivo_id,color_chat");
+
+    if(error){
+        console.error("💬 Error cargando colores:", error);
+        return;
+    }
+
+    this.colores = {};
+
+    (data || []).forEach(u=>{
+
+        this.colores[u.dispositivo_id] =
+            u.color_chat || "#3b82f6";
+
+    });
+
+    console.log("🎨 Colores cargados:", this.colores);
 
 },
     
@@ -3066,12 +3122,7 @@ if(oculto==="1"){
 
     const { data, error } = await db
     .from("chat_mensajes")
-    .select(`
-        *,
-        usuarios (
-            color_chat
-        )
-    `)
+    .select("*")
    
 .eq("jornada_id", jornada.id)
         
@@ -3091,7 +3142,7 @@ if(oculto==="1"){
         texto: m.mensaje,
         fecha: new Date(m.fecha),
         usuario_id: m.usuario_id,
-        color: m.usuarios?.color_chat || "#3b82f6"
+        color: Chat.colores[m.dispositivo_id] || "#3b82f6"
     };
 });
 
@@ -3121,9 +3172,11 @@ this.canal = db.channel("chat-"+jornadaId)
             table: "chat_mensajes",
             filter: "jornada_id=eq."+jornadaId
         },
-        (payload)=>{
+        async (payload)=>{
 
-            const m = payload.new;
+    await this.cargarColores();
+
+    const m = payload.new;
         
         console.log("💬 Color recibido:", m.color_chat);
 console.table(m);
@@ -3134,7 +3187,7 @@ console.table(m);
     texto: m.mensaje,
     fecha: new Date(m.fecha),
     usuario_id: m.usuario_id,
-    color: m.color_chat || "#3b82f6"
+    color: Chat.colores[m.dispositivo_id] || "#3b82f6"
 });
 
             this.mostrar();
@@ -3300,26 +3353,52 @@ console.table(m);
         padding:10px;
     ">
     `;
-
+       
+      
+    const usados = Object.values(Chat.colores);
+       
+       
+      
     colores.forEach(c=>{
 
-        html+=`
-        <div
-            onclick="Chat.seleccionarColor('${c}')"
-            style="
-                width:48px;
-                height:48px;
-                border-radius:50%;
-                background:${c};
-                cursor:pointer;
-                margin:auto;
-                border:3px solid white;
-                box-shadow:0 2px 6px rgba(0,0,0,.35);
-            ">
-        </div>
-        `;
+    const ocupado =
+        usados.includes(c) &&
+        c !== this.usuario.color_chat;
 
-    });
+    html += `
+    <div
+        ${ocupado ? "" : `onclick="Chat.seleccionarColor('${c}')"`}
+
+        style="
+            width:48px;
+            height:48px;
+            border-radius:50%;
+            background:${c};
+            margin:auto;
+            border:3px solid white;
+            box-shadow:0 2px 6px rgba(0,0,0,.35);
+            cursor:${ocupado?"not-allowed":"pointer"};
+            opacity:${ocupado?0.35:1};
+            position:relative;
+        ">
+
+        ${
+            ocupado
+            ? `<div style="
+                    position:absolute;
+                    inset:0;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:22px;
+                ">🔒</div>`
+            : ""
+        }
+
+    </div>
+    `;
+
+});
 
     html+=`</div>`;
 
@@ -3334,11 +3413,11 @@ console.table(m);
     async seleccionarColor(color){
 
     const { error } = await db
-        .from("usuarios")
+        .from("chat_usuarios")
         .update({
             color_chat: color
         })
-        .eq("id", this.usuario.id);
+        .eq("dispositivo_id", this.usuario.dispositivo_id);
 
     if(error){
         console.error(error);
@@ -3347,6 +3426,7 @@ console.table(m);
     }
 
     this.usuario.color_chat = color;
+        this.colores[this.usuario.dispositivo_id] = color;
 
     document.getElementById("modalMensaje").style.display="none";
 
@@ -3374,7 +3454,57 @@ console.table(m);
 
 },
     
-    obtenerInsignias(usuarioId){
+   obtenerInsignias(usuarioId){
+       
+       
+       let insignias = "";
+
+const ultimas = [...fama]
+    .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))
+    .slice(0,2);
+
+ultimas.forEach(f=>{
+
+    if(f.usuario_id===usuarioId){
+
+        const j = jornadas.find(x=>x.id===f.jornada_id);
+
+        if(j){
+            insignias += `👑J${j.numero} `;
+        }
+
+    }
+
+});
+       
+       
+
+    let lista = usuariosJornada()
+        .map(u => ({...u, ...aciertos(u.id)}))
+        .sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
+
+    let lugar = 0;
+    let pos = 0;
+    let ant = null;
+
+    for(const u of lista){
+
+        pos++;
+
+        if(ant===null || u.a<ant){
+            lugar=pos;
+        }
+
+        ant=u.a;
+
+        if(u.id!==usuarioId) continue;
+
+        if(lugar===1) return insignias + "🥇 ";
+if(lugar===2) return insignias + "🥈 ";
+if(lugar===3) return insignias + "🥉 ";
+
+return insignias;
+    }
 
     return "";
 
