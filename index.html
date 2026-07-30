@@ -3210,6 +3210,10 @@ const Chat = {
         this.txt = document.getElementById("chatTexto");
         this.lista = document.getElementById("chatLista");
         this.contador = document.getElementById("chatMensajes");
+       
+       this.participantes = document.getElementById("chatParticipantes");
+this.enLinea = document.getElementById("chatEnLinea");
+       
         this.btn = document.getElementById("btnChatEnviar");
 this.emojis = document.getElementById("chatEmojis");
 
@@ -3243,6 +3247,8 @@ if(sala){
         ? "block"
         : "none";
 }
+       
+       await this.conectarPresence();
 
 this.escucharMensajes();
 
@@ -3439,6 +3445,46 @@ perfil = nuevo;
     this.mostrar();
 
     console.log("💬 Historial cargado:", this.mensajes.length);
+
+},
+    
+    
+   async conectarPresence(){
+
+    const jornadaId = jornada.id;
+
+    this.presencia = db.channel("presencia-"+jornadaId,{
+
+        config:{
+            presence:{
+                key:this.usuario.id
+            }
+        }
+
+    });
+
+    this.presencia
+    .on("presence", { event:"sync" }, ()=>{
+
+        const estado = this.presencia.presenceState();
+
+        this.enLinea.textContent =
+            Object.keys(estado).length;
+
+    });
+
+    await this.presencia.subscribe(async (estado)=>{
+
+        if(estado==="SUBSCRIBED"){
+
+            await this.presencia.track({
+                usuario:this.usuario.nombre,
+                dispositivo:this.usuario.dispositivo_id
+            });
+
+        }
+
+    });
 
 },
         
@@ -4089,6 +4135,12 @@ div.appendChild(barra);
 });
 
         this.contador.textContent=this.mensajes.length;
+        
+        const participantes = new Set(
+    this.mensajes.map(m => m.usuario_id)
+).size;
+
+this.participantes.textContent = participantes;
 
     }
 
