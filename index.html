@@ -1003,6 +1003,12 @@ select.pronostico-error{
     min-width:90px;
 }
     
+    
+    
+    
+    
+    
+    
     @keyframes emojiPop{
 
 0%{
@@ -1026,6 +1032,253 @@ opacity:1;
 animation:emojiPop .25s ease-out;
 
 }
+    
+    
+    @keyframes emojiHeart{
+
+0%{
+transform:scale(1);
+}
+
+20%{
+transform:scale(1.30);
+}
+
+40%{
+transform:scale(.95);
+}
+
+60%{
+transform:scale(1.25);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+.chat-emoji-heart{
+
+animation:emojiHeart .65s ease;
+
+}
+    
+    /* 😀 FELIZ */
+@keyframes emojiHappy{
+
+0%,100%{transform:translateY(0);}
+30%{transform:translateY(-10px);}
+60%{transform:translateY(0);}
+
+}
+
+.chat-emoji-happy{
+animation:emojiHappy .45s ease;
+}
+
+
+/* 😂 RISA */
+
+@keyframes emojiLaugh{
+
+0%,100%{transform:translateY(0);}
+20%{transform:translateY(-10px);}
+40%{transform:translateY(0);}
+60%{transform:translateY(-8px);}
+80%{transform:translateY(0);}
+
+}
+
+.chat-emoji-laugh{
+animation:emojiLaugh .55s ease;
+}
+
+
+/* ⚽ BALÓN */
+
+@keyframes emojiBall{
+
+0%{transform:translateY(0);}
+25%{transform:translateY(-18px);}
+50%{transform:translateY(0);}
+75%{transform:translateY(-8px);}
+100%{transform:translateY(0);}
+
+}
+
+.chat-emoji-ball{
+animation:emojiBall .65s ease-out;
+}
+
+
+/* 🏆 TROFEO */
+
+@keyframes emojiCup{
+
+0%,100%{
+filter:brightness(1);
+transform:scale(1);
+}
+
+50%{
+filter:brightness(1.8);
+transform:scale(1.15);
+}
+
+}
+
+.chat-emoji-cup{
+animation:emojiCup .7s ease;
+}
+
+
+/* 🟥 ROJA */
+
+@keyframes emojiRed{
+
+0%{
+transform:translateY(-35px) rotate(-12deg);
+opacity:0;
+}
+
+100%{
+transform:translateY(0) rotate(0);
+opacity:1;
+}
+
+}
+
+.chat-emoji-red{
+animation:emojiRed .45s ease;
+}
+
+
+/* 🟨 AMARILLA */
+
+@keyframes emojiYellow{
+
+0%{
+transform:rotate(-18deg);
+}
+
+50%{
+transform:rotate(18deg);
+}
+
+100%{
+transform:rotate(0);
+}
+
+}
+
+.chat-emoji-yellow{
+animation:emojiYellow .45s ease;
+}
+
+
+/* 🔥 FUEGO */
+
+@keyframes emojiFire{
+
+0%,100%{
+transform:scale(1);
+filter:brightness(1);
+}
+
+50%{
+transform:scale(1.18);
+filter:brightness(1.6);
+}
+
+}
+
+.chat-emoji-fire{
+animation:emojiFire .5s ease;
+}
+
+
+/* 👍 PULGAR */
+
+@keyframes emojiThumb{
+
+0%,100%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.25);
+}
+
+}
+
+.chat-emoji-thumb{
+animation:emojiThumb .4s ease;
+}
+
+
+/* 👏 APLAUSO */
+
+@keyframes emojiClap{
+
+0%,100%{
+transform:scale(1);
+}
+
+25%{
+transform:scale(1.20);
+}
+
+50%{
+transform:scale(1);
+}
+
+75%{
+transform:scale(1.20);
+}
+
+}
+
+.chat-emoji-clap{
+animation:emojiClap .55s ease;
+}
+    
+    
+    
+  @keyframes emojiBall{
+
+0%{
+transform:translateY(0);
+}
+
+25%{
+transform:translateY(-18px);
+}
+
+50%{
+transform:translateY(0);
+}
+
+75%{
+transform:translateY(-8px);
+}
+
+100%{
+transform:translateY(0);
+}
+
+}
+
+.chat-emoji-ball{
+
+animation:emojiBall .65s ease-out;
+
+}  
+    
+    
+    
+    
+    
     
     
     
@@ -3603,6 +3856,48 @@ return insignias;
 
 },
     
+   animacionEmoji(texto){
+
+    texto = texto.trim();
+
+    switch(texto){
+
+        case "❤️":
+            return "chat-emoji-heart";
+
+        case "⚽":
+            return "chat-emoji-ball";
+
+        case "🏆":
+            return "chat-emoji-cup";
+
+        case "🟥":
+            return "chat-emoji-red";
+
+        case "🟨":
+            return "chat-emoji-yellow";
+
+        case "🔥":
+            return "chat-emoji-fire";
+
+        case "👍":
+            return "chat-emoji-thumb";
+
+        case "👏":
+            return "chat-emoji-clap";
+
+        case "😂":
+            return "chat-emoji-laugh";
+
+        case "😀":
+            return "chat-emoji-happy";
+
+        default:
+            return "chat-emoji-solo";
+
+    }
+
+},
     
     mostrar(){
 
@@ -3694,7 +3989,7 @@ ${this.obtenerInsignias(m.usuario_id)}${m.nombre}
 </div>
 
 <div
-class="${soloEmoji ? "chat-emoji-solo" : ""}"
+class="${soloEmoji ? this.animacionEmoji(m.texto) : ""}"
 style="
 white-space:pre-wrap;
 overflow-wrap:anywhere;
