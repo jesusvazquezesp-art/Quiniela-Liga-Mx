@@ -961,22 +961,35 @@ select.pronostico-error{
 }
 
 .chat-emojis{
-    display:flex;
-    gap:10px;
-    font-size:26px;
-    margin-top:10px;
-    margin-bottom:10px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+    margin:12px 0;
 }
-
 .chat-emojis span{
+    width:64px;
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:46px;
     cursor:pointer;
-    transition:.15s;
+    border-radius:18px;
+    background:#1e293b;
+    border:1px solid #334155;
+    box-shadow:0 2px 8px rgba(0,0,0,.30);
+    transition:all .18s ease;
+    user-select:none;
 }
 
 .chat-emojis span:hover{
-    transform:scale(1.2);
+    transform:translateY(-3px) scale(1.12);
+    background:#263548;
 }
 
+.chat-emojis span:active{
+    transform:scale(1.35);
+}
 .chat-input{
     display:flex;
     gap:8px;
@@ -988,6 +1001,30 @@ select.pronostico-error{
 
 .chat-input button{
     min-width:90px;
+}
+    
+    @keyframes emojiPop{
+
+0%{
+transform:scale(.6);
+opacity:0;
+}
+
+60%{
+transform:scale(1.20);
+}
+
+100%{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+.chat-emoji-solo{
+
+animation:emojiPop .25s ease-out;
+
 }
     
     
@@ -1119,18 +1156,18 @@ margin-bottom:10px;
          
 <div id="chatEmojis" class="chat-emojis">
 
-    <span onclick="Chat.agregarEmoji('😀')">😀</span>
+   <span onclick="Chat.agregarEmoji('😀')">😀</span>
+<span onclick="Chat.agregarEmoji('😂')">😂</span>
+<span onclick="Chat.agregarEmoji('❤️')">❤️</span>
+<span onclick="Chat.agregarEmoji('👍')">👍</span>
 
-    <span onclick="Chat.agregarEmoji('😂')">😂</span>
+<span onclick="Chat.agregarEmoji('⚽')">⚽</span>
+<span onclick="Chat.agregarEmoji('🏆')">🏆</span>
+<span onclick="Chat.agregarEmoji('🟥')">🟥</span>
+<span onclick="Chat.agregarEmoji('🟨')">🟨</span>
 
-    <span onclick="Chat.agregarEmoji('❤️')">❤️</span>
-
-    <span onclick="Chat.agregarEmoji('⚽')">⚽</span>
-
-    <span onclick="Chat.agregarEmoji('🔥')">🔥</span>
-
-    <span onclick="Chat.agregarEmoji('👍')">👍</span>
-
+<span onclick="Chat.agregarEmoji('🔥')">🔥</span>
+<span onclick="Chat.agregarEmoji('👏')">👏</span>
 </div>
 
    <div class="chat-input">
@@ -3212,24 +3249,50 @@ console.table(m);
 
     menu.className="chat-reacciones-menu";
 
-   menu.innerHTML=`
-    <span onclick="Chat.guardarReaccion('${id}','👍')">👍</span>
-    <span onclick="Chat.guardarReaccion('${id}','❤️')">❤️</span>
-    <span onclick="Chat.guardarReaccion('${id}','😂')">😂</span>
-    <span onclick="Chat.guardarReaccion('${id}','😮')">😮</span>
-    <span onclick="Chat.guardarReaccion('${id}','😢')">😢</span>
-    <span onclick="Chat.guardarReaccion('${id}','🔥')">🔥</span>
-    <span onclick="Chat.guardarReaccion('${id}','👏')">👏</span>
+  menu.innerHTML=`
+<span onclick="Chat.guardarReaccion('${id}','😀')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😀</span>
+
+<span onclick="Chat.guardarReaccion('${id}','😂')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😂</span>
+
+<span onclick="Chat.guardarReaccion('${id}','❤️')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">❤️</span>
+
+<span onclick="Chat.guardarReaccion('${id}','😡')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😡</span>
+
+<span onclick="Chat.guardarReaccion('${id}','😭')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😭</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🔥')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🔥</span>
+
+<span onclick="Chat.guardarReaccion('${id}','👏')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">👏</span>
+
+<span onclick="Chat.guardarReaccion('${id}','👍')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">👍</span>
+
+<span onclick="Chat.guardarReaccion('${id}','⚽')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">⚽</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🥅')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🥅</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🟥')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🟥</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🟨')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🟨</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🏆')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🏆</span>
+
+<span onclick="Chat.guardarReaccion('${id}','📣')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">📣</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🎉')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🎉</span>
+
+<span onclick="Chat.guardarReaccion('${id}','🍺')" style="font-size:42px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🍺</span>
 `;
 
     menu.style.position="absolute";
     menu.style.background="#fff";
-    menu.style.borderRadius="30px";
-    menu.style.padding="8px 12px";
     menu.style.boxShadow="0 4px 12px rgba(0,0,0,.30)";
-    menu.style.display="flex";
-    menu.style.gap="10px";
     menu.style.zIndex="9999";
+    menu.style.gridTemplateColumns="repeat(4,1fr)";
+    menu.style.borderRadius="18px";
+    menu.style.padding="16px";
+    menu.style.display="grid";
+    menu.style.gridTemplateColumns="repeat(4,1fr)";
+    menu.style.gap="12px";
 
     const r=div.getBoundingClientRect();
 
@@ -3563,25 +3626,50 @@ return insignias;
 
             const div=document.createElement("div");
             div.dataset.id = m.id;
-        const mio = m.usuario_id === this.usuario?.id;
+       const mio = m.usuario_id === this.usuario?.id;
 
+const texto = m.texto.trim();
+
+const soloEmoji =
+    /^(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)$/u.test(texto);
+        
+        
+     //   console.log("Emoji:", m.texto, "=>", soloEmoji);
+        
+        
+        
             div.style.marginBottom="12px";
-div.style.padding="10px";
+div.style.padding = soloEmoji ? "2px 10px" : "10px";
 div.style.borderRadius="10px";
 div.style.maxWidth="82%";
 div.style.wordBreak="break-word";
 
-if(mio){
+if(soloEmoji){
 
-    div.style.marginLeft="auto";
-    div.style.background="#2563eb";
-    div.style.border="1px solid #3b82f6";
+    div.style.background = "transparent";
+    div.style.border = "none";
+    div.style.boxShadow = "none";
+    div.style.maxWidth = "100%";
+
+    if(mio){
+        div.style.marginLeft = "auto";
+        div.style.textAlign = "right";
+    }else{
+        div.style.marginRight = "auto";
+        div.style.textAlign = "left";
+    }
+
+}else if(mio){
+
+    div.style.marginLeft = "auto";
+    div.style.background = "#2563eb";
+    div.style.border = "1px solid #3b82f6";
 
 }else{
 
-    div.style.marginRight="auto";
-    div.style.background="#1e293b";
-    div.style.border="1px solid #334155";
+    div.style.marginRight = "auto";
+    div.style.background = "#1e293b";
+    div.style.border = "1px solid #334155";
 
 }
 
@@ -3590,21 +3678,31 @@ if(mio){
     minute:"2-digit"
 });
         div.onclick = () => this.abrirReacciones(div, m.id);
-
+//barra de emojis
+        //
+        //
+        //
 div.innerHTML=`
 
 <div style="
 font-weight:bold;
-margin-bottom:4px;
+margin-bottom:${soloEmoji ? "0px" : "4px"};
 color:${m.color};
+text-align:${soloEmoji ? "right" : "left"};
 ">
 ${this.obtenerInsignias(m.usuario_id)}${m.nombre}
 </div>
 
-<div style="
+<div
+class="${soloEmoji ? "chat-emoji-solo" : ""}"
+style="
 white-space:pre-wrap;
 overflow-wrap:anywhere;
 margin-bottom:8px;
+font-size:${soloEmoji ? "30px" : "16px"};
+padding:${soloEmoji ? "2px 0" : "0"};
+line-height:${soloEmoji ? "1.1" : "normal"};
+text-align:${soloEmoji ? (mio ? "right" : "left") : "left"};
 ">
 ${m.texto}
 </div>
@@ -3636,20 +3734,52 @@ if(reacciones.length){
 
     const barra = document.createElement("div");
 
-    barra.style.marginTop = "6px";
-    barra.style.fontSize = "13px";
+barra.style.display = "flex";
+barra.style.flexWrap = "wrap";
+barra.style.gap = "6px";
+barra.style.marginTop = "8px";
 
-    const conteo = {};
+const conteo = {};
 
-    reacciones.forEach(r=>{
-        conteo[r.emoji] = (conteo[r.emoji] || 0) + 1;
-    });
+reacciones.forEach(r=>{
+    conteo[r.emoji] = (conteo[r.emoji] || 0) + 1;
+});
 
-    barra.innerHTML = Object.entries(conteo)
-        .map(([emoji,total])=>`${emoji} ${total}`)
-        .join("&nbsp;&nbsp;");
+Object.entries(conteo).forEach(([emoji,total])=>{
 
-    div.appendChild(barra);
+    const chip = document.createElement("div");
+
+   chip.style.display = "inline-flex";
+chip.style.alignItems = "center";
+chip.style.justifyContent = "center";
+chip.style.gap = "6px";
+
+chip.style.padding = "5px 10px";
+chip.style.borderRadius = "999px";
+
+chip.style.background = "#2f3b4f";
+chip.style.border = "1px solid #475569";
+
+chip.style.fontWeight = "700";
+chip.style.lineHeight = "1";
+    
+    
+
+chip.innerHTML = `
+<span style="font-size:22px;">${emoji}</span>
+<span style="
+font-size:13px;
+color:#fff;
+min-width:12px;
+text-align:center;
+">${total}</span>
+`;
+
+    barra.appendChild(chip);
+
+});
+
+div.appendChild(barra);
 
 }
         
