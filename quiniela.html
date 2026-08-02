@@ -1876,10 +1876,12 @@ function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.
     // Token
     const token = localStorage.getItem("fcm_token");
 
-    html += `<p><b>Token FCM:</b> ${
-        token ? "✅ Guardado" : "❌ No encontrado"
-    }</p>`;
+    html += `<p><b>Device ID:</b><br>${deviceId()}</p>`;
 
+html += `<p><b>Token FCM:</b><br>${
+    token || "❌ No encontrado"
+}</p>`;
+        
     div.innerHTML = html;
 
 }
