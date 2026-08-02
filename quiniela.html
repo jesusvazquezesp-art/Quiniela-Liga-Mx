@@ -2261,14 +2261,29 @@ function mostrarAlertaNoticia(titulo, mensaje){
     }
 
     aviso.innerHTML = `
-        <div style="font-size:20px;font-weight:bold;">
-            🔔 ${titulo}
-        </div>
+<div style="display:flex;justify-content:space-between;align-items:center">
 
-        <div style="margin-top:10px;font-size:16px;">
-            ${mensaje}
-        </div>
-    `;
+<div style="font-size:20px;font-weight:bold;">
+🔔 ${titulo}
+</div>
+
+<button
+onclick="this.parentNode.parentNode.style.display='none'"
+style="
+background:none;
+border:none;
+color:white;
+font-size:24px;
+cursor:pointer;">
+×
+</button>
+
+</div>
+
+<div style="margin-top:12px;font-size:16px;">
+${mensaje}
+</div>
+`;
 
     aviso.style.display = "block";
 
