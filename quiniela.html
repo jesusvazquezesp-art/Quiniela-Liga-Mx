@@ -2286,6 +2286,23 @@ ${mensaje}
 `;
 
     aviso.style.display = "block";
+    
+    aviso.style.cursor = "pointer";
+
+aviso.onclick = ()=>{
+
+    const panel = document.getElementById("noticias");
+
+    if(panel){
+
+        panel.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
+    }
+
+};
 
     if(navigator.vibrate){
         navigator.vibrate([250,120,250]);
