@@ -1,7 +1,10 @@
 importScripts("https://www.gstatic.com/firebasejs/12.17.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.17.0/firebase-messaging-compat.js");
 
-console.log("🔥 firebase-messaging-sw cargado");
+self.registration.showNotification("SW Firebase", {
+    body: "firebase-messaging-sw inició",
+    icon: "/Quiniela-Liga-Mx/icons/icon-192.png"
+});
 
 firebase.initializeApp({
   apiKey: "AIzaSyCtEzANH1GWNESY_uNPpHD6MJpwuZkcvl8",
