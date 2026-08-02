@@ -1879,6 +1879,11 @@ function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.
     html += `<p><b>Token FCM:</b> ${
         token ? "✅ Guardado" : "❌ No encontrado"
     }</p>`;
+        
+        html += `<p><b>Origen:</b><br>${location.origin}</p>`;
+html += `<p><b>URL:</b><br>${location.href}</p>`;
+        
+        
 
     div.innerHTML = html;
 
