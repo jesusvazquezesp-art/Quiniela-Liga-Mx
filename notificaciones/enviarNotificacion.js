@@ -17,6 +17,22 @@ admin.initializeApp({
 
 console.log("✅ Firebase Admin conectado");
 
+const mensaje = {
+    token: "e8XePGnb2cXp5dWq_3XmM4:APA91bHfjAbZ3yM2_7lzblew35JdLDcjr2g7S3FZj6qyJCxn8UIu2IQDsz3pQ5PVYXSgXZ6mPDbI995vDEtK4aC-v8iRRGg0H3TTGnJAFZ-yYP59alwNTdk",
+    notification: {
+        title: "🧪 Prueba directa",
+        body: "Si ves esto, Firebase funciona."
+    }
+};
+
+admin.messaging().send(mensaje)
+.then(id => {
+    console.log("MENSAJE ID:", id);
+})
+.catch(err => {
+    console.error(err);
+});
+
 //----------------------------------------------------
 // SUPABASE
 //----------------------------------------------------
