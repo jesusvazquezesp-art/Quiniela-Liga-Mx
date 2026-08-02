@@ -38,11 +38,25 @@ console.log("📩 Payload recibido:", payload);
 });
 
 self.addEventListener("notificationclick", (event) => {
-    console.log("🔔 CLICK", event.notification.title);
 
     event.notification.close();
 
-    event.waitUntil(
-        clients.openWindow("/Quiniela-Liga-Mx/")
-    );
+    event.waitUntil((async () => {
+
+        console.log("🔔 CLICK recibido");
+
+        const lista = await clients.matchAll({
+            type: "window",
+            includeUncontrolled: true
+        });
+
+        if(lista.length){
+            lista[0].focus();
+            return;
+        }
+
+        return clients.openWindow("https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/");
+
+    })());
+
 });
