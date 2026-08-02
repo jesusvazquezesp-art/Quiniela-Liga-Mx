@@ -2222,7 +2222,69 @@ async function cargarNoticias(){
             ${new Date(n.fecha_publicacion).toLocaleString("es-MX")}
         </div>
     `;
-}                                           
+    
+    mostrarAlertaNoticia(n.titulo, n.mensaje);
+}     
+    
+    
+    //----------------------------------------------------
+// ALERTA EN PANTALLA
+//----------------------------------------------------
+
+function mostrarAlertaNoticia(titulo, mensaje){
+
+    let aviso = document.getElementById("alerta-noticia");
+
+    if(!aviso){
+
+        aviso = document.createElement("div");
+
+        aviso.id = "alerta-noticia";
+
+        aviso.style.position = "fixed";
+        aviso.style.top = "20px";
+        aviso.style.left = "50%";
+        aviso.style.transform = "translateX(-50%)";
+        aviso.style.maxWidth = "420px";
+        aviso.style.width = "90%";
+        aviso.style.background = "#d97706";
+        aviso.style.color = "#fff";
+        aviso.style.padding = "18px";
+        aviso.style.borderRadius = "12px";
+        aviso.style.boxShadow = "0 8px 25px rgba(0,0,0,.35)";
+        aviso.style.zIndex = "999999";
+        aviso.style.fontFamily = "Arial,sans-serif";
+        aviso.style.textAlign = "left";
+
+        document.body.appendChild(aviso);
+
+    }
+
+    aviso.innerHTML = `
+        <div style="font-size:20px;font-weight:bold;">
+            🔔 ${titulo}
+        </div>
+
+        <div style="margin-top:10px;font-size:16px;">
+            ${mensaje}
+        </div>
+    `;
+
+    aviso.style.display = "block";
+
+    if(navigator.vibrate){
+        navigator.vibrate([250,120,250]);
+    }
+
+    clearTimeout(aviso.timer);
+
+    aviso.timer = setTimeout(()=>{
+
+        aviso.style.display = "none";
+
+    },10000);
+
+}
                                            
                                            
 async function audSistema(accion,detalle,jornadaId=null,antes={},despues={}){
