@@ -278,6 +278,14 @@ async function enviarNotificacion(dispositivo, title, body){
 
     try{
 
+console.log(JSON.stringify({
+    token: dispositivo.token_fcm,
+    notification: {
+        title,
+        body
+    }
+}, null, 2));
+
         const respuesta = await admin.messaging().send({
 
             token: dispositivo.token_fcm,
