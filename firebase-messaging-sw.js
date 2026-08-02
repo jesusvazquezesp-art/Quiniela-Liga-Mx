@@ -33,3 +33,13 @@ console.log("📩 Payload recibido:", payload);
     );
 
 });
+
+self.addEventListener("notificationclick", (event) => {
+    console.log("🔔 CLICK", event.notification.title);
+
+    event.notification.close();
+
+    event.waitUntil(
+        clients.openWindow("/Quiniela-Liga-Mx/")
+    );
+});
