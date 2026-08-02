@@ -1,10 +1,12 @@
 {
-  "id": "/",
+  "id": "/Quiniela-Liga-Mx/",
   "name": "Quiniela MX",
   "short_name": "Quiniela MX",
   "description": "Quiniela MX con Tribuna en tiempo real.",
-  "start_url": "/",
-  "scope": "/",
+
+  "start_url": "/Quiniela-Liga-Mx/",
+  "scope": "/Quiniela-Liga-Mx/",
+
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f172a",
