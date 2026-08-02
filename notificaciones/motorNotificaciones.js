@@ -79,12 +79,26 @@ async function enviarNotificacionATodos(title, body){
 
                 token: dispositivo.token_fcm,
 
-                notification:{
-
-                    title,
-                    body
-
-                }
+               notification: {
+    title,
+    body,
+    icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png"
+},
+android: {
+    priority: "high",
+    notification: {
+        sound: "default",
+        channelId: "default"
+    }
+},
+webpush: {
+    notification: {
+        icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+        badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+        vibrate: [200,100,200],
+        requireInteraction: true
+    }
+}
 
             });
 
