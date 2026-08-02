@@ -323,6 +323,12 @@ console.log(JSON.stringify({
 
 });
 
+console.log("📨 Respuesta Firebase:", respuesta);
+console.log("📱 Dispositivo:", dispositivo.dispositivo_id);
+console.log("🔑 Token:", dispositivo.token_fcm.substring(0,40) + "...");
+
+
+
         console.log("✅ Enviada:", dispositivo.dispositivo_id);
 
         return true;
