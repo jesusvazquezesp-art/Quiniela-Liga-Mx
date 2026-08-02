@@ -1471,6 +1471,7 @@ margin-bottom:10px;
      <button onclick="adminSub('admPagos',this)">💰 Pagos</button>
      <button onclick="adminSub('admAuditoria',this)">📋 Auditoría</button>
      <button onclick="adminSub('admNoticias',this)">📰 Noticias</button>
+     <button onclick="adminSub('admDiagnostico',this)">🔔 Diagnóstico</button>
      <button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button>
      <button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button>
      </div>
@@ -1555,6 +1556,22 @@ margin-bottom:10px;
     
      
      </div></div></div>
+     <div id="admDiagnostico" class="admin-sub">
+
+    <div class="card">
+
+        <h3>🔔 Diagnóstico de Notificaciones</h3>
+
+        <div id="diagNotificaciones">
+
+            Cargando diagnóstico...
+
+        </div>
+
+    </div>
+
+</div>
+     
      <div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div>
@@ -1817,7 +1834,77 @@ function equiposSeleccionadosAdmin(){return [...document.querySelectorAll('.equi
 function actualizarSelectsPartidos(){let usados=equiposSeleccionadosAdmin();document.querySelectorAll('.equipo-select').forEach(sel=>{[...sel.options].forEach(op=>{if(!op.value){op.disabled=false;return}op.disabled=usados.includes(op.value)&&op.value!==sel.value})});let total=new Set(usados).size;let box=$('contadorEquiposUsados');if(box){box.textContent=`Equipos utilizados: ${total}/18`;box.className='equipos-usados '+(total===18?'equipos-ok':'equipos-bad')}}
 function validarEquiposJornada(regs){let usados=[];for(const r of regs){usados.push(r.local,r.visitante)}let rep=usados.filter((x,i)=>usados.indexOf(x)!==i);if(rep.length)throw new Error('Hay equipos repetidos: '+[...new Set(rep)].join(', '));if(usados.length!==18||new Set(usados).size!==18)throw new Error('Deben usarse exactamente 18 equipos sin repetir.')}
 function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(id==='admin'&&esAdmin)cargarPrivado()}
-function adminSub(id,b){document.querySelectorAll('.admin-sub').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(esAdmin)cargarPrivado()}
+    
+    async function diagnosticoNotificaciones(){
+
+    const div = document.getElementById("diagNotificaciones");
+
+    let html = "";
+
+    // Permiso
+    html += `<p><b>Permiso:</b> ${Notification.permission}</p>`;
+
+    // Service Worker
+    if("serviceWorker" in navigator){
+
+        try{
+
+            const reg = await navigator.serviceWorker.ready;
+
+            html += `<p><b>Service Worker:</b> ✅ Activo</p>`;
+            html += `<p><b>Scope:</b> ${reg.scope}</p>`;
+            html += `<p><b>Script:</b> ${reg.active?.scriptURL}</p>`;
+
+            const sub = await reg.pushManager.getSubscription();
+
+            html += `<p><b>Push Subscription:</b> ${
+                sub ? "✅ Registrada" : "❌ No existe"
+            }</p>`;
+
+        }catch(e){
+
+            html += `<p><b>Service Worker:</b> ❌ ${e.message}</p>`;
+
+        }
+
+    }else{
+
+        html += `<p><b>Service Worker:</b> ❌ No soportado</p>`;
+
+    }
+
+    // Token
+    const token = localStorage.getItem("fcm_token");
+
+    html += `<p><b>Token FCM:</b> ${
+        token ? "✅ Guardado" : "❌ No encontrado"
+    }</p>`;
+
+    div.innerHTML = html;
+
+}
+    
+    
+function adminSub(id,b){
+
+    document.querySelectorAll('.admin-sub')
+        .forEach(x=>x.classList.remove('activa'));
+
+    $(id).classList.add('activa');
+
+    document.querySelectorAll('.subtabs button')
+        .forEach(x=>x.classList.remove('activo'));
+
+    b.classList.add('activo');
+
+    if(esAdmin)
+        cargarPrivado();
+
+    if(id==="admDiagnostico"){
+        diagnosticoNotificaciones();
+    }
+
+}
 function dtLocal(v){if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function toISO(v){return v?new Date(v).toISOString():null}
 function fecha(v){if(!v)return'-';const d=new Date(v);return d.toLocaleString('es-MX',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
