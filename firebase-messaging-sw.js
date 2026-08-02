@@ -1,10 +1,7 @@
 importScripts("https://www.gstatic.com/firebasejs/12.17.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.17.0/firebase-messaging-compat.js");
 
-self.registration.showNotification("SW Firebase", {
-    body: "firebase-messaging-sw inició",
-    icon: "/Quiniela-Liga-Mx/icons/icon-192.png"
-});
+
 
 firebase.initializeApp({
   apiKey: "AIzaSyCtEzANH1GWNESY_uNPpHD6MJpwuZkcvl8",
@@ -17,45 +14,90 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload)=>{
 
-    console.log("Notificación en segundo plano:", payload);
-console.log("📩 Payload recibido:", payload);
 
-    self.registration.showNotification(
 
-        payload.notification.title,
+
+
+
+
+
+messaging.onBackgroundMessage(async (payload)=>{
+
+    console.log("📩 Payload:", payload);
+
+    const titulo = payload.notification?.title || "Quiniela Liga MX";
+
+    const mensaje = payload.notification?.body || "";
+
+    await self.registration.showNotification(
+
+        "🏆 Quiniela Liga MX",
 
         {
-            body: payload.notification.body,
+            body: titulo + "\n\n" + mensaje,
+
             icon: "/Quiniela-Liga-Mx/icons/icon-192.png",
+
             badge: "/Quiniela-Liga-Mx/icons/icon-192.png",
-            vibrate: [200,100,200]
+
+            vibrate: [200,100,200],
+
+            tag: "quiniela-noticia",
+
+            renotify: true,
+
+            requireInteraction: true,
+
+            timestamp: Date.now(),
+
+            data:{
+                url:"https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
+            }
+
         }
 
     );
 
 });
 
-self.addEventListener("notificationclick", (event) => {
+
+
+//----------------------------------------------------
+// CLICK EN LA NOTIFICACIÓN
+//----------------------------------------------------
+
+self.addEventListener("notificationclick", (event)=>{
 
     event.notification.close();
 
-    event.waitUntil((async () => {
+    event.waitUntil((async()=>{
 
-        console.log("🔔 CLICK recibido");
+        const url = event.notification.data?.url ||
+            "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/";
 
-        const lista = await clients.matchAll({
+        const ventanas = await clients.matchAll({
             type: "window",
             includeUncontrolled: true
         });
 
-        if(lista.length){
-            lista[0].focus();
-            return;
+        for(const ventana of ventanas){
+
+            if(ventana.url.startsWith(url)){
+
+                await ventana.focus();
+
+                ventana.postMessage({
+                    tipo:"ABRIR_NOTICIAS"
+                });
+
+                return;
+
+            }
+
         }
 
-        return clients.openWindow("https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/");
+        await clients.openWindow(url);
 
     })());
 
