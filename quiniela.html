@@ -4536,9 +4536,12 @@ const messaging = getMessaging(app);
 
     if (permiso === "granted") {
 
-        const token = await getToken(messaging, {
-            vapidKey: "BKIpycS5NL49FEORrHiJpbPQMOiKOFSSLfPtjbnduGb9j1-SxV3JFuoS8PZGqN9G-MKFn3QZyVI0B8IABjSi82E"
-        });
+        const registroSW = await navigator.serviceWorker.ready;
+
+const token = await getToken(messaging, {
+    vapidKey: "BKIpycS5NL49FEORrHiJpbPQMOiKOFSSLfPtjbnduGb9j1-SxV3JFuoS8PZGqN9G-MKFn3QZyVI0B8IABjSi82E",
+    serviceWorkerRegistration: registroSW
+});
 
         console.log("🔔 Token FCM:", token);
 
