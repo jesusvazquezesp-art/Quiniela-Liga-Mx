@@ -288,17 +288,24 @@ console.log(JSON.stringify({
 
         const respuesta = await admin.messaging().send({
 
-            token: dispositivo.token_fcm,
+    token: dispositivo.token_fcm,
 
-            notification:{
+    notification: {
+        title,
+        body
+    },
 
-    title,
+    webpush: {
+        notification: {
+            title,
+            body,
+            icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+            badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+            vibrate: [200, 100, 200]
+        }
+    }
 
-    body
-
-}
-
-        });
+});
 
         console.log("✅ Enviada:", dispositivo.dispositivo_id);
 
