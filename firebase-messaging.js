@@ -10,4 +10,23 @@ firebase.initializeApp({
   appId: "1:1080661326939:web:d5ecec86e19f274e72137e"
 });
 
-firebase.messaging();
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload)=>{
+
+    console.log("Notificación en segundo plano:", payload);
+
+    self.registration.showNotification(
+
+        payload.notification.title,
+
+        {
+            body: payload.notification.body,
+            icon: "/Quiniela-Liga-Mx/icons/icon-192.png",
+            badge: "/Quiniela-Liga-Mx/icons/icon-192.png",
+            vibrate: [200,100,200]
+        }
+
+    );
+
+});
