@@ -573,7 +573,7 @@ if(evento.tipo==="inicio_partido"){
 
         `⚽ ${evento.datos.local} vs ${evento.datos.visitante}`,
 
-        "¡El partido va a de comenzar!"
+        "¡El partido esta a punto de comenzar!"
 
     );
 
