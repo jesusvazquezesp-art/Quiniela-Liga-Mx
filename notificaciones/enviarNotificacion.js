@@ -319,7 +319,10 @@ notification: {
             icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
             badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
             vibrate: [200, 100, 200]
-        }
+        },
+fcmOptions: {
+    link: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
+}
     }
 
 });
