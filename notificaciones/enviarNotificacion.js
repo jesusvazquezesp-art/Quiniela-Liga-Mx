@@ -306,10 +306,6 @@ console.log(JSON.stringify({
 
     token: dispositivo.token_fcm,
 
-    notification: {
-        title,
-        body
-    },
 
     webpush: {
         notification: {
