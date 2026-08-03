@@ -2228,50 +2228,6 @@ async function cargarNoticias(){
     
     
     //----------------------------------------------------
-// REALTIME NOTICIAS
-//----------------------------------------------------
-
-let canalNoticias = null;
-
-function escucharNoticias(){
-
-    if(canalNoticias){
-
-        db.removeChannel(canalNoticias);
-
-        canalNoticias = null;
-
-    }
-
-    canalNoticias = db
-        .channel("noticias")
-
-        .on(
-            "postgres_changes",
-            {
-                event: "INSERT",
-                schema: "public",
-                table: "noticias"
-            },
-            async ()=>{
-
-                console.log("📰 Nueva noticia recibida");
-
-                await cargarNoticias();
-
-            }
-        )
-
-        .subscribe((estado)=>{
-
-            console.log("📰 Estado Noticias:", estado);
-
-        });
-
-}
-    
-    
-    //----------------------------------------------------
 // ALERTA EN PANTALLA
 //----------------------------------------------------
 
@@ -4531,7 +4487,7 @@ this.participantes.textContent = participantes;
 
 };
     
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();escucharNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 
 function abrirAyudaQuiniela(){
@@ -4743,9 +4699,10 @@ const messaging = getMessaging(app);
         
         async function guardarTokenFCM(token){
 
-    if(localStorage.getItem("fcm_token") === token){
-        console.log("🔔 Token sin cambios.");
-        return;
+    const tokenGuardado = localStorage.getItem("fcm_token");
+
+    if(tokenGuardado === token){
+        console.log("🔔 Token sin cambios. Verificando Supabase...");
     }
 
     const { error } = await db
@@ -4766,7 +4723,12 @@ const messaging = getMessaging(app);
 
     localStorage.setItem("fcm_token", token);
 
-    console.log("✅ Token FCM guardado en Supabase.");
+    if(tokenGuardado === token){
+        console.log("✅ Token verificado en Supabase.");
+    }else{
+        console.log("✅ Token FCM guardado en Supabase.");
+    }
+
 }
         
         try {
