@@ -24,6 +24,11 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(async (payload)=>{
 
+console.log("🟢 PASO 6 - Firebase entregó el mensaje");
+console.log(payload);
+
+
+
     console.log("📩 Payload:", payload);
 
     const titulo = payload.notification?.title || "Quiniela Liga MX";
