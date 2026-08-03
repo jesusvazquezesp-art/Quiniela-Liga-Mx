@@ -13,14 +13,7 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
-
-
-
-
-
-
-
-
+console.log("🔥 Firebase Messaging SW cargado");
 
 messaging.onBackgroundMessage(async (payload)=>{
 
