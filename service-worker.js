@@ -171,3 +171,18 @@ self.addEventListener("message",(event)=>{
     }
 
 });
+
+self.addEventListener("push", (event) => {
+
+    console.log("🔥 PUSH RECIBIDO");
+
+    event.waitUntil(
+
+        self.registration.showNotification("PUSH FUNCIONA", {
+            body: "El navegador recibió un Push.",
+            icon: "/Quiniela-Liga-Mx/icons/icon-192.png"
+        })
+
+    );
+
+});
