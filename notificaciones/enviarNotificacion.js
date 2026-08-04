@@ -1,4 +1,3 @@
-// import readline from "readline";
 import admin from "firebase-admin";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
@@ -17,22 +16,6 @@ admin.initializeApp({
 
 console.log("✅ Firebase Admin conectado");
 
-const mensaje = {
-    token: "e8XePGnb2cXp5dWq_3XmM4:APA91bHfjAbZ3yM2_7lzblew35JdLDcjr2g7S3FZj6qyJCxn8UIu2IQDsz3pQ5PVYXSgXZ6mPDbI995vDEtK4aC-v8iRRGg0H3TTGnJAFZ-yYP59alwNTdk",
-    notification: {
-        title: "🧪 Prueba directa",
-        body: "Si ves esto, Firebase funciona."
-    }
-};
-
-admin.messaging().send(mensaje)
-.then(id => {
-    console.log("MENSAJE ID:", id);
-})
-.catch(err => {
-    console.error(err);
-});
-
 //----------------------------------------------------
 // SUPABASE
 //----------------------------------------------------
@@ -50,10 +33,10 @@ const db = createClient(
 
 console.log("✅ Supabase conectado");
 
-
 //----------------------------------------------------
 // MOTOR
 //----------------------------------------------------
+
 
 console.log("");
 console.log("================================");
@@ -61,52 +44,19 @@ console.log(" Motor de Notificaciones");
 console.log("================================");
 console.log("");
 console.log("Esperando noticias...");
+
 console.log("");
+console.log("================================");
+console.log("🚀 PRUEBA DE INICIO DE SERVIDOR");
+console.log("================================");
 
-//----------------------------------------------------
-// AGENDA DE EVENTOS
-//----------------------------------------------------
-
-const agenda = [];
-
-
-//----------------------------------------------------
-// AGREGAR EVENTO
-//----------------------------------------------------
-
-function agregarEvento(tipo, fecha, datos = {}){
-
-    agenda.push({
-
-        tipo,
-        fecha,
-        datos
-
-    });
-
-}
+await enviarATodosLosDispositivos(
+    "🚀 Prueba de inicio de servidor",
+    "Si recibes esta notificación, el servidor y Firebase funcionan correctamente."
+);
 
 
-//----------------------------------------------------
-// CONSOLA
-//----------------------------------------------------
-/*
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-function preguntar(texto){
-
-    return new Promise(resolve=>{
-
-        rl.question(texto, resolve);
-
-    });
-
-}
-*/
-
+console.log("");
 
 //----------------------------------------------------
 // OBTENER DISPOSITIVOS ACTIVOS
@@ -123,45 +73,142 @@ async function obtenerDispositivos(){
         throw error;
     }
 
-    return data;
+    return data || [];
 
 }
-/*
+
+//----------------------------------------------------
+// PRUEBA DE CONEXIÓN
+//----------------------------------------------------
+
 try{
 
     const dispositivos = await obtenerDispositivos();
 
-    console.log("--------------------------------");
+    console.log("");
     console.log("Dispositivos activos:", dispositivos.length);
-
-const title = await preguntar("Título: ");
-const body = await preguntar("Mensaje: ");
-
-console.log("");
-
-    for(const dispositivo of dispositivos){
-
-    console.log(
-        "Enviando a:",
-        dispositivo.dispositivo_id
-    );
-
-    await enviarNotificacion(dispositivo, title, body);
-
-}
-
-    console.log("--------------------------------");
-
- rl.close();
 
 }catch(e){
 
     console.error(e);
 
 }
-*/
 
+//----------------------------------------------------
+// REALTIME
+//----------------------------------------------------
 
+db.channel("noticias_push")
+
+.on(
+    "postgres_changes",
+    {
+        event: "INSERT",
+        schema: "public",
+        table: "noticias"
+    },
+    async (payload)=>{
+
+        console.log("");
+        console.log("================================");
+        console.log("📰 NUEVA NOTICIA");
+        console.log("================================");
+
+        console.log(payload.new);
+
+        const resultado = await enviarATodosLosDispositivos(
+    payload.new.titulo,
+    payload.new.mensaje
+);
+
+if(resultado.enviados > 0){
+
+    await marcarNotificacionEnviada(
+        payload.new.id
+    );
+
+    console.log("✅ Notificación marcada como enviada.");
+
+}else{
+
+    console.log("⚠️ No se marcó como enviada porque ningún dispositivo la recibió.");
+
+}
+
+    }
+)
+
+.subscribe((estado)=>{
+
+    console.log("Realtime:", estado);
+
+});
+
+//----------------------------------------------------
+// ENVIAR A UN DISPOSITIVO
+//----------------------------------------------------
+
+async function enviarNotificacion(dispositivo, title, body){
+
+    try{
+
+        if(!dispositivo.token_fcm){
+
+            console.log("⚠️ Dispositivo sin token:", dispositivo.dispositivo_id);
+
+            return false;
+
+        }
+
+        console.log("📱 Dispositivo:", dispositivo.dispositivo_id);
+        console.log("🔑 Token:", dispositivo.token_fcm.substring(0,40) + "...");
+
+        const respuesta = await admin.messaging().send({
+
+    token: dispositivo.token_fcm,
+
+    notification: {
+        title,
+        body
+    },
+
+    webpush: {
+
+        notification: {
+
+            title,
+            body,
+
+            icon: "/Quiniela-Liga-Mx/icon-192.png",
+
+            badge: "/Quiniela-Liga-Mx/icon-192.png"
+
+        }
+
+    }
+
+});
+        console.log("📨 Respuesta Firebase:", respuesta);
+        console.log("✅ Enviada correctamente.");
+
+        return true;
+
+    }catch(e){
+
+        console.error("❌ Error enviando a:", dispositivo.dispositivo_id);
+console.error(e.code || e.message);
+
+if(e.code === "messaging/registration-token-not-registered"){
+
+    await desactivarDispositivo(dispositivo);
+
+}
+
+return false;
+
+    }
+
+}
 
 //----------------------------------------------------
 // OBTENER JORNADA ACTIVA
@@ -183,25 +230,31 @@ async function obtenerJornadaActiva(){
 
 }
 
-
-
 //----------------------------------------------------
-// OBTENER PARTIDOS DE UNA JORNADA
+// DESACTIVAR DISPOSITIVO
 //----------------------------------------------------
 
-async function obtenerPartidos(jornadaId){
+async function desactivarDispositivo(dispositivo){
 
-    const { data, error } = await db
-        .from("partidos")
-        .select("*")
-        .eq("jornada_id", jornadaId)
-        .order("fecha_partido",{ ascending:true });
+    const { error } = await db
+        .from("notificaciones_dispositivos")
+        .update({
+            activo: false
+        })
+        .eq("dispositivo_id", dispositivo.dispositivo_id);
 
     if(error){
-        throw error;
+
+        console.error("❌ Error desactivando dispositivo:");
+        console.error(error);
+
+        return false;
+
     }
 
-    return data || [];
+    console.log("🚫 Dispositivo desactivado:", dispositivo.dispositivo_id);
+
+    return true;
 
 }
 
@@ -224,39 +277,37 @@ async function obtenerTodosLosPartidos(){
 
 }
 
+
 //----------------------------------------------------
 // PRIMER PARTIDO DE LA JORNADA
 //----------------------------------------------------
 
-function primerPartidoJornada(lista){
+function primerPartidoJornada(partidos){
 
     const ahora = new Date();
 
-    return (lista || [])
+    return (partidos || [])
 
-        .filter(p => {
+        .filter(partido => {
 
-            if(!p.fecha_partido) return false;
+            if(!partido.fecha_partido){
+                return false;
+            }
 
-            const fecha = new Date(p.fecha_partido);
+            const fecha = new Date(partido.fecha_partido);
 
-            if(isNaN(fecha)) return false;
-
-            return fecha > ahora;
+            return !isNaN(fecha) && fecha > ahora;
 
         })
 
-        .sort((a,b)=>
+        .sort((a, b) =>
 
             new Date(a.fecha_partido) -
-
             new Date(b.fecha_partido)
 
         )[0] || null;
 
 }
-
-
 
 
 //----------------------------------------------------
@@ -285,233 +336,154 @@ function agruparPorJornada(partidos){
 
 
 
+//----------------------------------------------------
+// AGENDA DE EVENTOS
+//----------------------------------------------------
+
+const agenda = [];
+const temporizadores = [];
+
 
 //----------------------------------------------------
-// ENVIAR A UN DISPOSITIVO
+// AGREGAR EVENTO
 //----------------------------------------------------
 
-async function enviarNotificacion(dispositivo, title, body){
+function agregarEvento(tipo, fecha, datos = {}){
 
-    try{
+    agenda.push({
 
-console.log(JSON.stringify({
-    token: dispositivo.token_fcm,
-    notification: {
-        title,
-        body
-    }
-}, null, 2));
+        tipo,
+        fecha,
+        datos
 
-        const respuesta = await admin.messaging().send({
-
-    token: dispositivo.token_fcm,
-
-notification: {
-    title,
-    body
-},
-
-
-    webpush: {
-        notification: {
-            title,
-            body,
-            icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
-            badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
-            vibrate: [200, 100, 200]
-        },
-fcmOptions: {
-    link: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
-}
-    }
-
-});
-
-console.log("📨 Respuesta Firebase:", respuesta);
-console.log("📱 Dispositivo:", dispositivo.dispositivo_id);
-console.log("🔑 Token:", dispositivo.token_fcm.substring(0,40) + "...");
-
-
-
-        console.log("✅ Enviada:", dispositivo.dispositivo_id);
-
-        return true;
-
-    }catch(e){
-
-    console.error("❌", dispositivo.dispositivo_id);
-
-    console.error(e.code);
-
-    if(e.code==="messaging/registration-token-not-registered"){
-
-        await desactivarDispositivo(dispositivo);
-
-    }
-
-    return false;
-
-}
+    });
 
 }
 
 //----------------------------------------------------
-// DESACTIVAR DISPOSITIVO
+// CONSTRUIR AGENDA
 //----------------------------------------------------
 
-async function desactivarDispositivo(dispositivo){
+async function construirAgenda(){
 
-    const { error } = await db
-        .from("notificaciones_dispositivos")
-        .update({
-
-            activo:false
-
-        })
-        .eq("dispositivo_id", dispositivo.dispositivo_id);
-
-    if(error){
-
-        console.error(error);
-
-    }else{
-
-        console.log("🚫 Desactivado:", dispositivo.dispositivo_id);
-
-    }
-
-}
-
-
-
-//----------------------------------------------------
-// PRUEBA JORNADA
-//----------------------------------------------------
-
-try{
+    agenda.length = 0;
 
     const jornada = await obtenerJornadaActiva();
 
     if(!jornada){
 
         console.log("❌ No hay jornada activa.");
-
-    }else{
-
-        console.log("Jornada activa:", jornada.numero);
-
-        const partidos = await obtenerTodosLosPartidos();
-
-        const jornadasPartidos = agruparPorJornada(partidos);
-
-        console.log("");
-        console.log("JORNADAS");
-        console.log("----------------");
-
-        for(const jornadaId in jornadasPartidos){
-
-            const partidosJornada = jornadasPartidos[jornadaId];
-
-            console.log("");
-            console.log("================================");
-            console.log("Jornada:", jornadaId);
-            console.log("Partidos:", partidosJornada.length);
-
-            const primero = primerPartidoJornada(partidosJornada);
-
-            if(primero){
-
-                console.log(
-                    "Primer partido:",
-                    primero.local,
-                    "vs",
-                    primero.visitante
-                );
-
-                const inicio = new Date(primero.fecha_partido);
-
-                const cierre = new Date(inicio);
-                cierre.setMinutes(cierre.getMinutes() - 10);
-
-                const aviso = new Date(cierre);
-                aviso.setHours(aviso.getHours() - 1);
-
-                console.log("Inicio :", inicio.toLocaleString());
-                console.log("Cierre :", cierre.toLocaleString());
-                console.log("Aviso  :", aviso.toLocaleString());
-
-                if(jornadaId === jornada.id){
-
-                    agregarEvento(
-                        "aviso_1h",
-                        aviso,
-                        {
-                            jornada: jornada.numero
-                        }
-                    );
-
-                    agregarEvento(
-                        "cierre_registros",
-                        cierre,
-                        {
-                            jornada: jornada.numero,
-                            jornadaId: jornada.id
-                        }
-                    );
-
-                }
-
-            }else{
-
-                console.log("Sin partidos futuros.");
-
-            }
-
-            for(const partido of partidosJornada){
-
-                if(!partido.fecha_partido) continue;
-
-                const fecha = new Date(partido.fecha_partido);
-
-                if(isNaN(fecha)) continue;
-
-                if(fecha <= new Date()) continue;
-
-                agregarEvento(
-                    "inicio_partido",
-                    fecha,
-                    {
-                        local: partido.local,
-                        visitante: partido.visitante
-                    }
-                );
-
-            }
-
-        }
-
-        console.log("");
-        console.log("AGENDA");
-        console.log("----------------");
-
-        agenda.forEach(evento=>{
-
-            console.log(
-                evento.tipo,
-                evento.fecha.toLocaleString()
-            );
-
-        });
+        return;
 
     }
 
-}catch(e){
+    console.log("Jornada activa:", jornada.numero);
 
-    console.error(e);
+    const partidos = await obtenerTodosLosPartidos();
+
+    const jornadas = agruparPorJornada(partidos);
+
+    console.log("");
+    console.log("JORNADAS");
+    console.log("----------------");
+
+    for(const jornadaId in jornadas){
+
+        const lista = jornadas[jornadaId];
+
+        console.log("");
+        console.log("================================");
+        console.log("Jornada:", jornadaId);
+        console.log("Partidos:", lista.length);
+
+        const primero = primerPartidoJornada(lista);
+
+        if(!primero){
+
+            console.log("Sin partidos futuros.");
+            continue;
+
+        }
+
+        console.log(
+            "Primer partido:",
+            primero.local,
+            "vs",
+            primero.visitante
+        );
+
+        const inicio = new Date(primero.fecha_partido);
+
+        const cierre = new Date(inicio);
+        cierre.setMinutes(cierre.getMinutes() - 10);
+
+        const aviso = new Date(cierre);
+        aviso.setHours(aviso.getHours() - 1);
+
+        console.log("Inicio :", inicio.toLocaleString());
+        console.log("Cierre :", cierre.toLocaleString());
+        console.log("Aviso  :", aviso.toLocaleString());
+
+        if(jornadaId === jornada.id){
+
+            agregarEvento(
+                "aviso_1h",
+                aviso,
+                {
+                    jornada: jornada.numero
+                }
+            );
+
+            agregarEvento(
+                "cierre_registros",
+                cierre,
+                {
+                    jornada: jornada.numero,
+                    jornadaId: jornada.id
+                }
+            );
+
+        }
+
+        for(const partido of lista){
+
+            if(!partido.fecha_partido) continue;
+
+            const fecha = new Date(partido.fecha_partido);
+
+            if(isNaN(fecha)) continue;
+
+            if(fecha <= new Date()) continue;
+
+            agregarEvento(
+                "inicio_partido",
+                fecha,
+                {
+                    local: partido.local,
+                    visitante: partido.visitante
+                }
+            );
+
+        }
+
+    }
+
+    console.log("");
+    console.log("AGENDA");
+    console.log("----------------");
+
+    agenda.sort((a,b)=>a.fecha-b.fecha);
+
+    for(const evento of agenda){
+
+        console.log(
+            evento.tipo,
+            evento.fecha.toLocaleString()
+        );
+
+    }
 
 }
-
-
 
 
 //----------------------------------------------------
@@ -520,80 +492,106 @@ try{
 
 function programarAgenda(){
 
+    console.log("");
+    console.log("PROGRAMANDO EVENTOS");
+    console.log("----------------");
+
+    const ahora = new Date();
+
     for(const evento of agenda){
 
-        const espera = evento.fecha.getTime() - Date.now();
+        const espera = evento.fecha.getTime() - ahora.getTime();
 
         if(espera <= 0){
 
-            console.log("⏩ Evento vencido:", evento.tipo);
+            console.log("⏭️ Omitido:", evento.tipo);
 
             continue;
 
         }
 
-        console.log("⏰ Programado:", evento.tipo);
+        console.log(
+            "⏰ Programado:",
+            evento.tipo,
+            "en",
+            Math.round(espera / 1000),
+            "segundos"
+        );
 
-        setTimeout(async ()=>{
+        const timer = setTimeout(async()=>{
 
-            console.log("");
-            console.log("================================");
-            console.log("EVENTO:", evento.tipo);
-            console.log("================================");
+    console.log("");
+    console.log("================================");
+    console.log("⏰ EVENTO");
+    console.log("================================");
 
-            if(evento.tipo==="aviso_1h"){
+    console.log(evento.tipo);
 
-               await crearNoticia(
+    await ejecutarEvento(evento);
 
-    `🏆 Jornada ${evento.datos.jornada + 1} disponible`,
+}, espera);
 
-    "Ya puedes registrar tus pronósticos.\n\n⏰ Recuerda que el registro cierra 10 minutos antes del primer partido."
-
-);
-
-            }
-
-
-
-
-if(evento.tipo==="cierre_registros"){
-
-    await crearNoticia(
-
-    "🔄 Cambio de Jornada",
-
-    `La Jornada ${evento.datos.jornada} ha cerrado.
-
-🏆 Ya puedes registrar tus pronósticos para la Jornada ${evento.datos.jornada + 1}.`
-
-);
-
-}
-
-
-if(evento.tipo==="inicio_partido"){
-
-    await crearNoticia(
-
-        `⚽ ${evento.datos.local} vs ${evento.datos.visitante}`,
-
-        "¡El partido esta a punto de comenzar!"
-
-    );
-
-}
-
-
-            console.log("");
-
-        }, espera);
+temporizadores.push(timer);
 
     }
 
 }
 
 
-programarAgenda();
+//----------------------------------------------------
+// EJECUTAR EVENTO
+//----------------------------------------------------
+
+async function ejecutarEvento(evento){
+
+    switch(evento.tipo){
+
+        case "aviso_1h":
+
+            await crearNoticia(
+
+    "⏰ Falta 1 hora",
+
+    "En una hora inicia la jornada " +
+    evento.datos.jornada
+
+);
+
+            break;
+
+        case "cierre_registros":
+
+            await crearNoticia(
+
+    "🔒 Registros cerrados",
+
+    "Ya no es posible registrar nuevos boletos."
+
+);
+
+            break;
+
+        case "inicio_partido":
+
+            await crearNoticia(
+
+    "⚽ Inicia el partido",
+
+    evento.datos.local +
+    " vs " +
+    evento.datos.visitante
+
+);
+
+            break;
+
+        default:
+
+            console.log("⚠️ Evento desconocido:", evento.tipo);
+
+    }
+
+}
 
 
 //----------------------------------------------------
@@ -602,80 +600,166 @@ programarAgenda();
 
 async function crearNoticia(titulo, mensaje){
 
+    const haceCincoMinutos = new Date(
+        Date.now() - (5 * 60 * 1000)
+    ).toISOString();
+
+    const { data: existe, error: errorBusqueda } = await db
+        .from("noticias")
+        .select("id")
+        .eq("titulo", titulo)
+        .eq("mensaje", mensaje)
+        .gte("fecha_publicacion", haceCincoMinutos)
+        .limit(1);
+
+    if(errorBusqueda){
+
+        console.error("❌ Error buscando noticia duplicada:");
+        console.error(errorBusqueda);
+
+        return false;
+
+    }
+
+    if(existe && existe.length){
+
+        console.log("⚠️ Noticia duplicada. No se creó.");
+
+        return false;
+
+    }
+
     const { error } = await db
         .from("noticias")
         .insert({
 
+            activa: true,
             titulo,
             mensaje,
-            activa: true
+            notificacion_enviada: false,
+            fecha_publicacion: new Date().toISOString()
 
         });
 
     if(error){
 
+        console.error("❌ Error creando noticia:");
         console.error(error);
 
-        return;
+        return false;
 
     }
 
-    console.log("📰 Noticia creada.");
+    console.log("📰 Noticia creada:", titulo);
+
+    return true;
+
+}
+
+//----------------------------------------------------
+// MARCAR NOTIFICACIÓN ENVIADA
+//----------------------------------------------------
+
+async function marcarNotificacionEnviada(id){
+
+    const { error } = await db
+        .from("noticias")
+        .update({
+            notificacion_enviada: true
+        })
+        .eq("id", id);
+
+    if(error){
+
+        console.error("❌ Error marcando noticia enviada:");
+        console.error(error);
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+//----------------------------------------------------
+// ENVIAR A TODOS LOS DISPOSITIVOS
+//----------------------------------------------------
+
+async function enviarATodosLosDispositivos(title, body){
+
+    const inicio = Date.now();
+
+    const dispositivos = await obtenerDispositivos();
+
+    let enviados = 0;
+    let errores = 0;
+
+    console.log("");
+    console.log("================================");
+    console.log("📨 ENVÍO DE NOTIFICACIONES");
+    console.log("================================");
+
+    console.log("Título:", title);
+    console.log("");
+
+    if(dispositivos.length === 0){
+
+        console.log("⚠️ No hay dispositivos registrados.");
+
+        return {
+            enviados: 0,
+            errores: 0,
+            dispositivos: 0
+        };
+
+    }
+
+    for(const dispositivo of dispositivos){
+
+        const ok = await enviarNotificacion(
+            dispositivo,
+            title,
+            body
+        );
+
+        if(ok){
+            enviados++;
+        }else{
+            errores++;
+        }
+
+    }
+
+    console.log("");
+    console.log("Dispositivos :", dispositivos.length);
+    console.log("✅ Enviadas   :", enviados);
+    console.log("❌ Errores    :", errores);
+    console.log("⏱ Tiempo     :", Date.now() - inicio, "ms");
+
+    return {
+
+        dispositivos: dispositivos.length,
+        enviados,
+        errores
+
+    };
 
 }
 
 
-
-
 //----------------------------------------------------
-// REALTIME
+// ARRANQUE
 //----------------------------------------------------
 
-db.channel("noticias_push")
+try{
 
-.on(
+    await construirAgenda();
 
-    "postgres_changes",
+    programarAgenda();
 
-    {
+}catch(e){
 
-        event: "INSERT",
-
-        schema: "public",
-
-        table: "noticias"
-
-    },
-
-    async (payload)=>{
-
-        console.log("");
-        console.log("================================");
-        console.log("NUEVA NOTICIA");
-        console.log("================================");
-
-        const dispositivos = await obtenerDispositivos();
-
-console.log("Dispositivos activos:", dispositivos.length);
-console.log("");
-
-for(const dispositivo of dispositivos){
-
-    console.log("Enviando a:", dispositivo.dispositivo_id);
-
-    await enviarNotificacion(
-        dispositivo,
-        payload.new.titulo,
-        payload.new.mensaje
-    );
+    console.error(e);
 
 }
-    }
-
-)
-
-.subscribe((estado)=>{
-
-    console.log("Realtime:",estado);
-
-});
