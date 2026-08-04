@@ -163,6 +163,27 @@ async function enviarNotificacion(dispositivo, title, body){
         console.log("📱 Dispositivo:", dispositivo.dispositivo_id);
         console.log("🔑 Token:", dispositivo.token_fcm.substring(0,40) + "...");
 
+
+console.log("================================");
+console.log("MENSAJE A FIREBASE");
+console.log("================================");
+
+console.dir({
+    token: dispositivo.token_fcm,
+    notification: {
+        title,
+        body
+    },
+    webpush: {
+        notification: {
+            title,
+            body,
+            icon: "/Quiniela-Liga-Mx/icons/icon-192.png",
+            badge: "/Quiniela-Liga-Mx/icons/icon-192.png"
+        }
+    }
+}, { depth: null });
+
         const respuesta = await admin.messaging().send({
 
     token: dispositivo.token_fcm,
@@ -179,9 +200,14 @@ async function enviarNotificacion(dispositivo, title, body){
             title,
             body,
 
-            icon: "/Quiniela-Liga-Mx/icon-192.png",
+            icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+            badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png"
 
-            badge: "/Quiniela-Liga-Mx/icon-192.png"
+        },
+
+        fcmOptions: {
+
+            link: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
 
         }
 
