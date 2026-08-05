@@ -1,188 +1,35 @@
 //----------------------------------------------------
-// QUINIELA MX
-// SERVICE WORKER
+// FIREBASE - MENSAJES EN SEGUNDO PLANO
 //----------------------------------------------------
 
-const VERSION = "2.0.0";
+messaging.onBackgroundMessage((payload)=>{
 
-const CACHE_NAME = `quiniela-mx-${VERSION}`;
+    console.log("🟢 onBackgroundMessage");
 
-//----------------------------------------------------
-// ARCHIVOS PRINCIPALES
-//----------------------------------------------------
+    console.log(payload);
 
-const ARCHIVOS = [
+    const titulo =
+        payload.notification?.title || "Quiniela Liga MX";
 
-    "./",
-    "./quiniela.html",
+    const mensaje =
+        payload.notification?.body || "";
 
-    "./manifest.json",
+    self.registration.showNotification(titulo,{
 
-    "./icons/icon-192.png",
-    "./icons/icon-512.png",
+        body: mensaje,
 
-];
+        icon: "/Quiniela-Liga-Mx/icons/icon-192.png",
 
-//----------------------------------------------------
-// INSTALACIÓN
-//----------------------------------------------------
+        badge: "/Quiniela-Liga-Mx/icons/icon-192.png",
 
-self.addEventListener("install", (event)=>{
+        vibrate:[200,100,200],
 
-    console.log("📦 Instalando PWA", VERSION);
+        requireInteraction:true,
 
-    event.waitUntil((async()=>{
-
-        const cache = await caches.open(CACHE_NAME);
-
-        await cache.addAll(ARCHIVOS);
-
-        await self.skipWaiting();
-
-    })());
-
-});
-
-
-//----------------------------------------------------
-// ACTIVACIÓN
-//----------------------------------------------------
-
-self.addEventListener("activate", (event)=>{
-
-    console.log("✅ Activando PWA", VERSION);
-
-    event.waitUntil((async()=>{
-
-        const nombres = await caches.keys();
-
-        await Promise.all(
-
-            nombres.map(nombre=>{
-
-                if(nombre!==CACHE_NAME){
-
-                    console.log("🗑 Eliminando", nombre);
-
-                    return caches.delete(nombre);
-
-                }
-
-            })
-
-        );
-
-        await self.clients.claim();
-
-console.log("✅ PWA lista");
-
-    })());
-
-});
-
-
-//----------------------------------------------------
-// FETCH
-//----------------------------------------------------
-
-self.addEventListener("fetch",(event)=>{
-
-    if(event.request.method!=="GET"){
-        return;
-    }
-
-    event.respondWith((async()=>{
-
-        try{
-
-            const respuesta = await fetch(event.request);
-
-            const cache = await caches.open(CACHE_NAME);
-
-            cache.put(event.request,respuesta.clone());
-
-            return respuesta;
-
-        }catch(e){
-
-            const cache = await caches.match(event.request);
-
-            if(cache){
-                return cache;
-            }
-
-            if(event.request.mode==="navigate"){
-
-                const pagina = await caches.match("./quiniela.html");
-
-                if(pagina){
-                    return pagina;
-                }
-
-            }
-
-            throw e;
-
+        data:{
+            url:"https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
         }
 
-    })());
-
-});
-
-
-//----------------------------------------------------
-// MENSAJES DESDE LA APLICACIÓN
-//----------------------------------------------------
-
-self.addEventListener("message",(event)=>{
-
-    if(!event.data){
-        return;
-    }
-
-    switch(event.data.tipo){
-
-        case "SKIP_WAITING":
-
-            console.log("♻ Actualizando Service Worker");
-
-            self.skipWaiting();
-
-            break;
-
-        case "LIMPIAR_CACHE":
-
-            event.waitUntil((async()=>{
-
-                const nombres = await caches.keys();
-
-                await Promise.all(
-
-                    nombres.map(nombre=>caches.delete(nombre))
-
-                );
-
-                console.log("🗑 Caché eliminada");
-
-            })());
-
-            break;
-
-    }
-
-});
-
-self.addEventListener("push", (event) => {
-
-    console.log("🔥 PUSH RECIBIDO");
-
-    event.waitUntil(
-
-        self.registration.showNotification("PUSH FUNCIONA", {
-            body: "El navegador recibió un Push.",
-            icon: "/Quiniela-Liga-Mx/icons/icon-192.png"
-        })
-
-    );
+    });
 
 });
