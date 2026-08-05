@@ -187,12 +187,12 @@ console.dir({
         const respuesta = await admin.messaging().send({
 
     token: dispositivo.token_fcm,
-
+/*
     notification: {
         title,
         body
     },
-
+*/
     webpush: {
 
         notification: {
