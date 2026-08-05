@@ -216,9 +216,8 @@ messaging.onBackgroundMessage((payload)=>{
 
         body: mensaje,
 
-        icon: "/Quiniela-Liga-Mx/icons/icon-192.png",
-
-        badge: "/Quiniela-Liga-Mx/icons/icon-192.png",
+       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+       badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
 
         vibrate:[200,100,200],
 
