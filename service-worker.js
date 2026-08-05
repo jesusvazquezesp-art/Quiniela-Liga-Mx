@@ -206,15 +206,22 @@ messaging.onBackgroundMessage((payload)=>{
 
     console.log(payload);
 
-    const titulo =
-        payload.notification?.title || "Quiniela Liga MX";
+    console.log("NOTIFICACIÓN:", payload.notification);
+console.log("DATA:", payload.data);
 
-    const mensaje =
-        payload.notification?.body || "";
+const titulo =
+    payload.notification?.title ||
+    payload.data?.title ||
+    "Quiniela Liga MX";
+
+const mensaje =
+    payload.notification?.body ||
+    payload.data?.body ||
+    "";
 
     self.registration.showNotification(titulo,{
 
-     //   body: mensaje,
+        body: mensaje,
 
        icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
        badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
