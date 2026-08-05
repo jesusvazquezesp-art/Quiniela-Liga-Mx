@@ -188,7 +188,7 @@ console.dir({
 
     token: dispositivo.token_fcm,
 
-    notification: {
+    data: {
         title,
         body
     },
