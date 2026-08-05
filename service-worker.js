@@ -224,7 +224,7 @@ const mensaje =
     payload.notification?.body ||
     payload.data?.body ||
     "";
-/*
+
     self.registration.showNotification(titulo,{
 
         body: mensaje,
@@ -241,5 +241,5 @@ const mensaje =
         }
 
     });
-*/
+
 });
