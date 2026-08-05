@@ -229,7 +229,7 @@ const mensaje =
 
         body: mensaje,
 
-       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-512.png",
        badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
 
         vibrate:[200,100,200],
