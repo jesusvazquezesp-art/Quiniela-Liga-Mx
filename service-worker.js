@@ -213,12 +213,12 @@ const titulo =
     payload.notification?.title ||
     payload.data?.title ||
     "Quiniela Liga MX";
-
+/*
 const mensaje =
     payload.notification?.body ||
     payload.data?.body ||
     "Aquí se repite la notificación, @chat gpt";
-
+*/
     self.registration.showNotification(titulo,{
 
         body: mensaje,
