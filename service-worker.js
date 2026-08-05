@@ -200,7 +200,13 @@ self.addEventListener("message",(event)=>{
 // FIREBASE - MENSAJES EN SEGUNDO PLANO
 //----------------------------------------------------
 
+
+
 messaging.onBackgroundMessage((payload)=>{
+
+console.log("===== PAYLOAD COMPLETO =====");
+console.dir(payload, { depth: null });
+console.log("============================");
 
     console.log("🟢 onBackgroundMessage");
 
@@ -217,7 +223,7 @@ const titulo =
 const mensaje =
     payload.notification?.body ||
     payload.data?.body ||
-    "Aquí se repite la notificación, @chat gpt";
+    "";
 /*
     self.registration.showNotification(titulo,{
 
