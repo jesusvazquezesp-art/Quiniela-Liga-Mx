@@ -10,17 +10,3 @@ firebase.initializeApp({
   appId: "1:325502110908:web:012b12571b5d85ac5354b9"
 });
 
-const messaging = firebase.messaging();
-
-console.log("🔥 SW cargado");
-
-messaging.onBackgroundMessage((payload) => {
-
-    console.log("📩 MENSAJE RECIBIDO", payload);
-
-    self.registration.showNotification("PRUEBA", {
-        body: JSON.stringify(payload),
-        icon: "/Quiniela-Liga-Mx/icons/icon-192.png"
-    });
-
-});
