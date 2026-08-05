@@ -217,7 +217,7 @@ const titulo =
 const mensaje =
     payload.notification?.body ||
     payload.data?.body ||
-    "";
+    "Aquí se repite la notificación, @chat gpt";
 
     self.registration.showNotification(titulo,{
 
