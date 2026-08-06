@@ -3082,61 +3082,83 @@ async function borrarJornada(id){try{if(!esAdmin)return msg('Solo administrador'
 async function activarJornada(id){if(!esAdmin)return msg('Solo administrador','error');jornadaVistaId=id;await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');await db.from('jornadas').update({activa:true}).eq('id',id);await aud('ACTIVAR_JORNADA','Admin activó jornada');await cargar();msg('Jornada activada','ok')}
 async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrador','error');await db.from('jornadas').update({bloqueada:cerrar}).eq('id',id);await aud(cerrar?'CERRAR_QUINIELA':'ABRIR_QUINIELA',cerrar?'Admin cerró quiniela':'Admin abrió quiniela');await cargar();msg(cerrar?'Quiniela cerrada':'Quiniela abierta','ok')}
 
-async function guardarResultados(){try{
-if(!esAdmin)return msg('Solo administrador','error');
-let antes=JSON.parse(JSON.stringify(partidos));
+async function guardarResultados(){
+
+try{
+
+if(!esAdmin) return msg('Solo administrador','error');
+
+let antes = JSON.parse(JSON.stringify(partidos));
 
 for(const p of partidos){
-let gl=$('gl_'+p.id).value,
-gv=$('gv_'+p.id).value;
-if(gl===''||gv==='')continue;
-let r=resFrom(gl,gv);
 
-await db.from('partidos')
-.update({
-    goles_local:+gl,
-    goles_visitante:+gv,
-    resultado:r,
-    finalizado:true
-})
-.eq('id',p.id);
+    let gl = $('gl_'+p.id).value,
+        gv = $('gv_'+p.id).value;
 
-console.log(p);
+    if(gl==='' || gv==='') continue;
 
-let ganador = "🤝 Empate";
+    let r = resFrom(gl,gv);
 
-if(+gl > +gv){
-    ganador = "🏠 Ganó el local";
-}
-else if(+gl < +gv){
-    ganador = "🚌 Ganó la visita";
-}
+    await db.from('partidos')
+    .update({
+        goles_local:+gl,
+        goles_visitante:+gv,
+        resultado:r,
+        finalizado:true
+    })
+    .eq('id',p.id);
 
+    let ganador = "🤝 Empate";
 
-}
-await actualizarAciertos();
-await recalcularTablaLiga();
+    if(+gl > +gv){
 
+        ganador = "🏠 Ganó el local";
 
+    }else if(+gl < +gv){
 
-await db
-.from("noticias")
-.insert({
-    titulo: "⚽ Resultado oficial",
-    mensaje:
+        ganador = "🚌 Ganó la visita";
+
+    }
+
+    await db
+    .from("noticias")
+    .insert({
+        titulo: "⚽ Resultado oficial",
+        mensaje:
 `${p.local} ${gl} - ${gv} ${p.visitante}
 
 ${ganador}`,
-    activa: true
-});
+        activa: true
+    });
 
-await aud('CAPTURAR_RESULTADOS','Admin guardó resultados',null,antes,{});
+}
+
+await actualizarAciertos();
+await recalcularTablaLiga();
+
+await aud(
+    'CAPTURAR_RESULTADOS',
+    'Admin guardó resultados',
+    null,
+    antes,
+    {}
+);
+
 await cargar();
+
 msg('Resultados guardados','ok');
+
 }catch(e){
-msg('Error: '+e.message,'error');
+
+    msg('Error: '+e.message,'error');
+
 }
+
 }
+
+console.log(p);
+
+
 
 
 async function actualizarAciertos(){let ps=await db.from('partidos').select('*').eq('jornada_id',jornada.id);let prs=await db.from('pronosticos').select('*').eq('jornada_id',jornada.id);for(const x of prs.data||[]){let p=(ps.data||[]).find(y=>y.id===x.partido_id);if(p&&p.resultado)await db.from('pronosticos').update({acierto:x.pronostico===p.resultado}).eq('id',x.id)}}
