@@ -3120,6 +3120,12 @@ for(const p of partidos){
 
     }
 
+console.log("📣 VOY A INSERTAR ESTA NOTICIA");
+console.log({
+    titulo: "⚽ Resultado oficial",
+    mensaje: `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
+});
+
     await db
     .from("noticias")
     .insert({
