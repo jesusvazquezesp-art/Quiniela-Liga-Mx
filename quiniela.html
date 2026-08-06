@@ -3081,39 +3081,50 @@ async function borrarJornada(id){try{if(!esAdmin)return msg('Solo administrador'
 }catch(e){msg('Error al borrar: '+e.message,'error')}}
 async function activarJornada(id){if(!esAdmin)return msg('Solo administrador','error');jornadaVistaId=id;await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');await db.from('jornadas').update({activa:true}).eq('id',id);await aud('ACTIVAR_JORNADA','Admin activó jornada');await cargar();msg('Jornada activada','ok')}
 async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrador','error');await db.from('jornadas').update({bloqueada:cerrar}).eq('id',id);await aud(cerrar?'CERRAR_QUINIELA':'ABRIR_QUINIELA',cerrar?'Admin cerró quiniela':'Admin abrió quiniela');await cargar();msg(cerrar?'Quiniela cerrada':'Quiniela abierta','ok')}
+
 async function guardarResultados(){try{
 if(!esAdmin)return msg('Solo administrador','error');
 let antes=JSON.parse(JSON.stringify(partidos));
+
 for(const p of partidos){
 let gl=$('gl_'+p.id).value,
 gv=$('gv_'+p.id).value;
 if(gl===''||gv==='')continue;
 let r=resFrom(gl,gv);
+
 await db.from('partidos')
 .update({
-goles_local:+gl,
-goles_visitante:+gv,
-resultado:r,
-finalizado:true
+    goles_local:+gl,
+    goles_visitante:+gv,
+    resultado:r,
+    finalizado:true
 })
 .eq('id',p.id);
+
+let ganador = "🤝 Empate";
+
+if(+gl > +gv){
+    ganador = "🏠 Ganó el local";
+}
+else if(+gl < +gv){
+    ganador = "🚌 Ganó la visita";
+}
+
+
 }
 await actualizarAciertos();
 await recalcularTablaLiga();
 
-console.log("ANTES DEL INSERT");
+await db
+.from("noticias")
+.insert({
+    titulo: "⚽ Resultado oficial",
+    mensaje:
+`${p.local} ${gl} - ${gv} ${p.visitante}
 
-const respuesta = await db
-    .from("noticias")
-    .insert({
-        titulo: "🏁 Resultados publicados",
-        mensaje: "Ya puedes consultar los resultados de la jornada.",
-        activa: true
-    });
-
-console.log("DESPUÉS DEL INSERT");
-
-console.log(respuesta);
+${ganador}`,
+    activa: true
+});
 
 await aud('CAPTURAR_RESULTADOS','Admin guardó resultados',null,antes,{});
 await cargar();
