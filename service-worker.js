@@ -201,48 +201,35 @@ self.addEventListener("message",(event)=>{
 //----------------------------------------------------
 
 
+messaging.onBackgroundMessage(async (payload)=>{
 
-messaging.onBackgroundMessage((payload)=>{
+    console.log("===== PAYLOAD COMPLETO =====");
+    console.dir(payload,{depth:null});
+    console.log("============================");
 
-console.log("===== PAYLOAD COMPLETO =====");
-console.dir(payload, { depth: null });
-console.log("============================");
+    const titulo =
+        payload.data?.title ||
+        payload.notification?.title ||
+        "Quiniela Liga MX";
 
-    console.log("🟢 onBackgroundMessage");
+    const mensaje =
+        payload.data?.body ||
+        payload.notification?.body ||
+        "";
 
-    console.log(payload);
-
-    console.log("NOTIFICACIÓN:", payload.notification);
-console.log("DATA:", payload.data);
-
-const titulo =
-    payload.notification?.title ||
-    payload.data?.title ||
-    "Quiniela Liga MX";
-
-const mensaje =
-    payload.notification?.body ||
-    payload.data?.body ||
-    "";
-/*
-    self.registration.showNotification(titulo,{
-
+    await self.registration.showNotification(titulo,{
         body: mensaje,
-
-       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
-       badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
-
-        vibrate:[200,100,200],
-
-  //      requireInteraction:true,
-
+        icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-512.png",
+        badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
+        tag: Date.now().toString(),
+        renotify: true,
         data:{
             url:"https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
         }
-
     });
-*/
+
 });
+
 
 //----------------------------------------------------
 // CLICK EN LA NOTIFICACIÓN
