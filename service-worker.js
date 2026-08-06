@@ -224,12 +224,12 @@ const mensaje =
     payload.notification?.body ||
     payload.data?.body ||
     "";
-
+/*
     self.registration.showNotification(titulo,{
 
         body: mensaje,
 
-       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-512.png",
+       icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
        badge: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-192.png",
 
         vibrate:[200,100,200],
@@ -241,5 +241,40 @@ const mensaje =
         }
 
     });
+*/
+});
+
+//----------------------------------------------------
+// CLICK EN LA NOTIFICACIÓN
+//----------------------------------------------------
+
+self.addEventListener("notificationclick",(event)=>{
+
+    event.notification.close();
+
+    event.waitUntil(
+
+        clients.matchAll({
+            type:"window",
+            includeUncontrolled:true
+        }).then((lista)=>{
+
+            for(const cliente of lista){
+
+                if(cliente.url.includes("/Quiniela-Liga-Mx/")){
+
+                    return cliente.focus();
+
+                }
+
+            }
+
+            return clients.openWindow(
+                "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/"
+            );
+
+        })
+
+    );
 
 });
