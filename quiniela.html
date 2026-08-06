@@ -3115,6 +3115,8 @@ else if(+gl < +gv){
 await actualizarAciertos();
 await recalcularTablaLiga();
 
+console.log(p);
+
 await db
 .from("noticias")
 .insert({
