@@ -3101,6 +3101,8 @@ await db.from('partidos')
 })
 .eq('id',p.id);
 
+console.log(p);
+
 let ganador = "🤝 Empate";
 
 if(+gl > +gv){
@@ -3115,7 +3117,7 @@ else if(+gl < +gv){
 await actualizarAciertos();
 await recalcularTablaLiga();
 
-console.log(p);
+
 
 await db
 .from("noticias")
