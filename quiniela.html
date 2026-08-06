@@ -2953,6 +2953,7 @@ async function eliminarBoleto(uid){
     r=await db.from('pagos').delete().eq('usuario_id',uid).eq('jornada_id',jornada.id); if(r.error) throw r.error;
     await db.from('fama').delete().eq('usuario_id',uid).eq('jornada_id',jornada.id);
     r=await db.from('usuarios').delete().eq('id',uid); if(r.error) throw r.error;
+    
     await recalcularTablaLiga(true);
     await cargar();
     msg(`Boleto eliminado correctamente: ${nombre}`,'ok');
@@ -3141,6 +3142,39 @@ ${ganador}`,
 
 await actualizarAciertos();
 await recalcularTablaLiga();
+
+// 👑 Obtener líderes
+
+const lideres = obtenerLideresQuiniela();
+
+await db
+.from("noticias")
+.insert({
+    titulo: lideres.length === 1
+        ? "👑 Líder de la quiniela"
+        : "👑 Líderes de la quiniela",
+
+    mensaje: lideres.join("\n"),
+
+    activa: true
+});
+
+// 👑 Notificación del líder
+
+
+await db
+.from("noticias")
+.insert({
+    titulo: lideres.length===1
+        ? "👑 Líder de la quiniela"
+        : "👑 Líderes de la quiniela",
+
+    mensaje: lideres.join("\n"),
+
+    activa: true
+});
+
+
 
 await aud(
     'CAPTURAR_RESULTADOS',
@@ -3433,8 +3467,13 @@ function medallaLugar(lugar){
   return lugar+'°';
 }
 function listaClasificacionCompartir(limite=10){
-  const lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
-  let lugar=0,pos=0,ant=null;
+  const lista=usuariosJornada()
+.map(u=>({...u,...aciertos(u.id)}))
+.sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
+
+
+
+let lugar=0,pos=0,ant=null;
   return lista.slice(0,limite).map(u=>{
     pos++;
     if(ant===null||u.a<ant)lugar=pos;
@@ -3442,6 +3481,10 @@ function listaClasificacionCompartir(limite=10){
     return `${medallaLugar(lugar)} ${nombreBoleto(u,lista)} — ${u.a}/${u.c} pts`;
   });
 }
+    
+    
+    
+    
 function resumenPartidosCompartir(){
   const finalizados=partidos.filter(p=>p.resultado);
   if(!finalizados.length)return '';
@@ -3680,6 +3723,19 @@ if(oculto==="1"){
     const texto = this.txt.value.trim();
 
     if(!texto) return;
+        
+        const mencionarTodos = /@todos\b/i.test(texto);
+
+if(mencionarTodos){
+    console.log("📢 Se mencionó a TODOS");
+}
+        
+        const menciones = [...texto.matchAll(/@([a-zA-Z0-9_ÁÉÍÓÚáéíóúÑñ]+)/g)]
+.map(m => m[1]);
+
+console.log("📣 Menciones:", menciones);
+        
+        
 
     if(!this.usuario){
         msg("Primero debes registrar un boleto para participar en el chat.");
