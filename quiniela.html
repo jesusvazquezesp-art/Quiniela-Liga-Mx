@@ -3818,6 +3818,26 @@ this.emojis = document.getElementById("chatEmojis");
     });
 
     lista.innerHTML = html;
+         
+         lista.querySelectorAll(".chat-mencion").forEach(item=>{
+
+    item.onclick = ()=>{
+
+        const nombre = item.dataset.nombre;
+
+        const inicio = this.txt.value.lastIndexOf("@");
+
+        this.txt.value =
+            this.txt.value.substring(0,inicio) +
+            "@" + nombre + " ";
+
+        lista.style.display = "none";
+
+        this.txt.focus();
+
+    };
+
+});
 
 });
 
