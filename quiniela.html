@@ -3724,16 +3724,17 @@ if(oculto==="1"){
 
     if(!texto) return;
         
-        const mencionarTodos = /@todos\b/i.test(texto);
+        const texto = this.txt.value.trim();
 
-if(mencionarTodos){
-    console.log("📢 Se mencionó a TODOS");
-}
-        
-        const menciones = [...texto.matchAll(/@([a-zA-Z0-9_ÁÉÍÓÚáéíóúÑñ]+)/g)]
-.map(m => m[1]);
+console.log("TEXTO:", texto);
 
-console.log("📣 Menciones:", menciones);
+const mencionarTodos = texto.includes("@todos");
+
+console.log("¿TODOS?:", mencionarTodos);
+
+const menciones = texto.match(/@[^\s]+/g) || [];
+
+console.log("MENCIONES:", menciones);
         
         
 
