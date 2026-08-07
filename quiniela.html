@@ -3679,10 +3679,23 @@ this.emojis = document.getElementById("chatEmojis");
 
     lista.style.display="block";
 
-    lista.innerHTML = `
-        <div style="padding:6px;cursor:pointer;">📢 @todos</div>
-        <div style="padding:6px;cursor:pointer;">👤 @jeve</div>
+    let html = `
+<div class="chat-mencion" data-nombre="todos">
+📢 @todos
+</div>
+`;
+
+usuariosJornada().forEach(u=>{
+
+    html += `
+    <div class="chat-mencion" data-nombre="${u.nombre}">
+        👤 @${u.nombre}
+    </div>
     `;
+
+});
+
+lista.innerHTML = html;
 
 });
 
