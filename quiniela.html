@@ -3775,77 +3775,47 @@ this.emojis = document.getElementById("chatEmojis");
     const lista = document.getElementById("chatMenciones");
 
     if(!this.txt.value.includes("@")){
-
         lista.style.display="none";
         return;
-
     }
 
     lista.style.display="block";
 
-   let html = `
-<div class="chat-mencion" data-nombre="todos">
+    let html = `
+    <div class="chat-mencion" data-nombre="todos">
 
-    <div class="chat-mencion-icono">
-        📢
-    </div>
-
-    <div>
-
-        <div class="chat-mencion-nombre">
-            Todos
-        </div>
-
-        <div class="chat-mencion-sub">
-            Notificar a todos los participantes
-        </div>
-
-    </div>
-
-</div>
-`;
-
-usuariosJornada().forEach(u=>{
-
-    html += `
-
-    <div class="chat-mencion" data-nombre="${u.nombre}">
-
-        <div class="chat-mencion-icono"
-             style="background:${this.colores[u.dispositivo_id] || '#3b82f6'};">
-        </div>
+        <div class="chat-mencion-icono">📢</div>
 
         <div>
-
-            <div class="chat-mencion-nombre">
-                ${u.nombre}
-            </div>
-
+            <div class="chat-mencion-nombre">Todos</div>
             <div class="chat-mencion-sub">
-                Participante
+                Notificar a todos los participantes
             </div>
-
         </div>
 
     </div>
-
     `;
 
-});
+    usuariosJornada().forEach(u=>{
 
-lista.innerHTML = html;
+        html += `
+        <div class="chat-mencion" data-nombre="${u.nombre}">
 
-usuariosJornada().forEach(u=>{
+            <div class="chat-mencion-icono"
+                 style="background:${this.colores[u.dispositivo_id] || '#3b82f6'};">
+            </div>
 
-    html += `
-    <div class="chat-mencion" data-nombre="${u.nombre}">
-        👤 @${u.nombre}
-    </div>
-    `;
+            <div>
+                <div class="chat-mencion-nombre">${u.nombre}</div>
+                <div class="chat-mencion-sub">Participante</div>
+            </div>
 
-});
+        </div>
+        `;
 
-lista.innerHTML = html;
+    });
+
+    lista.innerHTML = html;
 
 });
 
