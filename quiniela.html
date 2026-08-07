@@ -3627,6 +3627,9 @@ const Chat = {
         console.log("💬 Chat iniciado");
 
         this.txt = document.getElementById("chatTexto");
+       
+       
+       
         this.lista = document.getElementById("chatLista");
         this.contador = document.getElementById("chatMensajes");
        
@@ -3647,7 +3650,11 @@ this.emojis = document.getElementById("chatEmojis");
             }
         });
         
-      
+      this.txt.addEventListener("input",()=>{
+
+    console.log("✍️", this.txt.value);
+
+});
 
 this.usuario = await this.obtenerUsuario();
        
