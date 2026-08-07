@@ -3797,16 +3797,19 @@ this.emojis = document.getElementById("chatEmojis");
 
     let html = "";
 
+    if("todos".includes(despues.toLowerCase())){
     html += `
     <div class="chat-mencion" data-nombre="todos">
         <div class="chat-mencion-icono">📢</div>
         <div>
             <div class="chat-mencion-nombre">Todos</div>
-            <div class="chat-mencion-sub">Notificar a todos los participantes</div>
+            <div class="chat-mencion-sub">
+                Notificar a todos los participantes
+            </div>
         </div>
     </div>
     `;
-
+}
     usuariosJornada().forEach(u=>{
         if(u.nombre.toLowerCase().includes(despues.toLowerCase())){
             html += `
