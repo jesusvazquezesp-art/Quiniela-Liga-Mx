@@ -1442,10 +1442,24 @@ margin-bottom:10px;
    <div class="chat-input">
         <input
             id="chatTexto"
-            placeholder="Escribe un mensaje..."
+             placeholder="Escribe un mensaje..."
             maxlength="350"
             style="flex:1;"
         >
+       
+       <div id="chatMenciones" style="
+display:none;
+position:absolute;
+background:#1e293b;
+border:1px solid #475569;
+border-radius:8px;
+padding:6px;
+margin-top:4px;
+width:260px;
+max-height:180px;
+overflow-y:auto;
+z-index:9999;
+"></div>
 
         <button id="btnChatEnviar" class="btn-primary">
     Enviar
@@ -3652,9 +3666,23 @@ this.emojis = document.getElementById("chatEmojis");
             }
         });
         
-      this.txt.addEventListener("input",()=>{
+     this.txt.addEventListener("input",()=>{
 
-    console.log("✍️", this.txt.value);
+    const lista = document.getElementById("chatMenciones");
+
+    if(!this.txt.value.includes("@")){
+
+        lista.style.display="none";
+        return;
+
+    }
+
+    lista.style.display="block";
+
+    lista.innerHTML = `
+        <div style="padding:6px;cursor:pointer;">📢 @todos</div>
+        <div style="padding:6px;cursor:pointer;">👤 @jeve</div>
+    `;
 
 });
 
