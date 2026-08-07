@@ -3775,71 +3775,77 @@ this.emojis = document.getElementById("chatEmojis");
      this.txt.addEventListener("input",()=>{
 
     const lista = document.getElementById("chatMenciones");
+    const texto = this.txt.value.trim();
 
-    if(!this.txt.value.includes("@")){
-        lista.style.display="none";
+    if(!texto.includes("@")){
+        lista.style.display = "none";
+        lista.innerHTML = "";
         return;
     }
 
-    lista.style.display="block";
+    let html = "";
 
-    let html = `
+    html += `
     <div class="chat-mencion" data-nombre="todos">
-
         <div class="chat-mencion-icono">📢</div>
-
         <div>
             <div class="chat-mencion-nombre">Todos</div>
-            <div class="chat-mencion-sub">
-                Notificar a todos los participantes
-            </div>
+            <div class="chat-mencion-sub">Notificar a todos los participantes</div>
         </div>
-
     </div>
     `;
 
     usuariosJornada().forEach(u=>{
-
         html += `
         <div class="chat-mencion" data-nombre="${u.nombre}">
-
-            <div class="chat-mencion-icono"
-                 style="background:${this.colores[u.dispositivo_id] || '#3b82f6'};">
-            </div>
-
+            <div class="chat-mencion-icono" style="background:${this.colores[u.dispositivo_id] || '#3b82f6'};"></div>
             <div>
                 <div class="chat-mencion-nombre">${u.nombre}</div>
                 <div class="chat-mencion-sub">Participante</div>
             </div>
-
         </div>
         `;
-
     });
 
     lista.innerHTML = html;
+    lista.style.display = "block";
+
+const items = lista.querySelectorAll(".chat-mencion");
+if(items.length){
+    items.forEach((item, i) => {
+        item.style.borderRadius = i === 0 ? "14px 14px 0 0" : "";
+        item.style.borderBottom = i === items.length - 1 ? "none" : "1px solid rgba(255,255,255,.05)";
+    });
+}
          
-         lista.querySelectorAll(".chat-mencion").forEach(item=>{
-
+         
+   lista.querySelectorAll(".chat-mencion").forEach(item=>{
     item.onclick = ()=>{
-
         const nombre = item.dataset.nombre;
-
         const inicio = this.txt.value.lastIndexOf("@");
-
-        this.txt.value =
-            this.txt.value.substring(0,inicio) +
-            "@" + nombre + " ";
-
+        const antes = this.txt.value.substring(0, inicio);
+        this.txt.value = antes + "@" + nombre + " ";
         lista.style.display = "none";
-
+        lista.innerHTML = "";
         this.txt.focus();
-
     };
+       
+       document.addEventListener("click", (e) => {
+    const panel = document.getElementById("chatMenciones");
+    const input = document.getElementById("chatTexto");
+    if(!panel || !input) return;
 
+    if(e.target !== input && !panel.contains(e.target)){
+        panel.style.display = "none";
+        panel.innerHTML = "";
+    }
+});
+       
 });
 
 });
+       
+       
 
 this.usuario = await this.obtenerUsuario();
        
