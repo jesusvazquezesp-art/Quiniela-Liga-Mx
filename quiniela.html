@@ -1285,6 +1285,122 @@ animation:emojiBall .65s ease-out;
 }  
     
     
+ .chat-menciones{
+
+    display:none;
+
+    position:absolute;
+
+    left:12px;
+    right:12px;
+    bottom:58px;
+
+    background:#1f2937;
+
+    border:1px solid #374151;
+
+    border-radius:14px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35);
+
+    overflow:hidden;
+
+    max-height:280px;
+
+    overflow-y:auto;
+
+    z-index:9999;
+
+    animation:chatMenciones .15s ease;
+}
+
+@keyframes chatMenciones{
+
+    from{
+
+        opacity:0;
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+.chat-mencion{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px 14px;
+
+    cursor:pointer;
+
+    transition:.15s;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.chat-mencion:last-child{
+
+    border-bottom:none;
+
+}
+
+.chat-mencion:hover{
+
+    background:#334155;
+
+}
+
+.chat-mencion-icono{
+
+    width:32px;
+    height:32px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:16px;
+
+    flex:none;
+
+}
+
+.chat-mencion-nombre{
+
+    font-weight:600;
+
+    color:#fff;
+
+}
+
+.chat-mencion-sub{
+
+    font-size:12px;
+
+    color:#94a3b8;
+
+} 
+    
+    
+    
+    
     
     
     
@@ -1447,19 +1563,7 @@ margin-bottom:10px;
             style="flex:1;"
         >
        
-       <div id="chatMenciones" style="
-display:none;
-position:absolute;
-background:#1e293b;
-border:1px solid #475569;
-border-radius:8px;
-padding:6px;
-margin-top:4px;
-width:260px;
-max-height:180px;
-overflow-y:auto;
-z-index:9999;
-"></div>
+       <div id="chatMenciones" class="chat-menciones"></div>
 
         <button id="btnChatEnviar" class="btn-primary">
     Enviar
@@ -3679,11 +3783,57 @@ this.emojis = document.getElementById("chatEmojis");
 
     lista.style.display="block";
 
-    let html = `
+   let html = `
 <div class="chat-mencion" data-nombre="todos">
-📢 @todos
+
+    <div class="chat-mencion-icono">
+        📢
+    </div>
+
+    <div>
+
+        <div class="chat-mencion-nombre">
+            Todos
+        </div>
+
+        <div class="chat-mencion-sub">
+            Notificar a todos los participantes
+        </div>
+
+    </div>
+
 </div>
 `;
+
+usuariosJornada().forEach(u=>{
+
+    html += `
+
+    <div class="chat-mencion" data-nombre="${u.nombre}">
+
+        <div class="chat-mencion-icono"
+             style="background:${this.colores[u.dispositivo_id] || '#3b82f6'};">
+        </div>
+
+        <div>
+
+            <div class="chat-mencion-nombre">
+                ${u.nombre}
+            </div>
+
+            <div class="chat-mencion-sub">
+                Participante
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+});
+
+lista.innerHTML = html;
 
 usuariosJornada().forEach(u=>{
 
