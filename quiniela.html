@@ -3033,12 +3033,40 @@ if (mSel && window.innerWidth < 768) {
       await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid);
       nombreVisible=nombreBoleto({...u,nombre});
     }else{
-      let r=await db.from('usuarios').insert({nombre,telefono:tel,dispositivo_id:deviceId(),activo:true}).select().single();
+      let r=await db.from('usuarios')
+      .insert({
+          nombre,
+          telefono:tel,
+          dispositivo_id:deviceId(),
+          activo:true
+      })
+      .select()
+      .single();
+        
       if(r.error)throw r.error;
+        
       uid=r.data.id;
-      await db.from('pagos').insert({usuario_id:uid,jornada_id:jornada.id,monto:jornada.costo||20,pagado:false});
+        
+        await db
+    .from("notificaciones_dispositivos")
+    .update({
+        usuario_id: uid
+    })
+    .eq("dispositivo_id", deviceId());
+        
+        
+        
+      await db.from('pagos').insert({
+          usuario_id:uid,
+          jornada_id:jornada.id,
+          monto:jornada.costo||20,
+          pagado:false
+      });
+        
       nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
     }
+    
+    
     for(const x of picks){
       let old=pr(uid,x.p.id);
       if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
@@ -5075,13 +5103,14 @@ const messaging = getMessaging(app);
     const { error } = await db
         .from("notificaciones_dispositivos")
         .upsert({
-            dispositivo_id: deviceId(),
-            token_fcm: token,
-            plataforma: navigator.platform,
-            navegador: navigator.userAgent,
-            ultimo_acceso: new Date().toISOString(),
-            activo: true
-        });
+    dispositivo_id: deviceId(),
+    usuario_id: usuarioActual?.id || null,
+    token_fcm: token,
+    plataforma: navigator.platform,
+    navegador: navigator.userAgent,
+    ultimo_acceso: new Date().toISOString(),
+    activo: true
+});
 
     if(error){
         console.error("Error guardando token:", error);
