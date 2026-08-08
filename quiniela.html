@@ -3977,16 +3977,17 @@ console.log("MENCIONES:", menciones);
     }
 
     const { error } = await db
-    .from("chat_mensajes")
-    
-    
-   .insert({
+.from("chat_mensajes")
+.insert({
     jornada_id: jornada.id,
     usuario_id: this.usuario.id,
     dispositivo_id: this.usuario.dispositivo_id,
     nombre: this.usuario.nombre,
-    mensaje: texto
+    mensaje: texto,
+    menciones: this.mencionesPendientes.map(m => m.dispositivo_id)
 });
+        
+        this.mencionesPendientes = [];
         
         
     if(error){
