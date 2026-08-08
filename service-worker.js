@@ -216,7 +216,7 @@ messaging.onBackgroundMessage(async (payload)=>{
         payload.data?.body ||
         payload.notification?.body ||
         "";
-
+console.log("🔔 Voy a mostrar la notificación");
     await self.registration.showNotification(titulo,{
         body: mensaje,
         icon: "https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/icons/icon-512.png",
