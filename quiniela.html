@@ -1556,20 +1556,39 @@ margin-bottom:10px;
 </div>
 
   <div class="chat-input" style="position:relative;">
+      
+      <div id="chatMenciones" class="chat-menciones"></div>
+      
+     <div
+    id="chatRespuesta"
+    style="
+        display:none;
+        width:100%;
+        box-sizing:border-box;
+        margin-bottom:10px;
+    ">
+</div>
+      
+      <div id="chatEditor">
 
-    <input
-        id="chatTexto"
-        placeholder="Escribe un mensaje..."
-        maxlength="350"
-        style="flex:1;"
-    >
+    
 
-    <div id="chatMenciones" class="chat-menciones"></div>
+    <div id="chatFila" style="display:flex;gap:8px;align-items:flex-end;">
 
-    <button id="btnChatEnviar" class="btn-primary">
-        Enviar
-    </button>
+        <input
+            id="chatTexto"
+            placeholder="Escribe un mensaje..."
+            maxlength="350"
+            style="flex:1;"
+        >
 
+        <button id="btnChatEnviar" class="btn-primary">
+            Enviar
+        </button>
+
+    </div>
+
+</div>
 </div>
 
 </div>
@@ -3767,6 +3786,7 @@ const Chat = {
     reacciones: [],
      colores: {},
     mencionesPendientes: [],
+    respuestaActual: null,
     canal: null,
 
    async iniciar(){
@@ -3975,6 +3995,12 @@ console.log("MENCIONES:", menciones);
         msg("Primero debes registrar un boleto para participar en el chat.");
         return;
     }
+        
+        const respuestaA = this.respuestaActual?.id || null;
+
+console.log("↩️ Respondiendo a:", respuestaA);
+        
+        
 
     const { error } = await db
 .from("chat_mensajes")
@@ -3984,8 +4010,9 @@ console.log("MENCIONES:", menciones);
     dispositivo_id: this.usuario.dispositivo_id,
     nombre: this.usuario.nombre,
     mensaje: texto,
-    menciones: this.mencionesPendientes.map(m => m.dispositivo_id)
-});
+    menciones: this.mencionesPendientes.map(m => m.dispositivo_id),
+    respuesta_a: this.respuestaActual?.id || null
+})
         
         this.mencionesPendientes = [];
         
@@ -3997,6 +4024,28 @@ console.log("MENCIONES:", menciones);
     }
 
    this.txt.value="";
+    
+    console.log("LIMPIANDO RESPUESTA");
+    
+    this.respuestaActual = null;
+    
+    
+    console.log("Respuesta actual:", this.respuestaActual);
+
+const panel = document.getElementById("chatRespuesta");
+panel.style.display = "none";
+panel.innerHTML = "";
+    
+    console.log("Panel ocultado");
+    
+    console.log("💬 Mensaje enviado");
+    
+    const editor = document.getElementById("chatEditor");
+const fila = document.getElementById("chatFila");
+
+editor.appendChild(panel);
+    
+    
 
     console.log("💬 Mensaje enviado");
 
@@ -4203,13 +4252,14 @@ const mencionaActual = menciones.some(x => x.toLowerCase() === (this.usuario?.no
 
             
 
-            this.mensajes.push({
+           this.mensajes.push({
     id: m.id,
     nombre: m.nombre,
     texto: m.mensaje,
     fecha: new Date(m.fecha),
     usuario_id: m.usuario_id,
-    color: Chat.colores[m.dispositivo_id] || "#3b82f6"
+    color: Chat.colores[m.dispositivo_id] || "#3b82f6",
+    respuesta_a: m.respuesta_a
 });
 
             this.mostrar();
@@ -4315,11 +4365,31 @@ display:flex;align-items:center;justify-content:center;cursor:pointer;border-rad
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🍺</span>
+
+<div class="chat-responder" style="
+grid-column:1 / -1;
+text-align:center;
+padding:10px;
+margin-top:8px;
+border-top:1px solid #ddd;
+cursor:pointer;
+font-weight:bold;
+color:#111827;
+background:#f8fafc;
+border-radius:8px;
+">
+💬 Responder
+</div>
 `;
+     
+     
 
     menu.style.position="absolute";
+     
     menu.style.background="#fff";
+     
     menu.style.boxShadow="0 4px 12px rgba(0,0,0,.30)";
+     
     menu.style.zIndex="9999";
     menu.style.gridTemplateColumns="repeat(4,1fr)";
     menu.style.borderRadius="18px";
@@ -4334,6 +4404,95 @@ display:flex;align-items:center;justify-content:center;cursor:pointer;border-rad
     menu.style.top=(window.scrollY+r.top-55)+"px";
 
     document.body.appendChild(menu);
+     
+     const btnResponder = menu.querySelector(".chat-responder");
+
+btnResponder.onclick = () => {
+
+    const mensaje = this.mensajes.find(m => m.id === id);
+
+    this.respuestaActual = mensaje;
+    
+    const panel = document.getElementById("chatRespuesta");
+    
+    
+    const editor = document.getElementById("chatEditor");
+const fila = document.getElementById("chatFila");
+    
+    
+
+panel.style.display = "block";
+    
+    editor.style.display = "flex";
+editor.style.flexDirection = "column";
+    
+    editor.insertBefore(panel, fila);
+
+panel.innerHTML = `
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:10px;
+width:100%;
+box-sizing:border-box;
+background:#eef4ff;
+border-left:4px solid #2563eb;
+border-radius:8px;
+padding:10px 12px;
+">
+
+    <div style="flex:1;overflow:hidden;">
+
+        <div style="
+        color:#2563eb;
+        font-weight:bold;
+        font-size:12px;">
+            ↩️ Respondiendo
+        </div>
+
+        <div style="
+        color:#555;
+        font-size:13px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;">
+            ${mensaje.texto}
+        </div>
+
+    </div>
+
+    <button
+        id="chatCancelarRespuesta"
+        style="
+        border:none;
+        background:none;
+        color:#dc2626;
+        font-size:20px;
+        cursor:pointer;">
+        ✕
+    </button>
+
+</div>
+`;
+    
+    document.getElementById("chatCancelarRespuesta").onclick = () => {
+
+    this.respuestaActual = null;
+
+    panel.style.display = "none";
+
+    panel.innerHTML = "";
+
+};
+    
+    
+
+    console.log("💬 Respuesta seleccionada:", this.respuestaActual);
+
+    menu.remove();
+
+};
         
         setTimeout(()=>{
 
@@ -4748,6 +4907,44 @@ if(soloEmoji){
     div.style.border = "1px solid #334155";
 
 }
+            
+            let htmlRespuesta = "";
+
+if (m.respuesta_a) {
+
+    const original = this.mensajes.find(x => x.id === m.respuesta_a);
+
+    if (original) {
+
+        htmlRespuesta = `
+            <div style="
+                background:rgba(255,255,255,.12);
+                border-left:4px solid #22c55e;
+                padding:6px 8px;
+                margin-bottom:8px;
+                border-radius:6px;
+                font-size:12px;
+                overflow:hidden;
+            ">
+                <div style="font-weight:bold;">
+                    ↩️ ${original.nombre}
+                </div>
+
+                <div style="
+                    white-space:nowrap;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                ">
+                    ${original.texto}
+                </div>
+            </div>
+        `;
+
+    }
+
+}
+            
+            
 
             const hora = new Date(m.fecha).toLocaleTimeString("es-MX",{
     hour:"numeric",
@@ -4768,6 +4965,8 @@ text-align:${soloEmoji ? "right" : "left"};
 ">
 ${this.obtenerInsignias(m.usuario_id)}${m.nombre}
 </div>
+
+${htmlRespuesta}
 
 <div
 class="${soloEmoji ? this.animacionEmoji(m.texto) : ""}"
