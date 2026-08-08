@@ -3766,6 +3766,7 @@ const Chat = {
     mensajes: [],
     reacciones: [],
      colores: {},
+    mencionesPendientes: [],
     canal: null,
 
    async iniciar(){
@@ -3857,6 +3858,18 @@ this.emojis = document.getElementById("chatEmojis");
     lista.querySelectorAll(".chat-mencion").forEach(item=>{
         item.onclick = ()=>{
             const nombre = item.dataset.nombre;
+            
+            const usuario = usuariosJornada().find(u => u.nombre === nombre);
+
+if(usuario){
+    this.mencionesPendientes.push({
+        nombre: usuario.nombre,
+        dispositivo_id: usuario.dispositivo_id
+    });
+}
+
+console.log("📌 Menciones pendientes:", this.mencionesPendientes);
+            
             const inicio = this.txt.value.lastIndexOf("@");
             this.txt.value = this.txt.value.substring(0, inicio) + "@" + nombre + " ";
             lista.style.display = "none";
