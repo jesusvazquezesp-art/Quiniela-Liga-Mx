@@ -4201,25 +4201,6 @@ const menciones = [...texto.matchAll(/@([a-zA-Z0-9_ÁÉÍÓÚáéíóúÑñ]+)/g
 const mencionaTodos = menciones.some(x => x.toLowerCase() === "todos");
 const mencionaActual = menciones.some(x => x.toLowerCase() === (this.usuario?.nombre || "").toLowerCase());
 
-if (m.usuario_id !== this.usuario?.id && (mencionaTodos || mencionaActual)) {
-    const titulo = mencionaTodos
-        ? "📢 Te mencionaron en La Tribuna"
-        : "💬 Te mencionaron en La Tribuna";
-
-    const mensaje = `${m.nombre}: ${texto}`;
-
-    await fetch("https://tu-servidor/notificar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            titulo,
-            mensaje,
-            jornada_id: jornadaId,
-            tipo: mencionaTodos ? "todos" : "usuario",
-            destinatario: mencionaTodos ? "todos" : this.usuario.nombre
-        })
-    }).catch(err => console.error("Error notificando mención:", err));
-}
             
 
             this.mensajes.push({
