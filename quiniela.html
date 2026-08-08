@@ -3997,6 +3997,11 @@ console.log("MENCIONES:", menciones);
     const { data: usuario, error } = await db
         .from("usuarios")
         .select("id,nombre,dispositivo_id")
+    
+    console.log("USUARIOS:");
+console.log(usuarios);
+       
+       
         .eq("dispositivo_id", deviceId())
         .eq("activo", true)
         .in("id", pronosticos.map(p=>p.usuario_id))
