@@ -1436,6 +1436,20 @@ animation:emojiBall .65s ease-out;
   <header>
   <div class="header-logo">
     <img src="logo.png" alt="Logo Quiniela Copa MX">
+      
+      <div id="btnInstalarPWA"
+     onclick="instalarPWA()"
+     title="Instalar aplicación"
+     style="
+        display:none;
+        cursor:pointer;
+        font-size:28px;
+        margin-left:8px;
+        align-self:center;
+    ">
+    📲
+</div>
+      
     <div>
       <h1 style="margin-left:-18px;">Quiniela Copa MX</h1>
 
@@ -1846,9 +1860,12 @@ let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[
     deferredPrompt = e;
 
     const fila = document.getElementById("filaInstalarApp");
+        
 
     if(fila){
         fila.style.display = "flex";
+        
+        document.getElementById("btnInstalarPWA").style.display = "block";
     }
 
 });
@@ -5398,6 +5415,53 @@ onMessage(messaging, (payload) => {
         
 */
 console.log("Firebase conectado");
+        
+//----------------------------------------------------
+// INSTALAR PWA
+//----------------------------------------------------
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+    const btn = document.getElementById("btnInstalarApp");
+    if(btn){
+        btn.style.display = "inline-block";
+    }
+
+    console.log("✅ La aplicación puede instalarse");
+});
+
+window.addEventListener("appinstalled", () => {
+
+    installPrompt = null;
+
+    const btn = document.getElementById("btnInstalarApp");
+    if(btn){
+        btn.style.display = "none";
+    }
+
+    console.log("✅ Aplicación instalada");
+});
+
+async function instalarPWA(){
+
+    if(!installPrompt) return;
+
+    installPrompt.prompt();
+
+    const resultado = await installPrompt.userChoice;
+
+    console.log(resultado.outcome);
+
+    installPrompt = null;
+
+    document.getElementById("btnInstalarApp").style.display = "none";
+}   
 </script>
 </body>
 </html>
