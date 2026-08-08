@@ -3997,11 +3997,6 @@ console.log("MENCIONES:", menciones);
     const { data: usuario, error } = await db
         .from("usuarios")
         .select("id,nombre,dispositivo_id")
-    
-    console.log("USUARIOS:");
-console.log(usuarios);
-       
-       
         .eq("dispositivo_id", deviceId())
         .eq("activo", true)
         .in("id", pronosticos.map(p=>p.usuario_id))
@@ -4012,6 +4007,9 @@ console.log(usuarios);
         console.error("💬 Error obteniendo usuario:", error);
         return null;
     }
+       
+       console.log("USUARIOS:");
+console.log(usuarios);
 
     if(!usuario){
         console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
