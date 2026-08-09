@@ -12,9 +12,9 @@
     
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela Copa MX / Torneo Apertura 2026</title>
+<title>Quiniela liga MX / Torneo Apertura 2026</title>
 <meta name="description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
-<meta property="og:title" content="🏆 Quiniela Copa MX">
+<meta property="og:title" content="🏆 Quiniela Liga MX">
 <meta property="og:description" content="Pronósticos, clasificación en vivo, liguilla, tabla general y trono de la fama">
 <meta property="og:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
 <meta property="og:image:secure_url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
@@ -24,7 +24,7 @@
 <meta property="og:url" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🏆 Quiniela Copa MX">
+<meta name="twitter:title" content="🏆 Quiniela Liga MX">
 <meta name="twitter:description" content="Clasificación en vivo y liguilla">
 <meta name="twitter:image" content="https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/logo.png">
 <link rel="icon" type="image/png" href="logo.png">
@@ -1451,12 +1451,12 @@ animation:emojiBall .65s ease-out;
       
       
   <div class="header-logo">
-    <img src="logo.png" alt="Logo Quiniela Copa MX">
+    <img src="logo.png" alt="Logo Quiniela Liga MX">
       
      
       
     <div>
-      <h1 style="margin-left:-18px;">Quiniela Copa MX</h1>
+      <h1 style="margin-left:-18px;">Quiniela Liga MX</h1>
 
       <div style="
         margin-left:-18px;
@@ -1486,11 +1486,8 @@ animation:emojiBall .65s ease-out;
   <button class="activo" onclick="tab('quiniela',this)">📝 Quiniela</button><button onclick="tab('clasificacion',this)">🏆 Clasificación</button><button onclick="tab('partidos',this)">⚽ Partidos</button><button onclick="tab('tablaLiga',this)">📊 Tabla general</button><button onclick="tab('fama',this)">👑 Fama</button><button onclick="tab('salon',this)">🏛️ Salón</button><button onclick="tab('admin',this)">🔒 Admin</button>
  </div>
  <div id="msg" class="mensaje"></div>
- <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre automático: 10 minutos antes del primer partido. La siguiente jornada se abre automáticamente si ya está creada.</div>
-    <div class="auto-cierre-info">Depositos
-
-Cuenta para depositar: 4189 1433 3829 7644
-Jesus Vazquez, una vez depositado manda comprobante y nombre o alias que uses al WhatsApp 6566703156.</div></div>
+ <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div><div class="small">Solo la jornada activa y abierta permite registrar boletos.</div><div class="auto-cierre-info">🔒 Cierre jornada: 10 minutos antes del primer partido.</div>
+    <div class="auto-cierre-info">Depositos: 4189 1433 3829 7644 Jesus Vazquez, manda comprobante al WhatsApp 6566703156.</div></div>
  <section id="quiniela" class="seccion activa"><div class="card">
      
       <div class="noticias-box">
@@ -1744,7 +1741,7 @@ margin-bottom:10px;
 
 
 <footer class="footer-quiniela">
-  <div class="footer-title">🏆 Quiniela Copa MX</div>
+  <div class="footer-title">🏆 Quiniela Liga MX</div>
 
   <div>
     Sistema de pronósticos deportivos,<br>
@@ -1765,7 +1762,7 @@ margin-bottom:10px;
   <div>Todos los derechos reservados.</div>
 
   <div class="footer-version">
-    Versión  • Supabase Cloud
+    Versión  • v2.1.56
   </div>
 </footer>
 
@@ -3695,7 +3692,7 @@ async function compartirClasificacionWhatsApp(){
   try{
     const lineas=listaClasificacionCompartir(10);
     if(!lineas.length){msg('Todavía no hay boletos para compartir.','info');return;}
-    const titulo=`🏆 QUINIELA COPA MX V2`;
+    const titulo=`🏆 QUINIELA Liga MX`;
     const jornadaTxt=jornada?`\n${jornada.nombre}${jornada.activa?' ✅ Activa':''}${jornada.bloqueada?' 🔒 Cerrada':''}`:'';
     const dificil=textoPartidoMenosEsperadoCompartir();
     const texto=`${titulo}${jornadaTxt}\n\n📊 Clasificación en vivo:\n${lineas.join('\n')}${resumenPartidosCompartir()}${dificil}\n\n📲 Entra aquí:\n${URL_PUBLICA_QUINIELA}`;
