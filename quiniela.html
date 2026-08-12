@@ -2475,6 +2475,19 @@ aviso.onclick = ()=>{
     },10000);
 
 }
+    
+   
+    
+    async function publicarNoticia(titulo, mensaje) {
+
+    const { error } = await db
+        .from("noticias")
+        .insert([{ titulo, mensaje }]);
+
+    if (error) throw error;
+
+}
+    
                                            
                                            
 async function audSistema(accion,detalle,jornadaId=null,antes={},despues={}){
@@ -3110,7 +3123,32 @@ if (mSel && window.innerWidth < 768) {
       if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
       else await db.from('pronosticos').insert({usuario_id:uid,jornada_id:jornada.id,partido_id:x.p.id,pronostico:x.v});
     }
-    await aud(uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',`${nombreVisible} guardó boleto`,uid,antes,{nombre:nombreVisible,nombre_base:nombre,picks:picks.map(x=>({partido:x.p.numero_partido,pronostico:x.v}))});
+    await aud(
+        uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',
+        `${nombreVisible} guardó boleto`,
+        uid,
+        antes,{
+            nombre:nombreVisible,
+            nombre_base:nombre,
+            picks:picks.map(x=>({
+                partido:x.p.numero_partido,
+                pronostico:x.v
+            }))
+        }
+    );
+    
+    if (!editandoId) {
+
+    const total = usuariosJornada().length;
+
+    await publicarNoticia(
+        "📝 Nuevo pronóstico registrado",
+        `${nombreVisible} acaba de registrar su pronóstico. ¡Ya somos ${total} en esta jornada!`
+    );
+
+}
+    
+    
     limpiar();
     await cargar();
     actualizarTribuna();
@@ -5320,7 +5358,10 @@ const messaging = getMessaging(app);
         .from("notificaciones_dispositivos")
         .upsert({
     dispositivo_id: deviceId(),
-    usuario_id: usuarioActual?.id || null,
+    usuario_id:
+typeof usuarioActual !== "undefined"
+    ? usuarioActual?.id
+    : null,
     token_fcm: token,
     plataforma: navigator.platform,
     navegador: navigator.userAgent,
