@@ -1,64 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Quiniela Liga MX</title>
+<title>Quiniela MX</title>
 
 <style>
 
 body{
+
     margin:0;
-    background:#111827;
-    color:white;
     font-family:Arial,sans-serif;
+    color:white;
+    background:#111827;
+
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
+
+    min-height:100vh;
+
+    overflow:hidden;
+
 }
+
+/*==========================
+  SKIN PATRIO
+==========================*/
+
+body.skin-independencia::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background:url("img/bandera-patria.webp") center center/cover no-repeat;
+
+    opacity:.50;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+}
+
+/*==========================
+  CONTENEDOR
+==========================*/
 
 .contenedor{
+
     text-align:center;
+
+    max-width:500px;
+
 }
 
-h1{
+.contenedor h2{
+
     margin:0;
-    font-size:32px;
+
+    font-size:42px;
+
 }
 
-p{
-    margin-top:20px;
+.contenedor h3{
+
+    margin:18px 0;
+
+    font-size:30px;
+
+}
+
+.contenedor p{
+
     color:#d1d5db;
-}
-.bienvenida{
-    text-align: center;
-    margin: 30px 0;
-}
 
-.bienvenida h2{
-    margin: 0;
-    font-size: 30px;
-}
+    font-size:18px;
 
-.bienvenida h3{
-    margin: 18px 0 10px;
-    font-size: 24px;
-}
+    line-height:1.5;
 
-.bienvenida p{
-    margin: 8px 0;
-    font-size: 17px;
-    line-height: 1.5;
 }
 
 .jornada{
-    margin-top: 18px;
-    font-weight: bold;
+
+    margin-top:18px;
+
+    font-weight:bold;
+
+    color:#ffd54f;
+
 }
-    
+
+/*==========================
+  ESTADO
+==========================*/
+
+#estado{
+
+    margin:35px auto 0;
+
+    display:inline-block;
+
+    text-align:left;
+
+    font-size:22px;
+
+    line-height:38px;
+
+}
 
 </style>
 
@@ -68,26 +123,28 @@ p{
 
 <div class="contenedor">
 
-<div class="bienvenida">
-    <h2>⚽ Quiniela Liga MX</h2>
+    <h2>⚽ Quiniela MX</h2>
 
     <h3>👋 ¡Bienvenido!</h3>
 
-    <p>Todo está listo para vivir la emoción de la Liga MX.</p>
+    <p>
+        Todo está listo para vivir la emoción de la Liga MX.
+    </p>
 
-    <p class="jornada">🏆 Jornada 4 lista</p>
-</div>
+    <p class="jornada">
+        🏆 Jornada 4 lista
+    </p>
 
-<div id="estado" style="margin-top:20px;text-align:left;line-height:28px;">
+    <div id="estado">
 
-<div id="s1">🟡 🌐 Conexión</div>
-<div id="s2">⚪ 📱 Funciones</div>
-<div id="s3">⚪ 🔔 Alertas</div>
-<div id="s4">⚪ ☁️ Servidor</div>
-<div id="s5">⚪ 👤 Cuenta</div>
-<div id="s6">⚪ 💬 Comunidad</div>
+        <div id="s1">⚪ 🌐 Conexión</div>
+        <div id="s2">⚪ 📱 Funciones</div>
+        <div id="s3">⚪ 🔔 Alertas</div>
+        <div id="s4">⚪ ☁️ Servidor</div>
+        <div id="s5">⚪ 👤 Cuenta</div>
+        <div id="s6">⚪ 💬 Comunidad</div>
 
-</div>
+    </div>
 
 </div>
 
@@ -95,57 +152,49 @@ p{
 
 if(!navigator.onLine){
 
-   document.getElementById("estado").innerHTML =
-"🔴 Sin conexión a Internet.<br><br>Activa tus datos móviles o WiFi.";
+    document.getElementById("estado").innerHTML=
+        "🔴 Sin conexión a Internet.<br><br>Activa tus datos móviles o WiFi.";
 
 }else{
 
-    console.log("✅ Internet OK");
-    
     const s1=document.getElementById("s1");
-const s2=document.getElementById("s2");
-const s3=document.getElementById("s3");
-const s4=document.getElementById("s4");
-const s5=document.getElementById("s5");
-const s6=document.getElementById("s6");
+    const s2=document.getElementById("s2");
+    const s3=document.getElementById("s3");
+    const s4=document.getElementById("s4");
+    const s5=document.getElementById("s5");
+    const s6=document.getElementById("s6");
 
-s1.innerHTML="🟢  🌐 Conexión";
-        
-   setTimeout(()=>{
+    s1.innerHTML="🟢 🌐 Conexión";
 
-    s2.innerHTML="🟢 📱 Funciones";
-
-},1000);
-
-    
     setTimeout(()=>{
 
-    s3.innerHTML="🟢 🔔 Alertas";
+        s2.innerHTML="🟢 📱 Funciones";
 
-},2000);
-    
-    
+    },1000);
+
     setTimeout(()=>{
 
-    s4.innerHTML="🟢 ☁️ Servidor";
+        s3.innerHTML="🟢 🔔 Alertas";
 
-},3000);
-    
+    },2000);
+
     setTimeout(()=>{
 
-    s5.innerHTML="🟢 👤 Cuenta";
+        s4.innerHTML="🟢 ☁️ Servidor";
 
-},4000);
+    },3000);
 
-setTimeout(()=>{
+    setTimeout(()=>{
 
-    s6.innerHTML="🟢 💬 Comunidad";
+        s5.innerHTML="🟢 👤 Cuenta";
 
-},5000);
-    
-    
-    
-    // Aquí irán las siguientes verificaciones
+    },4000);
+
+    setTimeout(()=>{
+
+        s6.innerHTML="🟢 💬 Comunidad";
+
+    },5000);
 
     setTimeout(()=>{
 
@@ -155,7 +204,23 @@ setTimeout(()=>{
 
 }
 
+/*==========================
+  ACTIVAR SKIN EN SEPTIEMBRE
+==========================*/
+
+const hoy=new Date();
+
+if(hoy.getMonth()===8){
+
+    document.body.classList.add("skin-independencia");
+
+}
+
+// Para pruebas:
+// document.body.classList.add("skin-independencia");
+
 </script>
 
 </body>
+
 </html>
