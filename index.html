@@ -4,241 +4,943 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Quiniela MX</title>
 
+    
 <style>
+    
+    
+    
+    
+    
+    
+    /*==========================
+    BASE
+==========================*/
 
-body{
+*{
 
     margin:0;
-    font-family:Arial,sans-serif;
-    color:white;
-    background:#111827;
+    padding:0;
+    box-sizing:border-box;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+}
 
-    min-height:100vh;
+html,
+body{
+
+    width:100%;
+    height:100%;
 
     overflow:hidden;
+
+    font-family:Arial,sans-serif;
+
+    background:#111827;
+
+    color:#fff;
 
 }
 
 /*==========================
-  SKIN PATRIO
+    CAPAS
 ==========================*/
 
-body.skin-independencia::before{
-
-    content:"";
+#fondo,
+#skin,
+#efectos,
+#presentacion,
+#app{
 
     position:fixed;
 
     inset:0;
 
-    background:url("img/bandera-patria.webp") center center/cover no-repeat;
+}
 
-    opacity:.50;
+/*==========================
+    ORDEN DE CAPAS
+==========================*/
+
+#fondo{
+
+    z-index:1;
+
+    background:#111827;
+
+}
+
+#skin{
+
+    z-index:2;
 
     pointer-events:none;
 
-    z-index:-1;
+}
+
+#efectos{
+
+    z-index:3;
+
+    pointer-events:none;
+
+}
+
+#app{
+
+    z-index:4;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+
+}
+
+#presentacion{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:5;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    pointer-events:none;
+
+    opacity:0;
+
+    transform:translateY(-120px);
 
 }
 
 /*==========================
-  CONTENEDOR
+    CONTENIDO
 ==========================*/
 
 .contenedor{
 
-    text-align:center;
+    max-width:520px;
 
-    max-width:500px;
+    text-align:center;
 
 }
 
-.contenedor h2{
-
-    margin:0;
+h2{
 
     font-size:42px;
 
+    margin-bottom:20px;
+
 }
 
-.contenedor h3{
-
-    margin:18px 0;
+h3{
 
     font-size:30px;
 
+    margin-bottom:20px;
+
 }
 
-.contenedor p{
-
-    color:#d1d5db;
+p{
 
     font-size:18px;
 
-    line-height:1.5;
+    color:#d1d5db;
+
+    line-height:1.6;
 
 }
 
-.jornada{
+#jornada{
 
-    margin-top:18px;
-
-    font-weight:bold;
+    margin-top:20px;
 
     color:#ffd54f;
 
-}
-
-    #estado{
-
-    margin-top:35px;
-
-    text-align:left;
-
-    width:max-content;
-
-    margin-left:auto;
-
-    margin-right:auto;
-
-    font-size:26px;
-
-    line-height:44px;
+    font-weight:bold;
 
 }
-    
-/*==========================
-  ESTADO
-==========================*/
 
 #estado{
 
-    margin:35px auto 0;
+    margin-top:40px;
 
     display:inline-block;
 
     text-align:left;
 
-    font-size:22px;
+    font-size:24px;
 
-    line-height:38px;
+    line-height:42px;
 
 }
 
+    
+    /*==========================
+    PRESENTACIÓN
+==========================*/
+
+#presentacion{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    opacity:0;
+
+}
+
+#titulo-presentacion{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    letter-spacing:8px;
+
+    margin-bottom:20px;
+
+}
+
+#contenido-presentacion{
+
+    font-size:260px;
+
+    font-weight:900;
+
+    line-height:1;
+
+    text-shadow:
+        0 0 30px rgba(255,255,255,.20);
+
+}
+
+#subtitulo-presentacion{
+
+    margin-top:20px;
+
+    font-size:24px;
+
+    color:#ffd54f;
+
+}
+    
+    /*==========================
+    SKIN PATRIO
+==========================*/
+
+#skin{
+
+    background:
+        url("img/bandera-patria.webp")
+        center center / cover
+        no-repeat;
+
+    opacity:.18;
+
+    display:none;
+
+}
+    
+    /*==========================
+    HALLOWEEN
+==========================*/
+
+#escena-halloween{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:3;
+
+    display:none;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+}
+
+#calabaza{
+
+    position:absolute;
+
+    width:180px;
+
+    left:50%;
+
+    bottom:120px;
+
+    transform:translateX(-50%);
+
+}
+
+#bota{
+
+    position:absolute;
+
+    width:260px;
+
+    left:50%;
+
+    top:-350px;
+
+    transform:translateX(-50%);
+
+}
+
+#calavera{
+
+    position:absolute;
+
+    width:180px;
+
+    left:50%;
+
+    bottom:120px;
+
+    transform:translateX(-50%);
+
+    opacity:0;
+
+}
+    
+    #calabaza-rota{
+
+    position:absolute;
+
+    width:180px;
+
+    left:50%;
+
+    bottom:120px;
+
+    transform:translateX(-50%);
+
+    opacity:0;
+
+}
+    
+    #polvo-magico{
+
+    position:absolute;
+
+    width:320px;
+
+    left:50%;
+
+    bottom:70px;
+
+    transform:translateX(-50%);
+
+    opacity:0;
+
+}
+    
+    
+    
+    
+    
+    
+    
+    
 </style>
 
 </head>
 
 <body>
 
-<div class="contenedor">
+    <!-- CAPA 1 - FONDO -->
+    <div id="fondo"></div>
 
-    <h2>⚽ Quiniela MX</h2>
+    <!-- CAPA 2 - SKIN -->
+    <div id="skin"></div>
 
-    <h3>👋 ¡Bienvenido!</h3>
+    <!-- CAPA 3 - EFECTOS -->
+    <div id="efectos"></div>
+   <div id="escena-halloween">
 
-    <p>
-        Todo está listo para vivir la emoción de la Liga MX.
-    </p>
+    <img
+        id="calabaza"
+        src="img/halloween/calabaza.png"
+    >
+     <img
+    id="calabaza-rota"
+    src="img/halloween/calabaza-rota.png"
+>  
+       
 
-    <p class="jornada">
-        🏆 Jornada 4 lista
-    </p>
+    <img
+        id="bota"
+        src="img/halloween/bota.png"
+    >
 
-    <div id="estado">
+    <img
+        id="calavera"
+        src="img/halloween/calavera.png"
+    >
 
-        <div id="s1">⚪ 🌐 Conexión</div>
-        <div id="s2">⚪ 📱 Funciones</div>
-        <div id="s3">⚪ 🔔 Alertas</div>
-        <div id="s4">⚪ ☁️ Servidor</div>
-        <div id="s5">⚪ 👤 Cuenta</div>
-        <div id="s6">⚪ 💬 Comunidad</div>
+    <img
+        id="polvo-magico"
+        src="img/halloween/polvo-magico.png"
+    >
 
-    </div>
+</div>
+    
+
+    <!-- CAPA 4 - PRESENTACIÓN -->
+    <div id="presentacion">
+
+    <div id="titulo-presentacion"></div>
+
+    <div id="contenido-presentacion"></div>
+
+    <div id="subtitulo-presentacion"></div>
 
 </div>
 
+    <!-- CAPA 5 - APLICACIÓN -->
+    <div id="app">
+
+        <div class="contenedor">
+
+            <h2>⚽ Quiniela MX</h2>
+
+            <h3>👋 ¡Bienvenido!</h3>
+
+            <p>
+                Todo está listo para vivir la emoción de la Liga MX.
+            </p>
+
+            <p id="jornada">
+                🏆 Jornada 4 lista
+            </p>
+
+            <div id="estado">
+
+                <div id="s1">⚪ 🌐 Conexión</div>
+                <div id="s2">⚪ 📱 Funciones</div>
+                <div id="s3">⚪ 🔔 Alertas</div>
+                <div id="s4">⚪ ☁️ Servidor</div>
+                <div id="s5">⚪ 👤 Cuenta</div>
+                <div id="s6">⚪ 💬 Comunidad</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 <script>
-
-if(!navigator.onLine){
-
-    document.getElementById("estado").innerHTML=
-        "🔴 Sin conexión a Internet.<br><br>Activa tus datos móviles o WiFi.";
-
-}else{
-
-    const s1=document.getElementById("s1");
-    const s2=document.getElementById("s2");
-    const s3=document.getElementById("s3");
-    const s4=document.getElementById("s4");
-    const s5=document.getElementById("s5");
-    const s6=document.getElementById("s6");
-
-    s1.innerHTML="🟢 🌐 Conexión";
-
-    setTimeout(()=>{
-
-        s2.innerHTML="🟢 📱 Funciones";
-
-    },1000);
-
-    setTimeout(()=>{
-
-        s3.innerHTML="🟢 🔔 Alertas";
-
-    },2000);
-
-    setTimeout(()=>{
-
-        s4.innerHTML="🟢 ☁️ Servidor";
-
-    },3000);
-
-    setTimeout(()=>{
-
-        s5.innerHTML="🟢 👤 Cuenta";
-
-    },4000);
-
-    setTimeout(()=>{
-
-        s6.innerHTML="🟢 💬 Comunidad";
-
-    },5000);
-
-    setTimeout(()=>{
-
-        location.replace("quiniela.html");
-
-    },6000);
-
-}
-
-/*==========================
-  ACTIVAR SKIN EN SEPTIEMBRE
+    
+    
+    /*==========================
+    CONFIGURACIÓN
 ==========================*/
 
-const hoy=new Date();
+const PRESENTACION = {
 
-if(hoy.getMonth()===8){
+    titulo : "JORNADA",
 
-    document.body.classList.add("skin-independencia");
+    contenido : "1",
+
+    subtitulo : "Liga MX"
+
+};
+
+/*==========================
+    MOTOR
+==========================*/
+
+    const s1 = document.getElementById("s1");
+const s2 = document.getElementById("s2");
+const s3 = document.getElementById("s3");
+const s4 = document.getElementById("s4");
+const s5 = document.getElementById("s5");
+const s6 = document.getElementById("s6");
+    
+    /*==========================
+    SKINS
+==========================*/
+
+function cargarSkin(){
+
+    const hoy = new Date();
+
+    if(hoy.getMonth()===8){
+
+        document.getElementById("skin").style.display="block";
+
+    }
+
+}
+    
+   /*==========================
+    ESCENA HALLOWEEN
+==========================*/
+
+function escenaHalloween(){
+    
+    const calavera = document.getElementById("calavera");
+
+    const calabaza = document.getElementById("calabaza");
+
+    const calabazaRota = document.getElementById("calabaza-rota");
+
+    const bota = document.getElementById("bota");
+
+    const polvo = document.getElementById("polvo-magico");
+
+    calabaza.animate(
+
+        [
+
+            {
+                transform:"translateX(-50%) scale(.2)",
+                opacity:0
+            },
+
+            {
+                transform:"translateX(-50%) scale(1.25)",
+                opacity:1,
+                offset:.55
+            },
+
+            {
+                transform:"translateX(-50%) scale(.95)",
+                offset:.80
+            },
+
+            {
+                transform:"translateX(-50%) scale(1)"
+            }
+
+        ],
+
+        {
+
+            duration:1200,
+            easing:"ease-out",
+            fill:"forwards"
+
+        }
+
+    ).finished.then(()=>{
+
+        bota.animate(
+
+            [
+
+                {
+                    transform:"translateX(-50%) translateY(0)"
+                },
+
+                {
+                    transform:"translateX(-50%) translateY(520px)"
+                }
+
+            ],
+
+            {
+
+                duration:350,
+                easing:"ease-in",
+                fill:"forwards"
+
+            }
+
+        ).finished.then(()=>{
+
+            calabaza.style.opacity="0";
+
+            calabazaRota.style.opacity="1";
+
+            polvo.animate(
+
+                [
+
+                    {
+                        opacity:0,
+                        transform:"translateX(-50%) scale(.4)"
+                    },
+
+                    {
+                        opacity:1,
+                        transform:"translateX(-50%) scale(1.3)"
+                    },
+
+                    {
+                        opacity:0,
+                        transform:"translateX(-50%) scale(2)"
+                    }
+
+                ],
+
+                {
+
+                    duration:700,
+                    easing:"ease-out",
+                    fill:"forwards"
+
+                }
+
+            );
+            
+            setTimeout(()=>{
+
+    calabazaRota.style.opacity="0";
+
+    calavera.animate(
+
+        [
+
+            {
+                opacity:0,
+                transform:"translateX(-50%) scale(.6)"
+            },
+
+            {
+                opacity:1,
+                transform:"translateX(-50%) scale(1)"
+            }
+
+        ],
+
+        {
+
+            duration:500,
+            easing:"ease-out",
+            fill:"forwards"
+
+        }
+
+    ).finished.then(()=>{
+
+        setTimeout(()=>{
+
+            mostrarPresentacion();
+
+        },800);
+
+    });
+
+},300);
+
+        });
+
+    });
 
 }
 
-// Para pruebas:
-// document.body.classList.add("skin-independencia");
+    
+    /*==========================
+    HALLOWEEN
+==========================*/
+function cargarHalloween(){
+
+    const hoy = new Date();
+
+    if(hoy.getMonth()!==9){
+
+        return;
+
+    }
+
+    const escena = document.getElementById("escena-halloween");
+
+    escena.style.display="block";
+
+    escenaHalloween();
+
+}
+    
+   
+    function mostrarPresentacion(){
+
+    const presentacion = document.getElementById("presentacion");
+
+    document.getElementById("titulo-presentacion").textContent =
+        PRESENTACION.titulo;
+
+    document.getElementById("contenido-presentacion").textContent =
+        PRESENTACION.contenido;
+
+    document.getElementById("subtitulo-presentacion").textContent =
+        PRESENTACION.subtitulo;
+
+    const animacion = presentacion.animate(
+
+        [
+
+            {
+                opacity:0,
+                transform:"translateY(-180px) scale(.8)"
+            },
+
+            {
+                opacity:1,
+                transform:"translateY(40px) scale(1)"
+            },
+
+            {
+                opacity:1,
+                transform:"translateY(0)"
+            },
+
+            {
+                opacity:1,
+                transform:"translateY(12px)"
+            },
+
+            {
+                opacity:1,
+                transform:"translateY(0)"
+            },
+
+            {
+                opacity:0,
+                transform:"scale(.75)"
+            }
+
+        ],
+
+        {
+
+            duration:3000,
+            easing:"ease-out",
+            fill:"forwards"
+
+        }
+
+    );
+
+    animacion.finished.then(()=>{
+
+        iniciarConexion();
+
+    });
+
+}
+    
+   function iniciarConexion(){
+
+    const presentacion = document.getElementById("presentacion");
+    const app = document.getElementById("app");
+
+    app.animate(
+
+        [
+
+            {
+                opacity:0
+            },
+
+            {
+                opacity:1
+            }
+
+        ],
+
+        {
+
+            duration:700,
+            easing:"ease",
+            fill:"forwards"
+
+        }
+
+    );
+
+    presentacion.animate(
+
+        [
+
+            {
+                opacity:1,
+                transform:"translateY(0) scale(1)"
+            },
+
+            {
+                opacity:0,
+                transform:"translateY(0) scale(2.5)"
+            }
+
+        ],
+
+        {
+
+            duration:700,
+            easing:"ease-in",
+            fill:"forwards"
+
+        }
+
+    ).finished.then(()=>{
+
+        presentacion.style.display="none";
+
+    });
+
+    const estados=[
+
+        [s1,"🌐 Conexión"],
+        [s2,"📱 Funciones"],
+        [s3,"🔔 Alertas"],
+        [s4,"☁️ Servidor"],
+        [s5,"👤 Cuenta"],
+        [s6,"💬 Comunidad"]
+
+    ];
+
+    estados.forEach(([e,t])=>e.innerHTML="⚪ "+t);
+
+    estados.forEach(([e,t],i)=>{
+
+        setTimeout(()=>{
+
+            e.innerHTML="🟢 "+t;
+
+        },700+(i*600));
+
+    });
+
+}
+    
+    /*==========================
+    JORNADA AUTOMÁTICA
+==========================*/
+
+function actualizarJornada(){
+
+    const hoy = new Date();
+
+    if(hoy < new Date("2026-07-25T00:00:00")){     //fecha inicio 
+
+        PRESENTACION.contenido = "1";
+
+    }else if(hoy < new Date("2026-08-01T00:00:00")){
+
+        PRESENTACION.contenido = "2";
+
+    }else if(hoy < new Date("2026-08-08T00:00:00")){
+
+        PRESENTACION.contenido = "3";
+
+    }else if(hoy < new Date("2026-08-18T00:00:00")){
+
+        PRESENTACION.contenido = "4";
+
+    }else if(hoy < new Date("2026-08-25T00:00:00")){
+
+        PRESENTACION.contenido = "5";
+
+    }else if(hoy < new Date("2026-09-01T00:00:00")){
+
+        PRESENTACION.contenido = "6";
+
+    }else if(hoy < new Date("2026-09-08T00:00:00")){
+
+        PRESENTACION.contenido = "7";
+
+    }else if(hoy < new Date("2026-09-15T00:00:00")){
+
+        PRESENTACION.contenido = "8";
+
+    }else if(hoy < new Date("2026-09-22T00:00:00")){
+
+        PRESENTACION.contenido = "9";
+
+    }else if(hoy < new Date("2026-09-29T00:00:00")){
+
+        PRESENTACION.contenido = "10";
+
+    }else if(hoy < new Date("2026-10-06T00:00:00")){
+
+        PRESENTACION.contenido = "11";
+
+    }else if(hoy < new Date("2026-10-13T00:00:00")){
+
+        PRESENTACION.contenido = "12";
+
+    }else if(hoy < new Date("2026-10-20T00:00:00")){
+
+        PRESENTACION.contenido = "13";
+
+    }else if(hoy < new Date("2026-10-27T00:00:00")){
+
+        PRESENTACION.contenido = "14";
+
+    }else if(hoy < new Date("2026-11-03T00:00:00")){
+
+        PRESENTACION.contenido = "15";
+
+    }else if(hoy < new Date("2026-11-10T00:00:00")){
+
+        PRESENTACION.contenido = "16";
+
+    }else if(hoy < new Date("2026-11-17T00:00:00")){
+
+        PRESENTACION.contenido = "17";
+
+    }else if(hoy < new Date("2026-11-24T00:00:00")){
+
+        PRESENTACION.contenido = "CUARTOS";
+
+    }else if(hoy < new Date("2026-12-01T00:00:00")){
+
+        PRESENTACION.contenido = "SEMIS";
+
+    }else if(hoy < new Date("2026-12-08T00:00:00")){
+
+        PRESENTACION.contenido = "FINAL";
+
+    }else{
+
+        PRESENTACION.contenido = "FIN";
+
+    }
+
+}
+    
+ function iniciar(){
+
+    cargarSkin();
+
+    cargarHalloween();
+
+    actualizarJornada();
+
+    mostrarPresentacion();
+     
+     
+
+}   
+    
+iniciar();
+    
 
 </script>
 
 </body>
-
 </html>
