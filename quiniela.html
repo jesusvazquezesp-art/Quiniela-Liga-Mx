@@ -1399,6 +1399,41 @@ animation:emojiBall .65s ease-out;
 } 
     
     
+   body.skin-independencia::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background:url("img/bandera-patria.webp") center center/cover no-repeat;
+
+    opacity:.5;
+
+    z-index:-1;
+
+    pointer-events:none;
+
+}
+    
+    
+    body.skin-independencia header{
+
+    border-bottom:7px solid transparent;
+
+    border-image:linear-gradient(
+        to right,
+        #006847 0%,
+        #006847 33%,
+        #ffffff 33%,
+        #ffffff 66%,
+        #ce1126 66%,
+        #ce1126 100%
+    ) 1;
+
+}
+    
     
     
     
@@ -1714,6 +1749,18 @@ margin-bottom:10px;
      <div id="admDiagnostico" class="admin-sub">
 
     <div class="card">
+
+ <button
+            class="btn-primary"
+            onclick="location.href='admin/presentaciones.html'">
+
+            🎬 🖼️ 📅 👀 Administrar Presentaciones
+
+        </button>
+
+        <br><br>
+
+
 
         <h3>🔔 Diagnóstico de Notificaciones</h3>
 
@@ -2288,6 +2335,34 @@ function aciertos(usuarioId){
   });
   return {a,c};
 }
+                                           
+function obtenerLideresQuiniela(){
+
+  const lista = usuariosJornada()
+    .map(u => ({
+      ...u,
+      ...aciertos(u.id)
+    }));
+
+  if(!lista.length){
+    return [];
+  }
+
+  const max = Math.max(
+    ...lista.map(u => u.a),
+    0
+  );
+
+  if(max <= 0){
+    return [];
+  }
+
+  return lista
+    .filter(u => u.a === max)
+    .map(u =>
+      `👑 ${nombreBoleto(u, lista)} · ${u.a} aciertos`
+    );
+}                                          
 
 
 function primerPartidoJornada(lista){
@@ -3309,117 +3384,109 @@ async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrad
 
 async function guardarResultados(){
 
-try{
+    try{
 
-if(!esAdmin) return msg('Solo administrador','error');
+        if(!esAdmin) return msg('Solo administrador','error');
 
-let antes = JSON.parse(JSON.stringify(partidos));
+        let antes = JSON.parse(JSON.stringify(partidos));
 
-for(const p of partidos){
+        for(const p of partidos){
 
-    let gl = $('gl_'+p.id).value,
-        gv = $('gv_'+p.id).value;
+            let gl = $('gl_'+p.id).value,
+                gv = $('gv_'+p.id).value;
 
-    if(gl==='' || gv==='') continue;
+            if(gl==='' || gv==='') continue;
 
-    let r = resFrom(gl,gv);
+            let r = resFrom(gl,gv);
 
-    await db.from('partidos')
-    .update({
-        goles_local:+gl,
-        goles_visitante:+gv,
-        resultado:r,
-        finalizado:true
-    })
-    .eq('id',p.id);
+            await db.from('partidos')
+            .update({
+                goles_local:+gl,
+                goles_visitante:+gv,
+                resultado:r,
+                finalizado:true
+            })
+            .eq('id',p.id);
 
-    let ganador = "🤝 Empate";
+            let ganador = "🤝 Empate";
 
-    if(+gl > +gv){
+            if(+gl > +gv){
 
-        ganador = "🏠 Ganó el local";
+                ganador = "🏠 Ganó el local";
 
-    }else if(+gl < +gv){
+            }else if(+gl < +gv){
 
-        ganador = "🚌 Ganó la visita";
+                ganador = "🚌 Ganó la visita";
 
-    }
+            }
 
-console.log("📣 VOY A INSERTAR ESTA NOTICIA");
-console.log({
-    titulo: "⚽ Resultado oficial",
-    mensaje: `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
-});
+            console.log("📣 VOY A INSERTAR ESTA NOTICIA");
 
-    await db
-    .from("noticias")
-    .insert({
-        titulo: "⚽ Resultado oficial",
-        mensaje:
+            console.log({
+                titulo: "⚽ Resultado oficial",
+                mensaje: `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
+            });
+
+            await db
+            .from("noticias")
+            .insert({
+                titulo: "⚽ Resultado oficial",
+                mensaje:
 `${p.local} ${gl} - ${gv} ${p.visitante}
 
 ${ganador}`,
-        activa: true
-    });
+                activa: true
+            });
+
+        }
+
+        await actualizarAciertos();
+
+        await recalcularTablaLiga();
+
+
+        // 👑 Obtener líderes
+        const lideres = obtenerLideresQuiniela();
+
+
+        // 👑 Crear noticia de líderes
+        if(lideres.length){
+
+            await db
+            .from("noticias")
+            .insert({
+                titulo: lideres.length === 1
+                    ? "👑 Líder de la quiniela"
+                    : "👑 Líderes de la quiniela",
+
+                mensaje: lideres.join("\n"),
+
+                activa: true
+            });
+
+        }
+
+
+        await aud(
+            'CAPTURAR_RESULTADOS',
+            'Admin guardó resultados',
+            null,
+            antes,
+            {}
+        );
+
+        await cargar();
+
+        msg('Resultados guardados','ok');
+
+
+    }catch(e){
+
+        msg('Error: '+e.message,'error');
+
+    }
 
 }
-
-await actualizarAciertos();
-await recalcularTablaLiga();
-
-// 👑 Obtener líderes
-
-const lideres = obtenerLideresQuiniela();
-
-await db
-.from("noticias")
-.insert({
-    titulo: lideres.length === 1
-        ? "👑 Líder de la quiniela"
-        : "👑 Líderes de la quiniela",
-
-    mensaje: lideres.join("\n"),
-
-    activa: true
-});
-
-// 👑 Notificación del líder
-
-
-await db
-.from("noticias")
-.insert({
-    titulo: lideres.length===1
-        ? "👑 Líder de la quiniela"
-        : "👑 Líderes de la quiniela",
-
-    mensaje: lideres.join("\n"),
-
-    activa: true
-});
-
-
-
-await aud(
-    'CAPTURAR_RESULTADOS',
-    'Admin guardó resultados',
-    null,
-    antes,
-    {}
-);
-
-await cargar();
-
-msg('Resultados guardados','ok');
-
-}catch(e){
-
-    msg('Error: '+e.message,'error');
-
-}
-
-}
-
 
 
 
@@ -5504,7 +5571,18 @@ async function instalarPWA(){
     installPrompt = null;
 
     document.getElementById("btnInstalarApp").style.display = "none";
-}   
+}  
+        
+        
+        const hoy = new Date();
+
+if (hoy.getMonth() === 8) {
+    document.body.classList.add("skin-independencia");
+}
+
+</script>
+    
+    
 </script>
 </body>
 </html>
