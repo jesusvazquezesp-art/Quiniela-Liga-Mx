@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administrar Presentaciones</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    padding:16px;
+
+    font-family:Arial,sans-serif;
+
+    background:#0b1424;
+
+    color:white;
+
+}
+
+.contenedor{
+
+    width:100%;
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+.volver{
+
+    display:block;
+
+    width:100%;
+
+    padding:13px;
+
+    margin-bottom:16px;
+
+    background:#2f8cff;
+
+    color:white;
+
+    text-decoration:none;
+
+    text-align:center;
+
+    border-radius:10px;
+
+    font-weight:bold;
+
+}
+
+.titulo{
+
+    background:#111d31;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    margin-bottom:16px;
+
+    text-align:center;
+
+}
+
+.titulo h1{
+
+    margin:0 0 8px 0;
+
+    font-size:24px;
+
+}
+
+.titulo p{
+
+    margin:0;
+
+    opacity:.75;
+
+    font-size:14px;
+
+}
+
+.estado{
+
+    background:#18263c;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    margin-bottom:16px;
+
+    text-align:center;
+
+}
+
+.presentacion{
+
+    background:#111d31;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    margin-bottom:16px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.25);
+
+}
+
+.presentacion-titulo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:16px;
+
+}
+
+.presentacion-titulo h2{
+
+    margin:0;
+
+    font-size:20px;
+
+}
+
+.dato{
+
+    padding:10px 0;
+
+    border-bottom:1px solid #29364a;
+
+}
+
+.dato:last-child{
+
+    border-bottom:none;
+
+}
+
+.etiqueta{
+
+    display:block;
+
+    font-size:12px;
+
+    opacity:.65;
+
+    margin-bottom:4px;
+
+}
+
+.valor{
+
+    font-size:16px;
+
+}
+
+.estado-animacion{
+
+    color:#ffd166;
+
+}
+
+.sin-datos{
+
+    text-align:center;
+
+    padding:30px 10px;
+
+    opacity:.7;
+
+}
+
+.btn-editar{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2f8cff;
+
+    color:white;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+.editor-fechas{
+
+    margin-top:15px;
+
+    padding-top:15px;
+
+    border-top:1px solid #29364a;
+
+}
+
+.editor-fechas label{
+
+    display:block;
+
+    margin-top:10px;
+
+    margin-bottom:5px;
+
+    font-size:13px;
+
+}
+
+.editor-fechas input{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#18263c;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+.btn-cancelar{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#555;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+.selector-fondo{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-top:6px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#18263c;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+.vista-fondo{
+
+    width:100%;
+
+    height:120px;
+
+    margin-top:10px;
+
+    border-radius:10px;
+
+    background:#0b1424 center/cover no-repeat;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#aaa;
+
+    font-size:14px;
+
+}
+
+}.btn-guardar{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#28a745;
+
+    color:white;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+.mensaje-fondo{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+}
+
+.mensaje{
+
+    width:90%;
+
+    max-width:420px;
+
+    background:white;
+
+    color:#222;
+
+    border-radius:18px;
+
+    padding:28px 20px;
+
+    text-align:center;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+
+}
+
+.mensaje-icono{
+
+    font-size:42px;
+
+    margin-bottom:10px;
+
+}
+
+.mensaje h2{
+
+    margin:0 0 10px;
+
+    color:#2864d7;
+
+    font-size:24px;
+
+}
+
+.mensaje p{
+
+    margin:0 0 20px;
+
+    font-size:17px;
+
+}
+
+.mensaje button{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 25px;
+
+    background:#4b9cff;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+}
+
+@media(min-width:700px){
+
+    body{
+
+        padding:30px;
+
+    }
+
+    .contenedor{
+
+        max-width:800px;
+
+    }
+
+    .presentacion{
+
+        padding:22px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="contenedor">
+
+
+    <a class="volver" href="../quiniela.html">
+
+        ← Regresar a Quiniela
+
+    </a>
+
+
+    <div class="titulo">
+
+        <h1>🎬 Administrar Presentaciones</h1>
+
+        <p>Fechas, fondos y presentaciones de la quiniela</p>
+
+    </div>
+
+
+    <div id="estado" class="estado">
+
+        Cargando presentaciones...
+
+    </div>
+
+
+    <div id="listaPresentaciones">
+
+    </div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://ytedqizoetrafbgufslp.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_zbOWRVkCHQ4ezSa7yDEdHw_734fnkxH";
+
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+function mostrarFecha(fecha){
+
+    if(!fecha){
+
+        return "Sin fecha";
+
+    }
+
+    const f = new Date(fecha);
+
+    return f.toLocaleString("es-MX",{
+
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+
+    });
+
+}
+
+function convertirParaInput(fecha){
+
+    if(!fecha){
+
+        return "";
+
+    }
+
+    return new Intl.DateTimeFormat("sv-SE", {
+
+        timeZone:"America/Mexico_City",
+
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit",
+
+        hourCycle:"h23"
+
+    })
+    .format(new Date(fecha))
+    .replace(" ","T");
+
+}
+
+
+function editarFechas(id){
+
+    const tarjeta =
+        document.querySelector(
+            `.presentacion[data-id="${id}"]`
+        );
+
+    if(!tarjeta) return;
+
+    const editor =
+        tarjeta.querySelector(".editor-fechas");
+
+    if(editor){
+
+        editor.remove();
+
+        return;
+
+    }
+
+    const inicio =
+        tarjeta.dataset.inicio || "";
+
+    const fin =
+        tarjeta.dataset.fin || "";
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "editor-fechas";
+
+    div.innerHTML = `
+
+        <label>
+            📅 Fecha de inicio
+        </label>
+
+        <input
+            type="datetime-local"
+            id="inicio-${id}"
+            value="${inicio}"
+        >
+
+        <label>
+            📅 Fecha de fin
+        </label>
+
+        <input
+            type="datetime-local"
+            id="fin-${id}"
+            value="${fin}"
+        >
+
+               <button
+            class="btn-guardar"
+            onclick="guardarFechas(${id})">
+
+            💾 Guardar cambios
+
+        </button>
+
+        <button
+            class="btn-cancelar"
+            onclick="editarFechas(${id})">
+
+            ❌ Cancelar
+
+        </button>
+
+    `;
+
+    tarjeta.appendChild(div);
+
+}
+
+
+function mostrarMensaje(titulo, texto, icono = "ℹ️"){
+
+    const fondo = document.createElement("div");
+
+    fondo.className = "mensaje-fondo";
+
+    fondo.innerHTML = `
+
+        <div class="mensaje">
+
+            <div class="mensaje-icono">
+                ${icono}
+            </div>
+
+            <h2>
+                ${titulo}
+            </h2>
+
+            <p>
+                ${texto}
+            </p>
+
+            <button onclick="this.closest('.mensaje-fondo').remove()">
+                Aceptar
+            </button>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(fondo);
+
+}
+
+
+async function guardarFechas(id){
+
+    const inicio =
+        document.getElementById(`inicio-${id}`).value;
+
+    const fin =
+        document.getElementById(`fin-${id}`).value;
+
+
+    if(!inicio){
+
+        alert("Debes indicar una fecha de inicio.");
+
+        return;
+
+    }
+
+
+    const inicioUTC =
+        new Date(inicio).toISOString();
+
+
+    const finUTC =
+        fin
+            ? new Date(fin).toISOString()
+            : null;
+
+console.log("INICIO ELEGIDO:", inicio);
+console.log("FIN ELEGIDO:", fin);
+
+console.log("INICIO UTC:", inicioUTC);
+console.log("FIN UTC:", finUTC);
+
+
+    const { error } = await db
+
+        .from("presentaciones")
+
+        .update({
+
+            inicio: inicioUTC,
+
+            fin: finUTC
+
+        })
+
+        .eq("id", id);
+
+
+    if(error){
+
+        console.error(error);
+
+        alert("❌ No se pudieron guardar las fechas.");
+
+        return;
+
+    }
+
+
+   mostrarMensaje(
+    "Información",
+    "Fechas guardadas correctamente.",
+    "✅"
+);
+
+
+    cargarPresentaciones();
+
+}
+
+
+async function obtenerFondos(){
+
+    const url =
+        "https://api.github.com/repos/jesusvazquezesp-art/Quiniela-Liga-Mx/contents/presentaciones/fondos";
+
+    try{
+
+        const respuesta = await fetch(url);
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                `GitHub respondió ${respuesta.status}`
+            );
+
+        }
+
+        const archivos = await respuesta.json();
+
+        return archivos
+
+            .filter(archivo =>
+                archivo.type === "file" &&
+                archivo.name.toLowerCase().endsWith(".webp")
+            )
+
+            .map(archivo =>
+                archivo.name.replace(/\.webp$/i, "")
+            );
+
+    }catch(error){
+
+        console.error(
+            "❌ Error leyendo fondos del repositorio"
+        );
+
+        console.error(error);
+
+        return [];
+
+    }
+
+}
+
+
+async function obtenerAnimaciones(){
+
+    const url =
+        "https://api.github.com/repos/jesusvazquezesp-art/Quiniela-Liga-Mx/contents/presentaciones/animaciones";
+
+    try{
+
+        const respuesta = await fetch(url);
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                `GitHub respondió ${respuesta.status}`
+            );
+
+        }
+
+        const archivos = await respuesta.json();
+
+        return archivos
+            .filter(archivo =>
+                archivo.type === "file" &&
+                archivo.name.toLowerCase().endsWith(".webp")
+            )
+            .map(archivo =>
+                archivo.name.replace(/\.webp$/i, "")
+            );
+
+    }catch(error){
+
+        console.error(
+            "❌ Error leyendo animaciones del repositorio"
+        );
+
+        console.error(error);
+
+        return [];
+
+    }
+
+}
+
+
+function mostrarFondo(select){
+
+    const tarjeta =
+        select.closest(".presentacion");
+
+    const vista =
+        tarjeta.querySelector(".vista-fondo");
+
+    const fondo =
+        select.value;
+
+    if(fondo === "normal"){
+
+        vista.style.backgroundImage = "none";
+
+        vista.textContent = "Sin fondo";
+
+        return;
+
+    }
+
+    vista.style.backgroundImage =
+        `url("../presentaciones/fondos/${fondo}.webp")`;
+
+    vista.textContent = "";
+
+}
+
+
+async function guardarFondo(id, boton){
+
+    const tarjeta =
+        boton.closest(".presentacion");
+
+    const select =
+        tarjeta.querySelector(".selector-fondo");
+
+    const fondo =
+        select.value;
+
+    console.log("🖼️ GUARDANDO FONDO");
+    console.log("ID:", id);
+    console.log("Fondo elegido:", fondo);
+
+    boton.disabled = true;
+    boton.textContent = "💾 Guardando...";
+
+    const resultado = await db
+        .from("presentaciones")
+        .update({
+            fondo: fondo
+        })
+        .eq("id", id)
+        .select("id, evento, fondo");
+
+    console.log("📡 RESPUESTA SUPABASE:", resultado);
+
+    if(resultado.error){
+
+        console.error(
+            "❌ Error guardando fondo:",
+            resultado.error
+        );
+
+        mostrarMensaje(
+            "Error",
+            "No se pudo guardar el fondo.",
+            "❌"
+        );
+
+        boton.disabled = false;
+        boton.textContent = "💾 Guardar fondo";
+
+        return;
+    }
+
+    mostrarMensaje(
+        "Información",
+        "Fondo guardado correctamente.",
+        "✅"
+    );
+
+    boton.disabled = false;
+    boton.textContent = "💾 Guardar fondo";
+}
+
+
+async function cargarPresentaciones(){
+
+    const estado =
+        document.getElementById("estado");
+
+    const lista =
+        document.getElementById("listaPresentaciones");
+
+const fondos =
+    await obtenerFondos();
+
+
+    const { data, error } = await db
+
+        .from("presentaciones")
+
+        .select("*")
+
+        .order("inicio", {
+            ascending:true
+        });
+
+
+    if(error){
+
+        console.error(error);
+
+        estado.innerHTML =
+            "❌ Error al cargar las presentaciones.";
+
+        return;
+
+    }
+
+
+    if(!data || data.length===0){
+
+        estado.innerHTML =
+            "No hay presentaciones registradas.";
+
+        lista.innerHTML =
+            `<div class="presentacion sin-datos">
+                No hay datos todavía.
+            </div>`;
+
+        return;
+
+    }
+
+
+    estado.innerHTML =
+        `✅ ${data.length} presentaciones`;
+
+
+    lista.innerHTML = "";
+
+
+    data.forEach(presentacion => {
+
+
+        const tarjeta =
+            document.createElement("div");
+
+
+        tarjeta.className =
+            "presentacion";
+
+tarjeta.dataset.id =
+    presentacion.id;
+
+tarjeta.dataset.inicio =
+    convertirParaInput(presentacion.inicio);
+
+tarjeta.dataset.fin =
+    convertirParaInput(presentacion.fin);
+
+
+        tarjeta.innerHTML = `
+
+            <div class="presentacion-titulo">
+
+    <h2>
+        📅 ${presentacion.evento}
+    </h2>
+
+    <button
+        class="btn-editar"
+        onclick="editarFechas(${presentacion.id})">
+
+        ✏️ Editar fechas
+
+    </button>
+
+</div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    Presentación
+                </span>
+
+                <span class="valor">
+                    ${presentacion.titulo}
+                    ${presentacion.contenido}
+                    ${presentacion.subtitulo}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    📅 Inicio
+                </span>
+
+                <span class="valor">
+                    ${mostrarFecha(presentacion.inicio)}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    📅 Fin
+                </span>
+
+                <span class="valor">
+                   ${mostrarFecha(presentacion.fin)}
+                </span>
+
+            </div>
+
+
+           <div class="dato">
+
+    <span class="etiqueta">
+        🖼️ Fondo
+    </span>
+
+    <select
+    class="selector-fondo"
+    onchange="mostrarFondo(this)"
+    data-fondo="${presentacion.fondo ?? "normal"}"
+>
+
+    <option value="normal"
+        ${presentacion.fondo === "normal" ? "selected" : ""}>
+        Normal
+    </option>
+
+    ${fondos.map(fondo => `
+
+        <option
+            value="${fondo}"
+            ${presentacion.fondo === fondo ? "selected" : ""}
+        >
+            ${fondo}
+        </option>
+
+    `).join("")}
+
+</select>
+
+    <div
+        class="vista-fondo"
+        data-vista="${presentacion.fondo ?? "normal"}"
+    >
+        Vista previa
+    </div>
+
+</div>
+
+<button
+    class="btn-guardar"
+    onclick="guardarFondo(${presentacion.id}, this)"
+>
+    💾 Guardar fondo
+</button>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    🎬 Animación
+                </span>
+
+                <span class="valor estado-animacion">
+
+                    🔒 Asignada
+
+                </span>
+
+            </div>
+
+        `;
+
+
+        lista.appendChild(tarjeta);
+
+const selectorFondo =
+    tarjeta.querySelector(".selector-fondo");
+
+if(selectorFondo){
+
+    mostrarFondo(selectorFondo);
+
+}
+
+    });
+
+}
+
+
+cargarPresentaciones();
+
+</script>
+
+
+</body>
+
+</html>
