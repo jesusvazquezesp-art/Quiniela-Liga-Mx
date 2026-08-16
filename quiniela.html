@@ -3386,27 +3386,58 @@ async function guardarResultados(){
 
     try{
 
-        if(!esAdmin) return msg('Solo administrador','error');
+        if(!esAdmin)
+            return msg('Solo administrador','error');
 
         let antes = JSON.parse(JSON.stringify(partidos));
+
+        // Indica si realmente se capturó algún resultado nuevo
+        let huboResultadoNuevo = false;
+
 
         for(const p of partidos){
 
             let gl = $('gl_'+p.id).value,
                 gv = $('gv_'+p.id).value;
 
-            if(gl==='' || gv==='') continue;
+            if(gl === '' || gv === '')
+                continue;
+
+
+            // ---------------------------------------------
+            // ¿Este partido ya tenía resultado?
+            // ---------------------------------------------
+
+            const yaTeniaResultado =
+                p.resultado !== null &&
+                p.resultado !== undefined &&
+                p.resultado !== '';
+
 
             let r = resFrom(gl,gv);
 
-            await db.from('partidos')
-            .update({
-                goles_local:+gl,
-                goles_visitante:+gv,
-                resultado:r,
-                finalizado:true
-            })
-            .eq('id',p.id);
+
+            // ---------------------------------------------
+            // Guardar resultado
+            // ---------------------------------------------
+
+            const { error } = await db
+                .from('partidos')
+                .update({
+                    goles_local:+gl,
+                    goles_visitante:+gv,
+                    resultado:r,
+                    finalizado:true
+                })
+                .eq('id',p.id);
+
+            if(error)
+                throw error;
+
+
+            // ---------------------------------------------
+            // Determinar ganador
+            // ---------------------------------------------
 
             let ganador = "🤝 Empate";
 
@@ -3420,52 +3451,113 @@ async function guardarResultados(){
 
             }
 
-            console.log("📣 VOY A INSERTAR ESTA NOTICIA");
 
-            console.log({
-                titulo: "⚽ Resultado oficial",
-                mensaje: `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
-            });
+            // ---------------------------------------------
+            // SOLO NOTIFICAR SI ES RESULTADO NUEVO
+            // ---------------------------------------------
 
-            await db
-            .from("noticias")
-            .insert({
-                titulo: "⚽ Resultado oficial",
-                mensaje:
+            if(!yaTeniaResultado){
+
+                huboResultadoNuevo = true;
+
+                console.log("📣 NUEVO RESULTADO — VOY A INSERTAR NOTICIA");
+
+                console.log({
+                    titulo: "⚽ Resultado oficial",
+                    mensaje:
+                        `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
+                });
+
+
+                const { error: errorNoticia } = await db
+                    .from("noticias")
+                    .insert({
+                        titulo: "⚽ Resultado oficial",
+                        mensaje:
 `${p.local} ${gl} - ${gv} ${p.visitante}
 
 ${ganador}`,
-                activa: true
-            });
+                        activa: true
+                    });
+
+                if(errorNoticia)
+                    throw errorNoticia;
+
+            }else{
+
+                console.log(
+                    `ℹ️ ${p.local} vs ${p.visitante} ya tenía resultado. No se vuelve a notificar.`
+                );
+
+            }
 
         }
 
+
+        // ---------------------------------------------
+        // ACTUALIZAR ACIERTOS
+        // ---------------------------------------------
+
         await actualizarAciertos();
+
+
+        // ---------------------------------------------
+        // RECARGAR DATOS
+        // IMPORTANTE:
+        // ahora partidos contiene los resultados nuevos
+        // ---------------------------------------------
+
+        await cargar();
+
+
+        // ---------------------------------------------
+        // RECALCULAR TABLA
+        // ---------------------------------------------
 
         await recalcularTablaLiga();
 
 
-        // 👑 Obtener líderes
-        const lideres = obtenerLideresQuiniela();
+        // ---------------------------------------------
+        // OBTENER LÍDERES
+        // Ahora sí usamos datos actualizados
+        // ---------------------------------------------
+
+        if(huboResultadoNuevo){
+
+            const lideres = obtenerLideresQuiniela();
+
+            console.log("👑 LÍDERES ACTUALES:");
+            console.log(lideres);
 
 
-        // 👑 Crear noticia de líderes
-        if(lideres.length){
+            if(lideres.length){
 
-            await db
-            .from("noticias")
-            .insert({
-                titulo: lideres.length === 1
-                    ? "👑 Líder de la quiniela"
-                    : "👑 Líderes de la quiniela",
+                const { error: errorLider } = await db
+                    .from("noticias")
+                    .insert({
 
-                mensaje: lideres.join("\n"),
+                        titulo:
+                            lideres.length === 1
+                                ? "👑 Líder de la quiniela"
+                                : "👑 Líderes de la quiniela",
 
-                activa: true
-            });
+                        mensaje: lideres.join("\n"),
+
+                        activa: true
+
+                    });
+
+                if(errorLider)
+                    throw errorLider;
+
+            }
 
         }
 
+
+        // ---------------------------------------------
+        // AUDITORÍA
+        // ---------------------------------------------
 
         await aud(
             'CAPTURAR_RESULTADOS',
@@ -3475,19 +3567,26 @@ ${ganador}`,
             {}
         );
 
+
+        // ---------------------------------------------
+        // RECARGAR UNA VEZ MÁS PARA MOSTRAR TODO
+        // ---------------------------------------------
+
         await cargar();
+
 
         msg('Resultados guardados','ok');
 
 
     }catch(e){
 
+        console.error("❌ ERROR EN guardarResultados:", e);
+
         msg('Error: '+e.message,'error');
 
     }
 
 }
-
 
 
 
