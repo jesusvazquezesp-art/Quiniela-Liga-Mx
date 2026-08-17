@@ -3,448 +3,262 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
 
-<title>Quiniela MX</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
+    <title>Quiniela Liga MX</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+        }
+
+
+        body {
+
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
+
+            background: #111827;
+
+            color: #ffffff;
+
+        }
+
+
+        /* =====================================================
+           FONDO
+        ===================================================== */
+
+        #fondo {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1;
+
+            background-color: #111827;
+
+            background-position: center;
+
+            background-size: cover;
+
+            background-repeat: no-repeat;
+
+        }
+
+
+        /* =====================================================
+           VELO
+        ===================================================== */
+
+        #velo {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 2;
+
+            background: rgba(0, 0, 0, .42);
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           APLICACIÓN
+        ===================================================== */
+
+        #app {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 3;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            text-align: center;
+
+            padding: 20px;
+
+        }
+
+
+        .contenedor {
+
+            width: 100%;
+
+            max-width: 520px;
+
+        }
+
+
+        #app h2 {
+
+            font-size: 42px;
+
+            margin-bottom: 25px;
+
+            text-shadow:
+                0 3px 8px rgba(0, 0, 0, .95);
+
+        }
+
+
+        #estado {
+
+            margin-top: 10px;
+
+            display: inline-block;
+
+            text-align: left;
+
+            font-size: 22px;
+
+            line-height: 42px;
+
+            text-shadow:
+                0 3px 8px rgba(0, 0, 0, .95);
+
+        }
+
+
+        /* =====================================================
+           CONTENEDOR DE PRESENTACIÓN
+        ===================================================== */
+
+        #presentacion {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 10;
+
+            display: none;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           BOTÓN REINTENTAR
+        ===================================================== */
+
+        #boton-reintentar {
+
+            margin-top: 20px;
+
+            padding: 12px 22px;
+
+            font-size: 18px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+        }
+
+    </style>
     
-<style>
-    
-    
-    
-    
-    
-    
-    /*==========================
-    BASE
-==========================*/
-
-*{
-
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-
-}
-
-html,
-body{
-
-    width:100%;
-    height:100%;
-
-    overflow:hidden;
-
-    font-family:Arial,sans-serif;
-
-    background:#111827;
-
-    color:#fff;
-
-}
-
-/*==========================
-    CAPAS
-==========================*/
-
-#fondo,
-#skin,
-#efectos,
-#presentacion,
-#app{
-
-    position:fixed;
-
-    inset:0;
-
-}
-
-/*==========================
-    ORDEN DE CAPAS
-==========================*/
-
-#fondo{
-
-    z-index:1;
-
-    background:#111827;
-
-}
-
-#skin{
-
-    z-index:2;
-
-    pointer-events:none;
-
-}
-
-#efectos{
-
-    z-index:3;
-
-    pointer-events:none;
-
-}
-
-#app{
-
-    z-index:4;
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    opacity:0;
-
-}
-
-#presentacion{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:5;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    pointer-events:none;
-
-    opacity:0;
-
-    transform:translateY(-120px);
-
-}
-
-/*==========================
-    CONTENIDO
-==========================*/
-
-.contenedor{
-
-    max-width:520px;
-
-    text-align:center;
-
-}
-
-h2{
-
-    font-size:42px;
-
-    margin-bottom:20px;
-
-}
-
-h3{
-
-    font-size:30px;
-
-    margin-bottom:20px;
-
-}
-
-p{
-
-    font-size:18px;
-
-    color:#d1d5db;
-
-    line-height:1.6;
-
-}
-
-#jornada{
-
-    margin-top:20px;
-
-    color:#ffd54f;
-
-    font-weight:bold;
-
-}
-
-#estado{
-
-    margin-top:40px;
-
-    display:inline-block;
-
-    text-align:left;
-
-    font-size:24px;
-
-    line-height:42px;
-
-}
-
-    
-    /*==========================
-    PRESENTACIÓN
-==========================*/
-
-#presentacion{
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    opacity:0;
-
-}
-
-#titulo-presentacion{
-
-    font-size:34px;
-
-    font-weight:bold;
-
-    letter-spacing:8px;
-
-    margin-bottom:20px;
-
-}
-
-#contenido-presentacion{
-
-    font-size:260px;
-
-    font-weight:900;
-
-    line-height:1;
-
-    text-shadow:
-        0 0 30px rgba(255,255,255,.20);
-
-}
-
-#subtitulo-presentacion{
-
-    margin-top:20px;
-
-    font-size:24px;
-
-    color:#ffd54f;
-
-}
-    
-    /*==========================
-    SKIN PATRIO
-==========================*/
-
-#skin{
-
-    background:
-        url("img/bandera-patria.webp")
-        center center / cover
-        no-repeat;
-
-    opacity:.18;
-
-    display:none;
-
-}
-    
-    /*==========================
-    HALLOWEEN
-==========================*/
-
-#escena-halloween{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:3;
-
-    display:none;
-
-    overflow:hidden;
-
-    pointer-events:none;
-
-}
-
-#calabaza{
-
-    position:absolute;
-
-    width:180px;
-
-    left:50%;
-
-    bottom:120px;
-
-    transform:translateX(-50%);
-
-}
-
-#bota{
-
-    position:absolute;
-
-    width:260px;
-
-    left:50%;
-
-    top:-350px;
-
-    transform:translateX(-50%);
-
-}
-
-#calavera{
-
-    position:absolute;
-
-    width:180px;
-
-    left:50%;
-
-    bottom:120px;
-
-    transform:translateX(-50%);
-
-    opacity:0;
-
-}
-    
-    #calabaza-rota{
-
-    position:absolute;
-
-    width:180px;
-
-    left:50%;
-
-    bottom:120px;
-
-    transform:translateX(-50%);
-
-    opacity:0;
-
-}
-    
-    #polvo-magico{
-
-    position:absolute;
-
-    width:320px;
-
-    left:50%;
-
-    bottom:70px;
-
-    transform:translateX(-50%);
-
-    opacity:0;
-
-}
-    
-    
-    
-    
-    
-    
-    
-    
-</style>
+    <script src="presentaciones/motor.js"></script>
 
 </head>
 
+
 <body>
 
-    <!-- CAPA 1 - FONDO -->
+
+    <!-- =====================================================
+         FONDO
+    ===================================================== -->
+
     <div id="fondo"></div>
 
-    <!-- CAPA 2 - SKIN -->
-    <div id="skin"></div>
 
-    <!-- CAPA 3 - EFECTOS -->
-    <div id="efectos"></div>
-   <div id="escena-halloween">
+    <!-- =====================================================
+         VELO
+    ===================================================== -->
 
-    <img
-        id="calabaza"
-        src="img/halloween/calabaza.png"
-    >
-     <img
-    id="calabaza-rota"
-    src="img/halloween/calabaza-rota.png"
->  
-       
+    <div id="velo"></div>
 
-    <img
-        id="bota"
-        src="img/halloween/bota.png"
-    >
 
-    <img
-        id="calavera"
-        src="img/halloween/calavera.png"
-    >
+    <!-- =====================================================
+         APLICACIÓN
+    ===================================================== -->
 
-    <img
-        id="polvo-magico"
-        src="img/halloween/polvo-magico.png"
-    >
-
-</div>
-    
-
-    <!-- CAPA 4 - PRESENTACIÓN -->
-    <div id="presentacion">
-
-    <div id="titulo-presentacion"></div>
-
-    <div id="contenido-presentacion"></div>
-
-    <div id="subtitulo-presentacion"></div>
-
-</div>
-
-    <!-- CAPA 5 - APLICACIÓN -->
     <div id="app">
 
         <div class="contenedor">
 
-            <h2>⚽ Quiniela MX</h2>
+            <h2>
+                ⚽ Quiniela Liga MX
+            </h2>
+             <h2>
+                
+            </h2>
+             <h2>
+                ¡¡Bienvenido!!
+            </h2>
 
-            <h3>👋 ¡Bienvenido!</h3>
-
-            <p>
-                Todo está listo para vivir la emoción de la Liga MX.
-            </p>
-
-            <p id="jornada">
-                🏆 Jornada 4 lista
-            </p>
 
             <div id="estado">
 
-                <div id="s1">⚪ 🌐 Conexión</div>
-                <div id="s2">⚪ 📱 Funciones</div>
-                <div id="s3">⚪ 🔔 Alertas</div>
-                <div id="s4">⚪ ☁️ Servidor</div>
-                <div id="s5">⚪ 👤 Cuenta</div>
-                <div id="s6">⚪ 💬 Comunidad</div>
+                <div id="s1">
+                    ⚪ 🌐 Conexión
+                </div>
+
+                <div id="s2">
+                    ⚪ 📱 Funciones
+                </div>
+
+                <div id="s3">
+                    ⚪ 🔔 Alertas
+                </div>
+
+                <div id="s4">
+                    ⚪ ☁️ Servidor
+                </div>
+
+                <div id="s5">
+                    ⚪ 👤 Cuenta
+                </div>
+
+                <div id="s6">
+                    ⚪ 💬 Comunidad
+                </div>
 
             </div>
 
@@ -452,501 +266,1254 @@ p{
 
     </div>
 
-<script>
-    
-    
-    /*==========================
-    CONFIGURACIÓN
-==========================*/
 
-const PRESENTACION = {
+    <!-- =====================================================
+         CONTENEDOR DE A001
+    ===================================================== -->
 
-    titulo : "JORNADA",
+    <div id="presentacion"></div>
 
-    contenido : "1",
 
-    subtitulo : "Liga MX"
+    <!-- =====================================================
+         SUPABASE
+    ===================================================== -->
 
-};
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-/*==========================
-    MOTOR
-==========================*/
 
-    const s1 = document.getElementById("s1");
-const s2 = document.getElementById("s2");
-const s3 = document.getElementById("s3");
-const s4 = document.getElementById("s4");
-const s5 = document.getElementById("s5");
-const s6 = document.getElementById("s6");
-    
-    /*==========================
-    SKINS
-==========================*/
+    <script>
 
-function cargarSkin(){
 
-    const hoy = new Date();
+        /* =====================================================
+           SUPABASE
+        ===================================================== */
 
-    if(hoy.getMonth()===8){
+        const SUPABASE_URL =
+            "https://ytedqizoetrafbgufslp.supabase.co";
 
-        document.getElementById("skin").style.display="block";
 
-    }
+        const SUPABASE_KEY =
+            "sb_publishable_zbOWRVkCHQ4ezSa7yDEdHw_734fnkxH";
 
-}
-    
-   /*==========================
-    ESCENA HALLOWEEN
-==========================*/
 
-function escenaHalloween(){
-    
-    const calavera = document.getElementById("calavera");
-
-    const calabaza = document.getElementById("calabaza");
-
-    const calabazaRota = document.getElementById("calabaza-rota");
-
-    const bota = document.getElementById("bota");
-
-    const polvo = document.getElementById("polvo-magico");
-
-    calabaza.animate(
-
-        [
-
-            {
-                transform:"translateX(-50%) scale(.2)",
-                opacity:0
-            },
-
-            {
-                transform:"translateX(-50%) scale(1.25)",
-                opacity:1,
-                offset:.55
-            },
-
-            {
-                transform:"translateX(-50%) scale(.95)",
-                offset:.80
-            },
-
-            {
-                transform:"translateX(-50%) scale(1)"
-            }
-
-        ],
-
-        {
-
-            duration:1200,
-            easing:"ease-out",
-            fill:"forwards"
-
-        }
-
-    ).finished.then(()=>{
-
-        bota.animate(
-
-            [
-
-                {
-                    transform:"translateX(-50%) translateY(0)"
-                },
-
-                {
-                    transform:"translateX(-50%) translateY(520px)"
-                }
-
-            ],
-
-            {
-
-                duration:350,
-                easing:"ease-in",
-                fill:"forwards"
-
-            }
-
-        ).finished.then(()=>{
-
-            calabaza.style.opacity="0";
-
-            calabazaRota.style.opacity="1";
-
-            polvo.animate(
-
-                [
-
-                    {
-                        opacity:0,
-                        transform:"translateX(-50%) scale(.4)"
-                    },
-
-                    {
-                        opacity:1,
-                        transform:"translateX(-50%) scale(1.3)"
-                    },
-
-                    {
-                        opacity:0,
-                        transform:"translateX(-50%) scale(2)"
-                    }
-
-                ],
-
-                {
-
-                    duration:700,
-                    easing:"ease-out",
-                    fill:"forwards"
-
-                }
-
+        const db =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
             );
+
+
+        /* =====================================================
+           INDICADORES
+        ===================================================== */
+
+        const s1 =
+            document.getElementById("s1");
+
+        const s2 =
+            document.getElementById("s2");
+
+        const s3 =
+            document.getElementById("s3");
+
+        const s4 =
+            document.getElementById("s4");
+
+        const s5 =
+            document.getElementById("s5");
+
+        const s6 =
+            document.getElementById("s6");
+
+
+        /* =====================================================
+           ESTADOS
+        ===================================================== */
+
+        function estadoOK(elemento, texto) {
+
+            elemento.textContent =
+                "🟢 " + texto;
+
+        }
+
+
+        function estadoERROR(elemento, texto) {
+
+            elemento.textContent =
+                "🔴 " + texto;
+
+        }
+
+
+        function estadoCARGANDO(elemento, texto) {
+
+            elemento.textContent =
+                "⚪ " + texto;
+
+        }
+
+
+        /* =====================================================
+           INTERNET
+        ===================================================== */
+
+        async function comprobarInternet() {
+
+            if (!navigator.onLine) {
+
+                return false;
+
+            }
+
+
+            try {
+
+                await fetch(
+                    "https://www.gstatic.com/generate_204",
+                    {
+                        method: "GET",
+                        mode: "no-cors",
+                        cache: "no-store"
+                    }
+                );
+
+
+                return true;
+
+            } catch (error) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CONFIGURACIÓN ACTUAL
+        ===================================================== */
+
+        async function obtenerConfiguracionActual() {
+
+            const ahora =
+                new Date().toISOString();
+
+
+           const {
+    data,
+    error
+} = await db
+
+    .from("presentaciones")
+
+    .select(
+        "id, evento, jornada_id, fondo, inicio, fin"
+    )
+           
+                .lte("inicio", ahora)
+
+                .gte("fin", ahora)
+
+                .order(
+                    "inicio",
+                    {
+                        ascending: false
+                    }
+                )
+
+                .limit(1)
+
+                .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "❌ Error obteniendo presentación:",
+                    error
+                );
+
+                return null;
+
+            }
+
+
+            return data || null;
+
+        }
+
+
+        /* =====================================================
+           CARGAR FONDO
+        ===================================================== */
+
+        async function cargarFondo(fondo) {
+
+            const elemento =
+                document.getElementById("fondo");
+
+
+            if (
+                !fondo ||
+                fondo === "normal"
+            ) {
+
+                elemento.style.backgroundImage =
+                    "none";
+
+                return true;
+
+            }
+
+
+            const url =
+                "https://raw.githubusercontent.com/" +
+                "jesusvazquezesp-art/Quiniela-Liga-Mx/" +
+                "main/presentaciones/fondos/" +
+                fondo +
+                ".webp";
+
+
+            return new Promise(
+                (resolve) => {
+
+                    const imagen =
+                        new Image();
+
+
+                    let terminado =
+                        false;
+
+
+                    const finalizar =
+                        (resultado) => {
+
+                            if (terminado) {
+                                return;
+                            }
+
+                            terminado = true;
+
+                            resolve(resultado);
+
+                        };
+
+
+                    imagen.onload = () => {
+
+                        elemento.style.backgroundImage =
+                            `url("${url}")`;
+
+                        finalizar(true);
+
+                    };
+
+
+                    imagen.onerror = () => {
+
+                        console.warn(
+                            "⚠️ Fondo no disponible:",
+                            fondo
+                        );
+
+                        finalizar(false);
+
+                    };
+
+
+                    imagen.src = url;
+
+
+                    setTimeout(
+                        () => {
+
+                            finalizar(false);
+
+                        },
+                        4000
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           FUNCIONES
+        ===================================================== */
+
+        function comprobarFunciones() {
+
+            return (
+                typeof fetch === "function" &&
+                typeof Promise === "function" &&
+                typeof URL === "function"
+            );
+
+        }
+
+
+        /* =====================================================
+           ALERTAS
+        ===================================================== */
+
+        async function comprobarAlertas() {
+
+            return (
+                typeof Notification !==
+                "undefined"
+            );
+
+        }
+
+
+        /* =====================================================
+           SERVIDOR
+        ===================================================== */
+
+        async function comprobarServidor() {
+
+            try {
+
+                const {
+                    error
+                } = await db
+
+                    .from("presentaciones")
+
+                    .select("id")
+
+                    .limit(1);
+
+
+                if (error) {
+
+                    console.error(
+                        "❌ Supabase:",
+                        error
+                    );
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error servidor:",
+                    error
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CUENTA
+        ===================================================== */
+
+        async function comprobarCuenta() {
+
+            try {
+
+                const {
+                    error
+                } = await db.auth.getSession();
+
+
+                if (error) {
+
+                    console.error(
+                        "❌ Error cuenta:",
+                        error
+                    );
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error comprobando cuenta:",
+                    error
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           COMUNIDAD
+        ===================================================== */
+
+        async function comprobarComunidad() {
+
+            try {
+
+                const {
+                    error
+                } = await db
+
+                    .from("chat_mensajes")
+
+                    .select("id")
+
+                    .limit(1);
+
+
+                if (error) {
+
+                    console.error(
+                        "❌ Comunidad:",
+                        error
+                    );
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Error comunidad:",
+                    error
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           EJECUTAR A001
+        ===================================================== */
+
+    
+
+           /* =====================================================
+   EJECUTAR PRESENTACIÓN
+===================================================== */
+
+async function ejecutarPresentacion() {
+
+    const contenedor =
+        document.getElementById(
+            "presentacion"
+        );
+
+
+    const animacion =
+        obtenerAnimacion();
+
+
+    if (!animacion) {
+
+        throw new Error(
+            "El motor no seleccionó una animación"
+        );
+
+    }
+
+
+    const modulo =
+        await import(
+         `./presentaciones/animaciones/${animacion}.js`
+        );
+
+
+    if (
+        typeof modulo.ejecutar !==
+        "function"
+    ) {
+
+        throw new Error(
+            `${animacion}.js no contiene export function ejecutar()`
+        );
+
+    }
+
+
+    const datos =
+        obtenerPresentacion();
+
+
+    contenedor.style.display =
+        "block";
+
+
+    await modulo.ejecutar(
+        contenedor,
+        datos.contenido
+    );
+    
+        return {
+        animacion: animacion,
+        jornada_id: datos.jornada_id
+    };
+
+}
+
+        /* =====================================================
+           SIN CONEXIÓN
+        ===================================================== */
+
+        function mostrarSinConexion() {
+
+            const estado =
+                document.getElementById(
+                    "estado"
+                );
+
+
+            estado.innerHTML = `
+
+                🔴 Sin conexión a Internet
+
+                <br><br>
+
+                <span style="
+                    font-size:18px;
+                ">
+                    Activa tus datos móviles
+                    o conéctate a una red Wi-Fi.
+                </span>
+
+                <br><br>
+
+                <button
+                    id="boton-reintentar"
+                    onclick="iniciarSistema()"
+                >
+                    🔄 Reintentar
+                </button>
+
+            `;
+
+        }
+
+
+        /* =====================================================
+           ARRANQUE
+        ===================================================== */
+
+        async function iniciarSistema() {
+
+
+            /* -------------------------------------------------
+               INTERNET
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s1,
+                "🌐 Conexión"
+            );
+
+
+            const internet =
+                await comprobarInternet();
+
+
+            if (!internet) {
+
+                estadoERROR(
+                    s1,
+                    "🌐 Sin conexión"
+                );
+
+                mostrarSinConexion();
+
+                return;
+
+            }
+
+
+            estadoOK(
+                s1,
+                "🌐 Conexión"
+            );
+
+
+            /* -------------------------------------------------
+               CONFIGURACIÓN
+            ------------------------------------------------- */
+
+           const configuracion =
+    await obtenerConfiguracionActual();
+
+
+if (!configuracion) {
+
+    return;
+
+}
+
+
+await cargarPresentacion(
+    configuracion,
+    db
+);
+
+            /* -------------------------------------------------
+               FONDO
+            ------------------------------------------------- */
+
+            await cargarFondo(
+                configuracion.fondo
+            );
+
+
+            /* -------------------------------------------------
+               FUNCIONES
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s2,
+                "📱 Funciones"
+            );
+
+
+            if (
+                comprobarFunciones()
+            ) {
+
+                estadoOK(
+                    s2,
+                    "📱 Funciones"
+                );
+
+            } else {
+
+                estadoERROR(
+                    s2,
+                    "📱 Funciones"
+                );
+
+            }
+
+
+            /* -------------------------------------------------
+               ALERTAS
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s3,
+                "🔔 Alertas"
+            );
+
+
+            if (
+                await comprobarAlertas()
+            ) {
+
+                estadoOK(
+                    s3,
+                    "🔔 Alertas"
+                );
+
+            } else {
+
+                estadoERROR(
+                    s3,
+                    "🔔 Alertas"
+                );
+
+            }
+
+
+            /* -------------------------------------------------
+               SERVIDOR
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s4,
+                "☁️ Servidor"
+            );
+
+
+            if (
+                await comprobarServidor()
+            ) {
+
+                estadoOK(
+                    s4,
+                    "☁️ Servidor"
+                );
+
+            } else {
+
+                estadoERROR(
+                    s4,
+                    "☁️ Servidor"
+                );
+
+                return;
+
+            }
+
+
+            /* -------------------------------------------------
+               CUENTA
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s5,
+                "👤 Cuenta"
+            );
+
+
+            if (
+                await comprobarCuenta()
+            ) {
+
+                estadoOK(
+                    s5,
+                    "👤 Cuenta"
+                );
+
+            } else {
+
+                estadoERROR(
+                    s5,
+                    "👤 Cuenta"
+                );
+
+            }
+
+
+            /* -------------------------------------------------
+               COMUNIDAD
+            ------------------------------------------------- */
+
+            estadoCARGANDO(
+                s6,
+                "💬 Comunidad"
+            );
+
+
+            if (
+                await comprobarComunidad()
+            ) {
+
+                estadoOK(
+                    s6,
+                    "💬 Comunidad"
+                );
+
+            } else {
+
+                estadoERROR(
+                    s6,
+                    "💬 Comunidad"
+                );
+
+            }
+
+
+            /* -------------------------------------------------
+               LIMPIAR PANTALLA
+            ------------------------------------------------- */
+
+            document
+                .getElementById("app")
+                .style.display = "none";
+
+
+          /* -------------------------------------------------
+   PRESENTACIÓN
+------------------------------------------------- */
+
+try {
+
+    const resultado =
+        await ejecutarPresentacion();
+
+
+    /*
+    --------------------------------------------------------
+    REGISTRAR EJECUCIÓN EXITOSA
+    --------------------------------------------------------
+    */
+
+    if (resultado) {
+
+        const {
+            animacion,
+            jornada_id
+        } = resultado;
+
+
+        const {
+            data: asignacion,
+            error: errorAsignacion
+        } = await db
+
+            .from("animaciones_asignadas")
+
+            .select(
+                "id, jornada_id, codigo_animacion, ciclo, torneo"
+            )
+
+            .eq(
+                "jornada_id",
+                jornada_id
+            )
+
+            .eq(
+                "codigo_animacion",
+                animacion
+            )
+
+            .order(
+                "id",
+                {
+                    ascending: false
+                }
+            )
+
+            .limit(1)
+
+            .maybeSingle();
+
+
+        if (errorAsignacion) {
+
+            console.error(
+                "❌ Error buscando asignación:",
+                errorAsignacion
+            );
+
+        }
+
+
+        if (asignacion) {
+
+            const {
+                error: errorIntento
+            } = await db.rpc(
+                "registrar_intento_animacion",
+                {
+
+                    p_asignacion_id:
+                        asignacion.id,
+
+                    p_jornada_id:
+                        jornada_id,
+
+                    p_codigo_animacion:
+                        animacion,
+
+                    p_ciclo:
+                        asignacion.ciclo,
+
+                    p_torneo:
+                        asignacion.torneo,
+
+                    p_resultado:
+                        "exitosa",
+
+                    p_mensaje_error:
+                        null
+
+                }
+            );
+
+
+            if (errorIntento) {
+
+                console.error(
+                    "❌ Error registrando ejecución:",
+                    errorIntento
+                );
+
+            } else {
+
+                console.log(
+                    "✅ Animación registrada como exitosa:",
+                    animacion
+                );
+
+            }
+
+        }
+
+    }
+
+
+} catch (error) {
+
+    console.log(
+        "PRESENTACION:",
+        error
+    );
+
+
+    /*
+    --------------------------------------------------------
+    REPORTAR FALLA DE PRESENTACIÓN
+    --------------------------------------------------------
+    */
+
+    try {
+
+        const presentacion =
+            obtenerPresentacion();
+
+
+        if (
+            presentacion &&
+            presentacion.jornada_id
+        ) {
+
+
+            const {
+                data: asignacion,
+                error: errorAsignacion
+            } = await db
+
+                .from("animaciones_asignadas")
+
+                .select(
+                    "id, jornada_id, codigo_animacion, ciclo, torneo"
+                )
+
+                .eq(
+                    "jornada_id",
+                    presentacion.jornada_id
+                )
+
+                .order(
+                    "id",
+                    {
+                        ascending: false
+                    }
+                )
+
+                .limit(1)
+
+                .maybeSingle();
+
+
+            if (errorAsignacion) {
+
+                console.error(
+                    "❌ Error buscando asignación fallida:",
+                    errorAsignacion
+                );
+
+            } else if (asignacion) {
+
+
+                const {
+                    data: reemplazo,
+                    error: errorFallo
+                } = await db.rpc(
+                    "reportar_fallo_animacion",
+                    {
+
+                        p_asignacion_id:
+                            asignacion.id,
+
+                        p_mensaje_error:
+                            error?.message ||
+                            String(error)
+
+                    }
+                );
+
+
+                if (errorFallo) {
+
+                    console.error(
+                        "❌ Error reportando fallo:",
+                        errorFallo
+                    );
+
+                } else {
+
+    console.warn(
+        "⚠️ Animación fallida:",
+        asignacion.codigo_animacion
+    );
+
+
+    const codigoRespaldo =
+        reemplazo?.codigo_respaldo;
+
+
+    if (!codigoRespaldo) {
+
+        console.warn(
+            "⚠️ No hay animación de respaldo disponible"
+        );
+
+    } else {
+
+        console.log(
+            "🛡️ Respaldo asignado:",
+            codigoRespaldo
+        );
+
+
+        /*
+        --------------------------------------------------------
+        EJECUTAR ANIMACIÓN DE RESPALDO
+        --------------------------------------------------------
+        */
+
+        try {
+
+            const moduloRespaldo =
+                await import(
+                    `./presentaciones/animaciones/${codigoRespaldo}.js`
+                );
+
+
+            if (
+                typeof moduloRespaldo.ejecutar !==
+                "function"
+            ) {
+
+                throw new Error(
+                    `${codigoRespaldo}.js no contiene export function ejecutar()`
+                );
+
+            }
+
+
+            const datos =
+                obtenerPresentacion();
+
+
+            await moduloRespaldo.ejecutar(
+                document.getElementById(
+                    "presentacion"
+                ),
+                datos.contenido
+            );
+
+
+            console.log(
+                "✅ Respaldo ejecutado correctamente:",
+                codigoRespaldo
+            );
+
+
+            /*
+            ----------------------------------------------------
+            REGISTRAR RESPALDO COMO EXITOSO
+            ----------------------------------------------------
+            */
+
+            const {
+                error: errorIntentoRespaldo
+            } = await db.rpc(
+                "registrar_intento_animacion",
+                {
+
+                    p_asignacion_id:
+                        asignacion.id,
+
+                    p_jornada_id:
+                        asignacion.jornada_id,
+
+                    p_codigo_animacion:
+                        codigoRespaldo,
+
+                    p_ciclo:
+                        asignacion.ciclo,
+
+                    p_torneo:
+                        asignacion.torneo,
+
+                    p_resultado:
+                        "exitosa",
+
+                    p_mensaje_error:
+                        null
+
+                }
+            );
+
+
+            if (
+                errorIntentoRespaldo
+            ) {
+
+                console.error(
+                    "❌ Error registrando respaldo:",
+                    errorIntentoRespaldo
+                );
+
+            } else {
+
+                console.log(
+                    "✅ Respaldo registrado como exitoso:",
+                    codigoRespaldo
+                );
+
+            }
+
+
+        } catch (
+    errorRespaldoEjecucion
+) {
+
+    console.error(
+        "❌ El respaldo también falló:",
+        errorRespaldoEjecucion
+    );
+
+
+    /*
+    --------------------------------------------------------
+    REGISTRAR RESPALDO COMO FALLIDO
+    --------------------------------------------------------
+    */
+
+    const {
+        error: errorRegistroRespaldo
+    } = await db.rpc(
+        "registrar_intento_animacion",
+        {
+
+            p_asignacion_id:
+                asignacion.id,
+
+            p_jornada_id:
+                asignacion.jornada_id,
+
+            p_codigo_animacion:
+                codigoRespaldo,
+
+            p_ciclo:
+                asignacion.ciclo,
+
+            p_torneo:
+                asignacion.torneo,
+
+            p_resultado:
+                "fallida",
+
+            p_mensaje_error:
+                errorRespaldoEjecucion?.message ||
+                String(errorRespaldoEjecucion)
+
+        }
+    );
+
+
+    if (errorRegistroRespaldo) {
+
+        console.error(
+            "❌ Error registrando fallo del respaldo:",
+            errorRegistroRespaldo
+        );
+
+    } else {
+
+        console.log(
+            "📝 Respaldo registrado como fallido:",
+            codigoRespaldo
+        );
+
+    }
+
+
+    /*
+    --------------------------------------------------------
+    IMPORTANTE:
+    NO BUSCAR OTRO RESPALDO
+    LA QUINIELA CONTINÚA
+    --------------------------------------------------------
+    */
+
+}
+
+    }
+
+}
+
+            }
+
+        }
+
+    } catch (errorRespaldo) {
+
+        console.error(
+            "❌ Error procesando respaldo:",
+            errorRespaldo
+        );
+
+    }
+
+}
             
-            setTimeout(()=>{
+        
 
-    calabazaRota.style.opacity="0";
+            /* -------------------------------------------------
+               QUINIELA
+            ------------------------------------------------- */
 
-    calavera.animate(
-
-        [
-
-            {
-                opacity:0,
-                transform:"translateX(-50%) scale(.6)"
-            },
-
-            {
-                opacity:1,
-                transform:"translateX(-50%) scale(1)"
-            }
-
-        ],
-
-        {
-
-            duration:500,
-            easing:"ease-out",
-            fill:"forwards"
+         //   window.location.href =
+         //      "quiniela.html";
 
         }
 
-    ).finished.then(()=>{
 
-        setTimeout(()=>{
+        /* =====================================================
+           INICIO
+        ===================================================== */
 
-            mostrarPresentacion();
+        iniciarSistema();
 
-        },800);
 
-    });
+        /* =====================================================
+           CAMBIOS DE CONEXIÓN
+        ===================================================== */
 
-},300);
+        window.addEventListener(
+            "offline",
+            () => {
 
-        });
+                mostrarSinConexion();
 
-    });
-
-}
-
-    
-    /*==========================
-    HALLOWEEN
-==========================*/
-function cargarHalloween(){
-
-    const hoy = new Date();
-
-    if(hoy.getMonth()!==9){
-
-        return;
-
-    }
-
-    const escena = document.getElementById("escena-halloween");
-
-    escena.style.display="block";
-
-    escenaHalloween();
-
-}
-    
-   
-    function mostrarPresentacion(){
-
-    const presentacion = document.getElementById("presentacion");
-
-    document.getElementById("titulo-presentacion").textContent =
-        PRESENTACION.titulo;
-
-    document.getElementById("contenido-presentacion").textContent =
-        PRESENTACION.contenido;
-
-    document.getElementById("subtitulo-presentacion").textContent =
-        PRESENTACION.subtitulo;
-
-    const animacion = presentacion.animate(
-
-        [
-
-            {
-                opacity:0,
-                transform:"translateY(-180px) scale(.8)"
-            },
-
-            {
-                opacity:1,
-                transform:"translateY(40px) scale(1)"
-            },
-
-            {
-                opacity:1,
-                transform:"translateY(0)"
-            },
-
-            {
-                opacity:1,
-                transform:"translateY(12px)"
-            },
-
-            {
-                opacity:1,
-                transform:"translateY(0)"
-            },
-
-            {
-                opacity:0,
-                transform:"scale(.75)"
             }
+        );
 
-        ],
 
-        {
+        window.addEventListener(
+            "online",
+            () => {
 
-            duration:3000,
-            easing:"ease-out",
-            fill:"forwards"
+                iniciarSistema();
 
-        }
-
-    );
-
-    animacion.finished.then(()=>{
-
-        iniciarConexion();
-
-    });
-
-}
-    
-   function iniciarConexion(){
-
-    const presentacion = document.getElementById("presentacion");
-    const app = document.getElementById("app");
-
-    app.animate(
-
-        [
-
-            {
-                opacity:0
-            },
-
-            {
-                opacity:1
             }
+        );
 
-        ],
 
-        {
+    </script>
 
-            duration:700,
-            easing:"ease",
-            fill:"forwards"
-
-        }
-
-    );
-
-    presentacion.animate(
-
-        [
-
-            {
-                opacity:1,
-                transform:"translateY(0) scale(1)"
-            },
-
-            {
-                opacity:0,
-                transform:"translateY(0) scale(2.5)"
-            }
-
-        ],
-
-        {
-
-            duration:700,
-            easing:"ease-in",
-            fill:"forwards"
-
-        }
-
-    ).finished.then(()=>{
-
-        presentacion.style.display="none";
-
-    });
-
-    const estados=[
-
-        [s1,"🌐 Conexión"],
-        [s2,"📱 Funciones"],
-        [s3,"🔔 Alertas"],
-        [s4,"☁️ Servidor"],
-        [s5,"👤 Cuenta"],
-        [s6,"💬 Comunidad"]
-
-    ];
-
-    estados.forEach(([e,t])=>e.innerHTML="⚪ "+t);
-
-    estados.forEach(([e,t],i)=>{
-
-        setTimeout(()=>{
-
-            e.innerHTML="🟢 "+t;
-
-        },700+(i*600));
-
-    });
-       
-       setTimeout(()=>{
-
-    window.location.href="quiniela.html";
-
-},5000);
-
-}
-    
-    /*==========================
-    JORNADA AUTOMÁTICA
-==========================*/
-
-function actualizarJornada(){
-
-    const hoy = new Date();
-
-    if(hoy < new Date("2026-07-25T00:00:00")){     //fecha inicio 
-
-        PRESENTACION.contenido = "1";
-
-    }else if(hoy < new Date("2026-08-01T00:00:00")){
-
-        PRESENTACION.contenido = "2";
-
-    }else if(hoy < new Date("2026-08-08T00:00:00")){
-
-        PRESENTACION.contenido = "3";
-
-    }else if(hoy < new Date("2026-08-18T00:00:00")){
-
-        PRESENTACION.contenido = "4";
-
-    }else if(hoy < new Date("2026-08-25T00:00:00")){
-
-        PRESENTACION.contenido = "5";
-
-    }else if(hoy < new Date("2026-09-01T00:00:00")){
-
-        PRESENTACION.contenido = "6";
-
-    }else if(hoy < new Date("2026-09-08T00:00:00")){
-
-        PRESENTACION.contenido = "7";
-
-    }else if(hoy < new Date("2026-09-15T00:00:00")){
-
-        PRESENTACION.contenido = "8";
-
-    }else if(hoy < new Date("2026-09-22T00:00:00")){
-
-        PRESENTACION.contenido = "9";
-
-    }else if(hoy < new Date("2026-09-29T00:00:00")){
-
-        PRESENTACION.contenido = "10";
-
-    }else if(hoy < new Date("2026-10-06T00:00:00")){
-
-        PRESENTACION.contenido = "11";
-
-    }else if(hoy < new Date("2026-10-13T00:00:00")){
-
-        PRESENTACION.contenido = "12";
-
-    }else if(hoy < new Date("2026-10-20T00:00:00")){
-
-        PRESENTACION.contenido = "13";
-
-    }else if(hoy < new Date("2026-10-27T00:00:00")){
-
-        PRESENTACION.contenido = "14";
-
-    }else if(hoy < new Date("2026-11-03T00:00:00")){
-
-        PRESENTACION.contenido = "15";
-
-    }else if(hoy < new Date("2026-11-10T00:00:00")){
-
-        PRESENTACION.contenido = "16";
-
-    }else if(hoy < new Date("2026-11-17T00:00:00")){
-
-        PRESENTACION.contenido = "17";
-
-    }else if(hoy < new Date("2026-11-24T00:00:00")){
-
-        PRESENTACION.contenido = "CUARTOS";
-
-    }else if(hoy < new Date("2026-12-01T00:00:00")){
-
-        PRESENTACION.contenido = "SEMIS";
-
-    }else if(hoy < new Date("2026-12-08T00:00:00")){
-
-        PRESENTACION.contenido = "FINAL";
-
-    }else{
-
-        PRESENTACION.contenido = "FIN";
-
-    }
-
-}
-    
- function iniciar(){
-
-    cargarSkin();
-
-    cargarHalloween();
-
-    actualizarJornada();
-
-    mostrarPresentacion();
-     
-     
-
-}   
-    
-iniciar();
-    
-
-</script>
 
 </body>
+
 </html>
