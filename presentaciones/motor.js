@@ -78,7 +78,7 @@ PRESENTACION.jornada_id =
     --------------------------------------------------------
     ASIGNACIÓN ESTÁTICA DE LA SAGA
     --------------------------------------------------------
-
+    
     J05 → A010
     J06 → A011
     J07 → A012
@@ -101,6 +101,7 @@ PRESENTACION.jornada_id =
 
     const animaciones = {
 
+        "4":  "A001",
         "5":  "A010",
         "6":  "A011",
         "7":  "A012",
