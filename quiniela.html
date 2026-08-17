@@ -2590,19 +2590,9 @@ async function revisarCierreAutomatico(){
     const ahoraMs = Date.now();
     if(ahoraMs < cierreMs) return false;
 
-   const siguiente = proximaJornadaDespues(activa);
+    const siguiente = proximaJornadaDespues(activa);
 
-
-// 💾 RESPALDO AUTOMÁTICO DE CIERRE
-await guardarRespaldoCierreJornada(activa);
-
-
-// 🔒 CERRAR JORNADA
-await db.from('jornadas').update({
-    activa:false,
-    bloqueada:true
-}).eq('id',activa.id);
-      
+    await db.from('jornadas').update({activa:false,bloqueada:true}).eq('id',activa.id);
     await audSistema('AUTO_CIERRE_JORNADA',`Sistema cerró ${activa.nombre} ${MINUTOS_CIERRE_AUTOMATICO} minutos antes del primer partido`,activa.id,{jornada:activa,primer_partido:primero},{bloqueada:true,activa:false});
 
     if(siguiente){
@@ -2621,85 +2611,6 @@ await db.from('jornadas').update({
   }finally{
     revisandoCierreAutomatico=false;
   }
-}
-    
-    async function guardarRespaldoCierreJornada(jornadaCierre){
-
-    const existente = await db
-        .from('respaldos')
-        .select('*')
-        .eq('tipo','AUTO_SEMANAL')
-        .maybeSingle();
-
-    if(existente.error)
-        throw existente.error;
-
-
-    // Ya se respaldó esta jornada
-    if(
-        existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
-    ){
-
-        console.log(
-            `💾 La jornada ${jornadaCierre.nombre} ya tiene respaldo de cierre.`
-        );
-
-        return existente.data;
-
-    }
-
-
-    const datos = await obtenerDatosRespaldo();
-
-    datos.meta.tipo = 'AUTO_SEMANAL';
-    datos.meta.jornada_cierre_id = jornadaCierre.id;
-    datos.meta.jornada_cierre_nombre = jornadaCierre.nombre;
-    datos.meta.fecha_cierre_respaldo = new Date().toISOString();
-
-
-    const payload = {
-        tipo: 'AUTO_SEMANAL',
-        fecha: new Date().toISOString(),
-        semana: semanaKeyRespaldo(),
-        datos
-    };
-
-
-    const r = await db
-        .from('respaldos')
-        .upsert(
-            payload,
-            {onConflict:'tipo'}
-        )
-        .select()
-        .single();
-
-
-    if(r.error)
-        throw new Error(
-            'No pude guardar respaldo de cierre: '+r.error.message
-        );
-
-
-    await audSistema(
-        'RESPALDO_CIERRE_JORNADA',
-        `Respaldo automático de cierre de ${jornadaCierre.nombre}`,
-        jornadaCierre.id,
-        {},
-        {
-            tipo:'AUTO_SEMANAL',
-            semana:payload.semana,
-            jornada:jornadaCierre.nombre
-        }
-    );
-
-
-    console.log(
-        `💾 Respaldo de cierre creado: ${jornadaCierre.nombre}`
-    );
-
-
-    return r.data;
 }
 
 async function aud(accion,detalle,usuario_id=null,antes={},despues={}){try{await db.from('auditoria').insert({accion,detalle,usuario_id,jornada_id:jornada?.id||null,antes,despues,dispositivo_id:deviceId(),actor:esAdmin?'admin':'usuario'})}catch(e){console.warn(e)}}
