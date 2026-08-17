@@ -122,6 +122,152 @@ body{
     box-shadow:0 4px 15px rgba(0,0,0,.25);
 
 }
+    
+    /* =====================================================
+   MENÚ DE PRESENTACIONES
+===================================================== */
+
+.grupo-presentaciones{
+    margin-bottom:25px;
+}
+
+.grupo-presentaciones h2{
+    margin:0 0 12px 0;
+    padding:12px 14px;
+    background:#18263c;
+    border-radius:12px;
+    font-size:18px;
+    text-align:center;
+}
+
+
+.grid-presentaciones{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+
+.boton-presentacion{
+    width:100%;
+    min-height:82px;
+    padding:14px 10px;
+
+    border:1px solid #29364a;
+    border-radius:14px;
+
+    background:#111d31;
+    color:white;
+
+    cursor:pointer;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease;
+}
+
+
+.boton-presentacion:hover{
+    background:#18263c;
+    border-color:#2f8cff;
+}
+
+
+.boton-presentacion:active{
+    transform:scale(.97);
+}
+
+
+.boton-evento{
+    font-size:17px;
+    font-weight:bold;
+}
+
+
+.boton-fecha{
+    font-size:11px;
+    opacity:.65;
+}
+
+
+/* =====================================================
+   DETALLE DE PRESENTACIÓN
+===================================================== */
+
+#detallePresentacion{
+    margin-top:20px;
+}
+
+
+.detalle-presentacion{
+    background:#111d31;
+    border-radius:16px;
+    padding:18px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.25);
+}
+
+
+.detalle-cabecera{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:18px;
+}
+
+
+.detalle-cabecera h2{
+    margin:4px 0 0 0;
+    font-size:22px;
+}
+
+
+.btn-cerrar-detalle{
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#555;
+    color:white;
+
+    font-size:18px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.btn-cerrar-detalle:hover{
+    background:#777;
+}
+
+
+/* =====================================================
+   ESCRITORIO
+===================================================== */
+
+@media(min-width:700px){
+
+    .grid-presentaciones{
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+}
 
 .presentacion-titulo{
 
@@ -477,15 +623,35 @@ body{
 
 
     <div id="estado" class="estado">
+    Cargando presentaciones...
+</div>
 
-        Cargando presentaciones...
+<div id="menuPresentaciones">
 
-    </div>
+    <section class="grupo-presentaciones">
+
+        <h2>🏆 FASE REGULAR</h2>
+
+        <div id="faseRegular" class="grid-presentaciones">
+        </div>
+
+    </section>
 
 
-    <div id="listaPresentaciones">
+    <section class="grupo-presentaciones">
 
-    </div>
+        <h2>🏆 LIGUILLA</h2>
+
+        <div id="liguilla" class="grid-presentaciones">
+        </div>
+
+    </section>
+
+</div>
+
+
+<div id="detallePresentacion">
+</div>
 
 
 </div>
@@ -559,15 +725,19 @@ function convertirParaInput(fecha){
 
 function editarFechas(id){
 
-    const tarjeta =
-        document.querySelector(
-            `.presentacion[data-id="${id}"]`
+    const detalle =
+        document.getElementById(
+            "detallePresentacion"
         );
 
-    if(!tarjeta) return;
+    if(!detalle) return;
+
 
     const editor =
-        tarjeta.querySelector(".editor-fechas");
+        detalle.querySelector(
+            ".editor-fechas"
+        );
+
 
     if(editor){
 
@@ -577,17 +747,21 @@ function editarFechas(id){
 
     }
 
-    const inicio =
-        tarjeta.dataset.inicio || "";
 
-    const fin =
-        tarjeta.dataset.fin || "";
+    const inicioTexto =
+        detalle.dataset.inicio || "";
+
+    const finTexto =
+        detalle.dataset.fin || "";
+
 
     const div =
         document.createElement("div");
 
+
     div.className =
         "editor-fechas";
+
 
     div.innerHTML = `
 
@@ -598,8 +772,9 @@ function editarFechas(id){
         <input
             type="datetime-local"
             id="inicio-${id}"
-            value="${inicio}"
+            value="${inicioTexto}"
         >
+
 
         <label>
             📅 Fecha de fin
@@ -608,28 +783,413 @@ function editarFechas(id){
         <input
             type="datetime-local"
             id="fin-${id}"
-            value="${fin}"
+            value="${finTexto}"
         >
 
-               <button
+
+        <button
             class="btn-guardar"
-            onclick="guardarFechas(${id})">
-
+            onclick="guardarFechas(${id})"
+        >
             💾 Guardar cambios
-
         </button>
+
 
         <button
             class="btn-cancelar"
-            onclick="editarFechas(${id})">
-
+            onclick="editarFechas(${id})"
+        >
             ❌ Cancelar
-
         </button>
 
     `;
 
-    tarjeta.appendChild(div);
+
+    detalle
+        .querySelector(
+            ".detalle-presentacion"
+        )
+        .appendChild(div);
+
+}    
+    function mostrarDetallePresentacion(
+    presentacion,
+    fondos
+){
+
+    const detalle =
+        document.getElementById(
+            "detallePresentacion"
+        );
+        
+        detalle.dataset.id =
+    presentacion.id;
+
+detalle.dataset.inicio =
+    convertirParaInput(
+        presentacion.inicio
+    );
+
+detalle.dataset.fin =
+    convertirParaInput(
+        presentacion.fin
+    );
+
+    if(!detalle){
+        return;
+    }
+
+
+    detalle.innerHTML = `
+
+        <div class="detalle-presentacion">
+
+            <div class="detalle-cabecera">
+
+                <div>
+
+                    <span class="etiqueta">
+                        PRESENTACIÓN SELECCIONADA
+                    </span>
+
+                    <h2>
+                        ${
+                            presentacion.evento === "4TOS"
+                                ? "4tos"
+                                : presentacion.evento === "SEMIS"
+                                    ? "Semis"
+                                    : presentacion.evento === "FINAL"
+                                        ? "Final"
+                                        : `Jornada ${presentacion.contenido}`
+                        }
+                    </h2>
+
+                </div>
+
+                <button
+                    class="btn-cerrar-detalle"
+                    type="button"
+                    onclick="cerrarDetallePresentacion()"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    🎬 Animación
+                </span>
+
+                <span class="valor estado-animacion">
+                    🔒 Asignada por el sistema
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    📅 Inicio
+                </span>
+
+                <span class="valor">
+                    ${mostrarFecha(presentacion.inicio)}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    📅 Fin
+                </span>
+
+                <span class="valor">
+                    ${mostrarFecha(presentacion.fin)}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <span class="etiqueta">
+                    🖼️ Fondo
+                </span>
+
+                <select
+                    id="detalle-fondo-${presentacion.id}"
+                    class="selector-fondo"
+                    onchange="mostrarFondoDetalle(this)"
+                >
+
+                    <option
+                        value="normal"
+                        ${
+                            presentacion.fondo === "normal"
+                                ? "selected"
+                                : ""
+                        }
+                    >
+                        Normal
+                    </option>
+
+                    ${
+                        fondos.map(fondo => `
+
+                            <option
+                                value="${fondo}"
+                                ${
+                                    presentacion.fondo === fondo
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${fondo}
+                            </option>
+
+                        `).join("")
+                    }
+
+                </select>
+
+
+                <div
+                    id="vista-fondo-${presentacion.id}"
+                    class="vista-fondo"
+                >
+                    Vista previa
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn-guardar"
+                type="button"
+                onclick="
+    guardarFondoDetalle(
+        ${presentacion.id},
+        this
+    )
+"
+            >
+                💾 Guardar fondo
+            </button>
+
+
+            <button
+                class="btn-editar"
+                type="button"
+                onclick="
+                    editarFechas(
+                        ${presentacion.id}
+                    )
+                "
+            >
+                ✏️ Editar fechas
+            </button>
+
+
+            <div
+                class="dato"
+                style="margin-top:15px;"
+            >
+
+                <span class="etiqueta">
+                    🆔 Jornada
+                </span>
+
+                <span class="valor">
+                    ${presentacion.jornada_id ?? "Sin jornada"}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const selector =
+        document.getElementById(
+            `detalle-fondo-${presentacion.id}`
+        );
+
+
+    if(selector){
+
+        mostrarFondoDetalle(
+            selector
+        );
+
+    }
+
+
+    detalle.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+
+function mostrarFondoDetalle(select){
+
+    const id =
+        select.id.replace(
+            "detalle-fondo-",
+            ""
+        );
+
+    const vista =
+        document.getElementById(
+            `vista-fondo-${id}`
+        );
+
+    if(!vista){
+        return;
+    }
+
+    const fondo =
+        select.value;
+
+    if(fondo === "normal"){
+
+        vista.style.backgroundImage =
+            "none";
+
+        vista.textContent =
+            "Sin fondo";
+
+        return;
+
+    }
+
+    vista.style.backgroundImage =
+        `url("../presentaciones/fondos/${fondo}.webp")`;
+
+    vista.textContent = "";
+
+}
+
+  async function guardarFondoDetalle(id, boton){
+
+    const select =
+        document.getElementById(
+            `detalle-fondo-${id}`
+        );
+
+    if(!select){
+        return;
+    }
+
+    const fondo =
+        select.value;
+
+    console.log("🖼️ GUARDANDO FONDO");
+    console.log("ID:", id);
+    console.log("Fondo elegido:", fondo);
+
+
+    boton.disabled = true;
+    boton.textContent =
+        "💾 Guardando...";
+
+
+    const resultado =
+        await db
+            .from("presentaciones")
+            .update({
+                fondo: fondo
+            })
+            .eq("id", id)
+            .select(
+                "id, evento, fondo"
+            );
+
+
+    console.log(
+        "📡 RESPUESTA SUPABASE:",
+        resultado
+    );
+
+
+    if(resultado.error){
+
+        console.error(
+            "❌ Error guardando fondo:",
+            resultado.error
+        );
+
+        mostrarMensaje(
+            "Error",
+            "No se pudo guardar el fondo.",
+            "❌"
+        );
+
+        boton.disabled = false;
+        boton.textContent =
+            "💾 Guardar fondo";
+
+        return;
+    }
+
+
+    mostrarMensaje(
+        "Información",
+        "Fondo guardado correctamente.",
+        "✅"
+    );
+
+
+    boton.disabled = false;
+    boton.textContent =
+        "💾 Guardar fondo";
+
+}  
+    
+    
+    
+    
+function cerrarDetallePresentacion(){
+
+    const detalle =
+        document.getElementById(
+            "detallePresentacion"
+        );
+
+    if(!detalle){
+        return;
+    }
+    
+    detalle.dataset.id =
+    presentacion.id;
+
+detalle.dataset.inicio =
+    convertirParaInput(
+        presentacion.inicio
+    );
+
+detalle.dataset.fin =
+    convertirParaInput(
+        presentacion.fin
+    );
+    
+
+
+    detalle.innerHTML = "";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
 }
 
@@ -921,8 +1481,14 @@ async function cargarPresentaciones(){
     const estado =
         document.getElementById("estado");
 
-    const lista =
-        document.getElementById("listaPresentaciones");
+    const faseRegular =
+    document.getElementById("faseRegular");
+
+const liguilla =
+    document.getElementById("liguilla");
+
+const detalle =
+    document.getElementById("detallePresentacion");
 
 const fondos =
     await obtenerFondos();
@@ -970,166 +1536,72 @@ const fondos =
         `✅ ${data.length} presentaciones`;
 
 
-    lista.innerHTML = "";
+    faseRegular.innerHTML = "";
+liguilla.innerHTML = "";
+detalle.innerHTML = "";
 
 
     data.forEach(presentacion => {
 
+    const tarjeta =
+        document.createElement("button");
 
-        const tarjeta =
-            document.createElement("div");
+    tarjeta.className =
+        "boton-presentacion";
 
+    tarjeta.type = "button";
 
-        tarjeta.className =
-            "presentacion";
+    tarjeta.dataset.id =
+        presentacion.id;
 
-tarjeta.dataset.id =
-    presentacion.id;
+    tarjeta.innerHTML = `
 
-tarjeta.dataset.inicio =
-    convertirParaInput(presentacion.inicio);
+        <span class="boton-evento">
+            📅
+            ${presentacion.evento === "4TOS"
+                ? "4tos"
+                : presentacion.evento === "SEMIS"
+                    ? "Semis"
+                    : presentacion.evento === "FINAL"
+                        ? "Final"
+                        : `Jornada ${presentacion.contenido}`}
+        </span>
 
-tarjeta.dataset.fin =
-    convertirParaInput(presentacion.fin);
+        <span class="boton-fecha">
+            ${mostrarFecha(presentacion.inicio)}
+        </span>
 
-
-        tarjeta.innerHTML = `
-
-            <div class="presentacion-titulo">
-
-    <h2>
-        📅 ${presentacion.evento}
-    </h2>
-
-    <button
-        class="btn-editar"
-        onclick="editarFechas(${presentacion.id})">
-
-        ✏️ Editar fechas
-
-    </button>
-
-</div>
+    `;
 
 
-            <div class="dato">
+    tarjeta.addEventListener(
+        "click",
+        () => {
 
-                <span class="etiqueta">
-                    Presentación
-                </span>
+            mostrarDetallePresentacion(
+                presentacion,
+                fondos
+            );
 
-                <span class="valor">
-                    ${presentacion.titulo}
-                    ${presentacion.contenido}
-                    ${presentacion.subtitulo}
-                </span>
-
-            </div>
+        }
+    );
 
 
-            <div class="dato">
+    if(
+        presentacion.evento === "4TOS" ||
+        presentacion.evento === "SEMIS" ||
+        presentacion.evento === "FINAL"
+    ){
 
-                <span class="etiqueta">
-                    📅 Inicio
-                </span>
+        liguilla.appendChild(tarjeta);
 
-                <span class="valor">
-                    ${mostrarFecha(presentacion.inicio)}
-                </span>
+    }else{
 
-            </div>
+        faseRegular.appendChild(tarjeta);
 
+    }
 
-            <div class="dato">
-
-                <span class="etiqueta">
-                    📅 Fin
-                </span>
-
-                <span class="valor">
-                   ${mostrarFecha(presentacion.fin)}
-                </span>
-
-            </div>
-
-
-           <div class="dato">
-
-    <span class="etiqueta">
-        🖼️ Fondo
-    </span>
-
-    <select
-    class="selector-fondo"
-    onchange="mostrarFondo(this)"
-    data-fondo="${presentacion.fondo ?? "normal"}"
->
-
-    <option value="normal"
-        ${presentacion.fondo === "normal" ? "selected" : ""}>
-        Normal
-    </option>
-
-    ${fondos.map(fondo => `
-
-        <option
-            value="${fondo}"
-            ${presentacion.fondo === fondo ? "selected" : ""}
-        >
-            ${fondo}
-        </option>
-
-    `).join("")}
-
-</select>
-
-    <div
-        class="vista-fondo"
-        data-vista="${presentacion.fondo ?? "normal"}"
-    >
-        Vista previa
-    </div>
-
-</div>
-
-<button
-    class="btn-guardar"
-    onclick="guardarFondo(${presentacion.id}, this)"
->
-    💾 Guardar fondo
-</button>
-
-
-            <div class="dato">
-
-                <span class="etiqueta">
-                    🎬 Animación
-                </span>
-
-                <span class="valor estado-animacion">
-
-                    🔒 Asignada
-
-                </span>
-
-            </div>
-
-        `;
-
-
-        lista.appendChild(tarjeta);
-
-const selectorFondo =
-    tarjeta.querySelector(".selector-fondo");
-
-if(selectorFondo){
-
-    mostrarFondo(selectorFondo);
-
-}
-
-    });
-
+});
 }
 
 
