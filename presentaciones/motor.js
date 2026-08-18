@@ -102,7 +102,7 @@ PRESENTACION.jornada_id =
     const animaciones = {
 
         "4":  "A001",
-        "5":  "A010",
+        "5":  "B010",
         "6":  "A011",
         "7":  "A012",
         "8":  "A013",
