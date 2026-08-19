@@ -1018,6 +1018,16 @@ select.pronostico-error{
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @keyframes emojiPop{
 
 0%{
@@ -1456,6 +1466,86 @@ animation:emojiBall .65s ease-out;
     
     
     
+  * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+}
+
+/* FONDO DE LA PRESENTACIÓN */
+#fondo-quiniela {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    z-index: -1;
+    pointer-events: none;
+}
+    
+    
+   /* =========================================
+   TARJETAS TRANSPARENTES - FONDO
+   ========================================= */
+
+body.dark .card,
+body.dark .box,
+body.dark .partido-card,
+body.dark .boleto-form-card,
+body.dark .boleto-list-card,
+body.dark .ranking-mini,
+body.dark .salon-card,
+body.dark .fama-card,
+body.dark .audit-card,
+body.dark .liguilla-bloque,
+body.dark .liguilla-card,
+body.dark .mobile-matrix-wrap,
+body.dark .pronostico-card,
+body.dark .resumen .box,
+body.dark .jornadas-titulo,
+body.dark #quiniela > .card {
+
+    background: rgba(15, 27, 45, 0.20) !important;
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+    /* =========================================
+   TABLA GENERAL TRANSPARENTE
+   ========================================= */
+
+body.dark .liga-compact-mobile {
+    background: rgba(15, 27, 45, 0.20) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+body.dark .liga-compact-row {
+    background: rgba(15, 27, 45, 0.20) !important;
+    border-top-color: rgba(255,255,255,.12) !important;
+}
+
+body.dark .liga-compact-row:nth-child(even) {
+    background: rgba(15, 27, 45, 0.20) !important;
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1465,7 +1555,10 @@ animation:emojiBall .65s ease-out;
 </style>
 </head>
 <body>
+    
+    <div id="fondo-quiniela"></div>
 <div class="menu-flotante">
+    
   <button class="menu-btn" onclick="toggleMenuOpciones()" title="Opciones">☰</button>
   <div id="menuOpciones" class="menu-panel">
     <div class="menu-title">Opciones</div>
@@ -1543,7 +1636,10 @@ animation:emojiBall .65s ease-out;
   <button class="activo" onclick="tab('quiniela',this)">📝 Quiniela</button><button onclick="tab('clasificacion',this)">🏆 Clasificación</button><button onclick="tab('partidos',this)">⚽ Partidos</button><button onclick="tab('tablaLiga',this)">📊 Tabla general</button><button onclick="tab('fama',this)">👑 Fama</button><button onclick="tab('salon',this)">🏛️ Salón</button><button onclick="tab('admin',this)">🔒 Admin</button>
  </div>
  <div id="msg" class="mensaje"></div>
- <div class="card"><b>Jornadas</b><div id="selectorJornadas" class="selector-jornadas"></div>
+
+   <div class="card jornadas-titulo" style="text-align: center;"><b>Jornadas</b></div>
+    
+    <div id="selectorJornadas" class="selector-jornadas"></div>
      
      <div class="small" style="color: white; text-align: center;">Solo la jornada activa y abierta permite registrar boletos.</div>
      
@@ -1570,10 +1666,10 @@ animation:emojiBall .65s ease-out;
 
 </div>
      
-     <h2>Registrar boleto</h2>
+     <h2 style="text-align: center;">Registrar boleto</h2>
      
     
-     <p class="small">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
+     <p class="small;"style="text-align: center;">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
      
    <div id="salaJornada" class="card chat-card" style="display:none;"> 
     
@@ -1930,6 +2026,49 @@ margin-bottom:10px;
 <script>
 const SUPABASE_URL="https://ytedqizoetrafbgufslp.supabase.co";
 const SUPABASE_KEY="sb_publishable_zbOWRVkCHQ4ezSa7yDEdHw_734fnkxH";
+    async function cargarFondoPresentacion(){
+
+    const ahora = new Date().toISOString();
+
+const { data, error } = await db
+    .from("presentaciones")
+    .select("id, evento, jornada_id, fondo, inicio, fin")
+    .lte("inicio", ahora)
+    .gte("fin", ahora)
+    .order("inicio", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+    if(error){
+        console.error("❌ Error cargando fondo:", error);
+        return;
+    }
+
+    if(!data || !data.fondo){
+        console.log("ℹ️ No hay fondo seleccionado");
+        return;
+    }
+console.log("📦 Presentación encontrada:", data);
+    console.log("🖼️ Fondo seleccionado:", data.fondo);
+
+    const url =
+    "https://raw.githubusercontent.com/" +
+    "jesusvazquezesp-art/Quiniela-Liga-Mx/" +
+    "main/presentaciones/fondos/" +
+    data.fondo +
+    ".webp";
+
+console.log("🌄 URL del fondo:", url);
+        
+        const fondoElemento = document.getElementById("fondo-quiniela");
+
+if(fondoElemento){
+    fondoElemento.style.backgroundImage = `url("${url}")`;
+}
+    
+ }
+    
+    
 const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[],respaldos=[],salonFama=[];
@@ -2788,11 +2927,27 @@ function dibujar(){
     
     
 function dibSelectorJornadas(){
- const cont=$('selectorJornadas'); if(!cont) return;
- let html='';
- jornadas.forEach(j=>{html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`});
- cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
+  const cont=$('selectorJornadas'); if(!cont) return;
+  let html='';
+
+  jornadas.forEach(j=>{
+    html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`;
+  });
+
+  cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
+
+  // 🎯 Centrar automáticamente la jornada seleccionada
+  const activa = cont.querySelector('button.activo');
+
+  if(activa){
+    activa.scrollIntoView({
+      behavior: 'instant',
+      block: 'nearest',
+      inline: 'center'
+    });
+  }
 }
+
 async function verJornada(id){
 
     jornadaVistaId = id;
@@ -2890,12 +3045,12 @@ function dibQuinielaMovil(lista){
 
     html += `
     <div class="boleto-form-card">
-        <h3>Nuevo boleto</h3>
+       <h2 style="text-align: center;">Nuevo boleto</h2>
 
         <input id="mNuevoNombre" placeholder="Nombre / boleto">
         <input id="mNuevoTelefono" placeholder="Teléfono opcional">
 
-        <div class="small" id="mModo">Nuevo boleto</div>
+        <div class="small;"style="text-align: center;" id="mModo">Nuevo boleto</div>
     `;
 
     partidos.forEach(p=>{
@@ -2920,7 +3075,7 @@ function dibQuinielaMovil(lista){
     ${estadoPartidoHTML(p)}
 </div>
 
-                <select id="mSel_${p.id}">
+                <select style="text-align: center;">
                 <option value="">Elegir pronóstico</option>
                 <option value="L">Gana local</option>
                 <option value="E">Empate</option>
@@ -5425,7 +5580,11 @@ this.participantes.textContent = participantes;
 
 };
     
-async function init(){try{aplicarModoOscuro();esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
+async function init(){
+      try{
+          await cargarFondoPresentacion();
+          aplicarModoOscuro();
+          esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
 
 function abrirAyudaQuiniela(){
