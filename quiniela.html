@@ -1742,18 +1742,18 @@ const { data, error } = await db
         return;
     }
     if(!data || !data.fondo){
-        console.log("ℹ️ No hay fondo seleccionado");
+   //     console.log("ℹ️ No hay fondo seleccionado");
         return;
     }
-console.log("📦 Presentación encontrada:", data);
-    console.log("🖼️ Fondo seleccionado:", data.fondo);
+//console.log("📦 Presentación encontrada:", data);
+  //  console.log("🖼️ Fondo seleccionado:", data.fondo);
     const url =
     "https://raw.githubusercontent.com/" +
     "jesusvazquezesp-art/Quiniela-Liga-Mx/" +
     "main/presentaciones/fondos/" +
     data.fondo +
     ".webp";
-console.log("🌄 URL del fondo:", url);
+//console.log("🌄 URL del fondo:", url);
         const fondoElemento = document.getElementById("fondo-quiniela");
 if(fondoElemento){
     fondoElemento.style.backgroundImage = `url("${url}")`;
@@ -1777,7 +1777,7 @@ async function instalarPWA(){
     const resultado = await deferredPrompt.userChoice;
     deferredPrompt = null;
 document.getElementById("filaInstalarApp").style.display="none";
-console.log("Instalación:",resultado.outcome);
+//console.log("Instalación:",resultado.outcome);
 }
 window.addEventListener("appinstalled",()=>{
     deferredPrompt=null;
@@ -1785,7 +1785,7 @@ window.addEventListener("appinstalled",()=>{
     if(fila){
         fila.style.display="none";
     }
-    console.log("PWA instalada");
+   // console.log("PWA instalada");
 });
 let editandoId=null, editandoJornadaId=null, jornadaVistaId=null;
 const MINUTOS_CIERRE_AUTOMATICO = 10;
@@ -1828,7 +1828,7 @@ function deviceId(){let id=localStorage.getItem('quiniela_copamx_device');if(!id
             console.error("Error guardando token:", error);
             return;
         }
-        console.log("✅ Token FCM guardado.");
+      //  console.log("✅ Token FCM guardado.");
     }catch(e){
         console.error(e);
     }
@@ -2303,7 +2303,7 @@ await db.from('jornadas').update({
     if(
 existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
     ){
-        console.log(
+      //  console.log(
             `💾 La jornada ${jornadaCierre.nombre} ya tiene respaldo de cierre.`
         );
         return existente.data;
@@ -2342,7 +2342,7 @@ existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
             jornada:jornadaCierre.nombre
         }
     );
-    console.log(
+    //console.log(
         `💾 Respaldo de cierre creado: ${jornadaCierre.nombre}`
     );
     return r.data;
@@ -3089,8 +3089,8 @@ async function guardarResultados(){
             // ---------------------------------------------
             if(!yaTeniaResultado){
                 huboResultadoNuevo = true;
-                console.log("📣 NUEVO RESULTADO — VOY A INSERTAR NOTICIA");
-                console.log({
+              //  console.log("📣 NUEVO RESULTADO — VOY A INSERTAR NOTICIA");
+              //  console.log({
                     titulo: "⚽ Resultado oficial",
                     mensaje:
                         `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
@@ -3107,7 +3107,7 @@ ${ganador}`,
                 if(errorNoticia)
                     throw errorNoticia;
             }else{
-                console.log(
+              //  console.log(
                     `ℹ️ ${p.local} vs ${p.visitante} ya tenía resultado. No se vuelve a notificar.`
                 );
             }
@@ -3132,8 +3132,8 @@ ${ganador}`,
         // ---------------------------------------------
         if(huboResultadoNuevo){
             const lideres = obtenerLideresQuiniela();
-            console.log("👑 LÍDERES ACTUALES:");
-            console.log(lideres);
+          //  console.log("👑 LÍDERES ACTUALES:");
+          //  console.log(lideres);
             if(lideres.length){
                 const { error: errorLider } = await db
                     .from("noticias")
@@ -3554,9 +3554,9 @@ const Chat = {
     respuestaActual: null,
     canal: null,
    async iniciar(){
-        console.log("💬 Chat iniciado");
+     //   console.log("💬 Chat iniciado");
         this.txt = document.getElementById("chatTexto");
-       console.log("TXT:", this.txt);
+     //  console.log("TXT:", this.txt);
         this.lista = document.getElementById("chatLista");
         this.contador = document.getElementById("chatMensajes");
        this.participantes = document.getElementById("chatParticipantes");
@@ -3623,7 +3623,7 @@ if(usuario){
         dispositivo_id: usuario.dispositivo_id
     });
 }
-console.log("📌 Menciones pendientes:", this.mencionesPendientes);
+//console.log("📌 Menciones pendientes:", this.mencionesPendientes);
             const inicio = this.txt.value.lastIndexOf("@");
             this.txt.value = this.txt.value.substring(0, inicio) + "@" + nombre + " ";
             lista.style.display = "none";
@@ -3677,17 +3677,17 @@ if(oculto==="1"){
 }
 const texto = this.txt.value.trim();
     if(!texto) return;
-console.log("TEXTO:", texto);
+//console.log("TEXTO:", texto);
 const mencionarTodos = texto.includes("@todos");
-console.log("¿TODOS?:", mencionarTodos);
+//console.log("¿TODOS?:", mencionarTodos);
 const menciones = texto.match(/@[^\s]+/g) || [];
-console.log("MENCIONES:", menciones);
+//console.log("MENCIONES:", menciones);
     if(!this.usuario){
         msg("Primero debes registrar un boleto para participar en el chat.");
         return;
     }
         const respuestaA = this.respuestaActual?.id || null;
-console.log("↩️ Respondiendo a:", respuestaA);
+//console.log("↩️ Respondiendo a:", respuestaA);
     const { error } = await db
 .from("chat_mensajes")
 .insert({
@@ -3706,18 +3706,18 @@ console.log("↩️ Respondiendo a:", respuestaA);
         return;
     }
    this.txt.value="";
-    console.log("LIMPIANDO RESPUESTA");
+  //  console.log("LIMPIANDO RESPUESTA");
     this.respuestaActual = null;
-    console.log("Respuesta actual:", this.respuestaActual);
+  //  console.log("Respuesta actual:", this.respuestaActual);
 const panel = document.getElementById("chatRespuesta");
 panel.style.display = "none";
 panel.innerHTML = "";
-console.log("Panel ocultado");
-    console.log("💬 Mensaje enviado");
+// console.log("Panel ocultado");
+   // console.log("💬 Mensaje enviado");
     const editor = document.getElementById("chatEditor");
 const fila = document.getElementById("chatFila");
 editor.appendChild(panel);
-    console.log("💬 Mensaje enviado");
+  //  console.log("💬 Mensaje enviado");
 },
    async obtenerUsuario(){
     // Buscar el boleto de esta jornada
@@ -3733,10 +3733,10 @@ editor.appendChild(panel);
         console.error("💬 Error obteniendo usuario:", error);
         return null;
     }
-       console.log("USUARIOS:");
-console.log(usuarios);
+       //  console.log("USUARIOS:");
+        //  console.log(usuarios);
     if(!usuario){
-        console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
+     //   console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
         return null;
     }
     // Buscar perfil del chat
@@ -3762,7 +3762,7 @@ if(errNuevo){
 perfil = nuevo;
     }
     usuario.color_chat = perfil.color_chat;
-    console.log("💬 Usuario del chat:", usuario);
+   // console.log("💬 Usuario del chat:", usuario);
     return usuario;
 },
     async cargarColores(){
@@ -3778,10 +3778,10 @@ perfil = nuevo;
         this.colores[u.dispositivo_id] =
             u.color_chat || "#3b82f6";
     });
-    console.log("🎨 Colores cargados:", this.colores);
+ //   console.log("🎨 Colores cargados:", this.colores);
 },
     async cargarMensajes(){
-        console.log("📢 Cargando chat de jornada:", jornada.id, jornada.nombre);
+  //      console.log("📢 Cargando chat de jornada:", jornada.id, jornada.nombre);
     const { data, error } = await db
     .from("chat_mensajes")
     .select("*")
@@ -3803,7 +3803,7 @@ perfil = nuevo;
     };
 });
     this.mostrar();
-    console.log("💬 Historial cargado:", this.mensajes.length);
+  //  console.log("💬 Historial cargado:", this.mensajes.length);
 },
    async conectarPresence(){
     const jornadaId = jornada.id;
@@ -3847,7 +3847,7 @@ this.canal = db.channel("chat-"+jornadaId)
         async (payload)=>{
     await this.cargarColores();
     const m = payload.new;
-        console.log("💬 Color recibido:", m.color_chat);
+  //      console.log("💬 Color recibido:", m.color_chat);
 console.table(m);
             const texto = (m.mensaje || "").trim();
 const menciones = [...texto.matchAll(/@([a-zA-Z0-9_ÁÉÍÓÚáéíóúÑñ]+)/g)].map(x=>x[1]);
@@ -3863,11 +3863,11 @@ const mencionaActual = menciones.some(x => x.toLowerCase() === (this.usuario?.no
     respuesta_a: m.respuesta_a
 });
             this.mostrar();
-            console.log("💬 Nuevo mensaje:",m.nombre);
+  //          console.log("💬 Nuevo mensaje:",m.nombre);
         }
     )
     this.canal.subscribe((estado)=>{
-    console.log("💬 Estado Realtime:", estado);
+  //  console.log("💬 Estado Realtime:", estado);
 });
 },
  abrirReacciones(div,id){
@@ -4025,7 +4025,7 @@ padding:10px 12px;
     panel.style.display = "none";
     panel.innerHTML = "";
 };
-    console.log("💬 Respuesta seleccionada:", this.respuestaActual);
+  //  console.log("💬 Respuesta seleccionada:", this.respuestaActual);
     menu.remove();
 };
         setTimeout(()=>{
@@ -4136,8 +4136,8 @@ padding:10px 12px;
         padding:10px;
     ">
     `;
-       console.log("Mi color:", this.usuario.color_chat);
-console.log("Colores:", Chat.colores);
+  //     console.log("Mi color:", this.usuario.color_chat);
+ // console.log("Colores:", Chat.colores);
     const usados = Object.values(Chat.colores);
        console.table(Chat.colores);
     colores.forEach(c=>{
@@ -4562,7 +4562,7 @@ if ("serviceWorker" in navigator) {
         try {
     const registroPrincipal =
         await navigator.serviceWorker.register("service-worker.js");
-    console.log("✅ Service Worker principal:", registroPrincipal.scope);
+  //  console.log("✅ Service Worker principal:", registroPrincipal.scope);
 } catch (error) {
     console.error("Error al registrar Service Workers:", error);
 }
@@ -4587,12 +4587,12 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-        console.log("Firebase conectado");
+   //     console.log("Firebase conectado");
 const messaging = getMessaging(app);
         async function guardarTokenFCM(token){
     const tokenGuardado = localStorage.getItem("fcm_token");
     if(tokenGuardado === token){
-        console.log("🔔 Token sin cambios. Verificando Supabase...");
+    //    console.log("🔔 Token sin cambios. Verificando Supabase...");
     }
     const { error } = await db
         .from("notificaciones_dispositivos")
@@ -4614,31 +4614,31 @@ typeof usuarioActual !== "undefined"
     }
     localStorage.setItem("fcm_token", token);
     if(tokenGuardado === token){
-        console.log("✅ Token verificado en Supabase.");
+    //    console.log("✅ Token verificado en Supabase.");
     }else{
-        console.log("✅ Token FCM guardado en Supabase.");
+    //    console.log("✅ Token FCM guardado en Supabase.");
     }
 }
         try {
     const permiso = await Notification.requestPermission();
-    console.log("Permiso:", permiso);
+ //   console.log("Permiso:", permiso);
     if (permiso === "granted") {
         const registroSW = await navigator.serviceWorker.ready;
 const token = await getToken(messaging, {
     vapidKey: "BJNOW3ZmLT3nFipVaOrlx9PebQmErYRKVKCIiJquLLdj-HDTBvmizj6ZQ045TQwAfDLjZegeq9-ijCYv2m9eoBs",
     serviceWorkerRegistration: registroSW
 });
-        console.log("🔔 Token FCM:", token);
+  //      console.log("🔔 Token FCM:", token);
         if (token) {
             await guardarTokenFCM(token);
         }
     } else {
-        console.log("❌ Permiso denegado.");
+  //      console.log("❌ Permiso denegado.");
     }
 } catch (e) {
     console.error("Error FCM:", e);
 }
-console.log("Firebase conectado");
+//console.log("Firebase conectado");
 //----------------------------------------------------
 // INSTALAR PWA
 //----------------------------------------------------
@@ -4650,7 +4650,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
     if(btn){
         btn.style.display = "inline-block";
     }
-    console.log("✅ La aplicación puede instalarse");
+//    console.log("✅ La aplicación puede instalarse");
 });
 window.addEventListener("appinstalled", () => {
     installPrompt = null;
@@ -4658,13 +4658,13 @@ window.addEventListener("appinstalled", () => {
     if(btn){
         btn.style.display = "none";
     }
-    console.log("✅ Aplicación instalada");
+ //   console.log("✅ Aplicación instalada");
 });
 async function instalarPWA(){
     if(!installPrompt) return;
     installPrompt.prompt();
     const resultado = await installPrompt.userChoice;
-    console.log(resultado.outcome);
+  //  console.log(resultado.outcome);
     installPrompt = null;
     document.getElementById("btnInstalarApp").style.display = "none";
 }  
