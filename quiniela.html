@@ -6,10 +6,7 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
 <meta name="theme-color" content="#2563eb">
-    
-<head>
-    
-    
+ <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiniela liga MX / Torneo Apertura 2026</title>
@@ -50,7 +47,6 @@
   line-height:1.05;
   transform:translateX(-18px);
 }
-
 .header-logo .torneo-sub{
   font-size:15px;
   color:#ffd54f;
@@ -58,7 +54,6 @@
   margin-top:4px;
   transform:translateX(-18px);
 }
-
 .header-logo .header-sub{
   font-size:14px;
   opacity:.92;
@@ -111,10 +106,16 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   .detalle-resultado{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
   .detalle-pill{background:white;border-radius:12px;padding:8px;text-align:center;font-weight:bold}
   .detalle-pill.ok{background:#c8e6c9;color:#0b5d1e}.detalle-pill.bad{background:#e0e0e0;color:#333}
-
   .mobile-matrix-wrap{background:#fff;border-radius:18px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.10);overflow:auto;border:1px solid #e5e7eb}
   .mobile-matrix{border-collapse:separate;border-spacing:0;min-width:850px;width:max-content;background:#fff}
-  .mobile-matrix th,.mobile-matrix td{border-bottom:1px solid #e5e7eb;border-right:1px solid #edf0f5;padding:0;text-align:center;vertical-align:middle}
+  .mobile-matrix th,
+    .mobile-matrix td{
+        border-bottom:1px solid #e5e7eb;
+        border-right:1px solid #edf0f5;
+        padding:0;
+        text-align:center;
+        vertical-align:middle
+    }
   .mobile-matrix th{position:sticky;top:0;background:#eef3fb;z-index:3}
   .mobile-matrix .col-nombre{position:sticky;left:0;z-index:4;background:#fff;min-width:145px;width:145px;text-align:left;padding:8px}
   .mobile-matrix th.col-nombre{background:#eef3fb;z-index:5}
@@ -125,7 +126,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   .m-row-name{font-size:14px;font-weight:900;line-height:1.15}.m-row-meta{font-size:11px;color:#667085;margin-top:3px}.m-row-actions{margin-top:6px}.m-row-actions button{padding:6px 8px;font-size:12px;width:100%}
   .mobile-help{background:#fff;border-radius:16px;padding:12px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:13px;color:#667085}
 }
-
 /* FIX32: Tabla general de equipos compacta en celular */
 .tabla-liga-mobile{display:none}
 @media(max-width:760px){
@@ -149,8 +149,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   .liga-compact-row.zona-liguilla .liga-team-mobile .pos{background:#0d47a1}
   .liga-compact-row:not(.zona-liguilla) .liga-team-mobile .pos{background:#607d8b}
 }
-
-
 /* FIX6: Liguilla ordenada por fases */
 .liguilla-panel{display:block}
 .liguilla-tabs{display:flex;gap:8px;overflow:auto;margin:10px 0 14px}
@@ -168,7 +166,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
 @keyframes copaBounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
 .tombola-box{background:#eef7ff;border:1px solid #bddcff;border-radius:16px;padding:12px;margin:12px 0}
 @media(max-width:760px){.liguilla-grid{grid-template-columns:1fr}.campeon-titulo{font-size:24px}.campeon-copa{font-size:50px}}
-
 /* FIX8: Sección Partidos y Liguilla con marcador claro */
 .match-card{padding:14px;overflow:visible}
 .match-num{text-align:center;margin-bottom:10px}
@@ -229,8 +226,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   .match-team{font-size:13px}
   .match-team .escudo{width:23px;height:23px}
 }
-
-
 /* FIX10: Vista de partidos más limpia en PC, sin empalmar nombres ni marcadores */
 @media(min-width:761px){
   #partidos .partidos-grid{
@@ -280,8 +275,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
 @media(min-width:1500px){
   #partidos .partidos-grid{grid-template-columns:repeat(3, minmax(520px, 1fr));}
 }
-
-
 /* FIX11: Vista de liguilla en PC a todo el ancho, sin empalmes */
 #listaPartidos > .liguilla-panel{
   grid-column:1 / -1;
@@ -340,7 +333,6 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
     grid-template-columns:repeat(2, minmax(560px, 1fr));
   }
 }
-
 /* FIX29: contador más grande y detallado para captura a 7 días */
 #partidos .match-status .contador-box{min-width:160px;max-width:240px}
 #partidos .match-status .contador-tiempo{font-size:19px}
@@ -349,13 +341,9 @@ body.dark-mode .header-logo img{filter:drop-shadow(0 0 14px rgba(255,215,64,.25)
   #partidos .match-status .contador-box{min-width:165px;max-width:260px;padding:9px 14px}
   #partidos .match-status .contador-tiempo{font-size:18px}
 }
-
-
-
 /* FIX13: pagos privados y modo oscuro legible */
 .pago-admin-only{display:none!important}
 body.admin-on .pago-admin-only{display:block!important}
-
 /* FIX14: clasificación móvil clara y auditoría legible */
 .clasificacion-movil{display:none}
 .class-card{background:var(--card);border:1px solid var(--borde);border-radius:16px;padding:13px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -376,8 +364,6 @@ body.dark .class-pill{background:#1d3352!important;color:#d9ecff!important}
   #clasificacion .tabla-wrap{display:none!important}
   .clasificacion-movil{display:block}
 }
-
-
 /* FIX12: menú de 3 líneas y modo oscuro */
 .menu-flotante{position:fixed;top:12px;right:12px;z-index:9999}
 .menu-btn{width:46px;height:42px;border-radius:12px;background:rgba(255,255,255,.92);color:#0d47a1;box-shadow:0 3px 12px rgba(0,0,0,.22);font-size:24px;line-height:1;padding:0}
@@ -393,12 +379,42 @@ body.dark .class-pill{background:#1d3352!important;color:#d9ecff!important}
 .switch input:checked + .slider:before{transform:translateX(24px)}
 body.dark{--azul:#4da3ff;--azul2:#1e6ed8;--fondo:#07111f;--card:#0f1b2d;--borde:#26364c;--texto:#eef6ff;--verde:#126b39;--verdeTxt:#fff;--gris:#475569;--rojo:#c62828;--amarillo:#5b4a16}
 body.dark header{background:linear-gradient(135deg,#07111f,#123c73)}
-body.dark .box,body.dark .card,body.dark .partido-card,body.dark .audit-card,body.dark .fama-card,body.dark .salon-card,body.dark .liguilla-bloque,body.dark .liguilla-card,body.dark .boleto-form-card,body.dark .boleto-list-card,body.dark .ranking-mini,body.dark .mobile-matrix-wrap,body.dark .liga-card-mobile,body.dark .detalle-equipos,body.dark .detalle-pill,body.dark .liga-stat{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
+body.dark .box,body.dark .card,body.dark .partido-card,body.dark .audit-card,body.dark .fama-card,body.dark .salon-card,body.dark .liguilla-bloque,body.dark .liguilla-card,
+   body.dark .boleto-form-card{
+    background:rgba(15,27,45,.20)!important;
+    color:var(--texto)!important;
+    border-color:var(--borde)!important;
+}
+    body.dark .boleto-list-card,
+    body.dark .ranking-mini,
+    body.dark .mobile-matrix-wrap,
+    body.dark .liga-card-mobile,
+    body.dark .detalle-equipos,
+    body.dark .detalle-pill,
+    body.dark .liga-stat{
+        background:var(--card)!important;
+        color:var(--texto)!important;
+        border-color:var(--borde)!important
+    }
 body.dark .small,body.dark .audit-time,body.dark .liga-extra-mobile{color:#b7c4d8!important}
 body.dark .tabs button,body.dark .subtabs button,body.dark .selector-jornadas button,body.dark .liguilla-tabs button{background:#1f2d42;color:#e8f1ff}
 body.dark .tabs button.activo,body.dark .subtabs button.activo,body.dark .selector-jornadas button.activo,body.dark .liguilla-tabs button.activo{background:#0d47a1;color:#fff}
-body.dark .tabla-wrap,body.dark table,body.dark td,body.dark th{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
-body.dark th,body.dark th.nombre,body.dark .nombre,body.dark .mobile-matrix th,body.dark .mobile-matrix .col-nombre,body.dark .liga-head-mobile{background:#16243a!important;color:#eef6ff!important}
+body.dark .tabla-wrap,
+body.dark table,
+body.dark th{
+    background:rgba(15,27,45,.20)!important;
+    color:var(--texto)!important;
+    border-color:var(--borde)!important
+}
+body.dark th,
+    body.dark th.nombre,
+    body.dark .nombre,
+    body.dark .mobile-matrix th,
+    body.dark .mobile-matrix .col-nombre,
+    body.dark .liga-head-mobile{
+    background:rgba(15,27,45,.20)!important;
+    color:#eef6ff!important
+    }
 body.dark input,body.dark select,body.dark textarea{background:#0b1524;color:#eef6ff;border-color:#33445f}
 body.dark .tombola-box{background:#0c233a;border-color:#23517a;color:#d9ecff}
 body.dark .campeon-box{background:linear-gradient(135deg,#332600,#111827);border-color:#fbc02d}
@@ -416,7 +432,14 @@ body.dark .detalle-partido,
 body.dark .mobile-help,
 body.dark .mobile-matrix,
 body.dark .mobile-matrix th,
-body.dark .mobile-matrix td{background:#0f1b2d!important;color:#eef6ff!important;border-color:#26364c!important}
+body.dark .mobile-matrix td{
+   background:rgba(15,27,45,.20)!important;
+    color:#eef6ff!important;
+    border-color:#26364c!important;
+}
+body.dark .pronostico-card{
+    background:rgba(15,27,45,.20)!important;
+}
 body.dark .pronostico-card .equipo,
 body.dark .pronostico-card .titulo-p,
 body.dark .detalle-equipos,
@@ -427,15 +450,20 @@ body.dark .match-vs{color:#4da3ff!important}
 body.dark .pronostico-card .small,
 body.dark .mobile-help,
 body.dark .m-row-meta{color:#b7c4d8!important}
-body.dark .mobile-matrix{background:#0f1b2d!important}
-body.dark .mobile-matrix th{background:#16243a!important}
-body.dark .mobile-matrix .col-nombre{background:#0f1b2d!important}
-body.dark .mobile-matrix th.col-nombre{background:#16243a!important}
-body.dark .ranking-row{border-color:#26364c!important}
-
+body.dark .mobile-matrix{
+    background:rgba(15,27,45,.05)!important;
+    }
+body.dark .mobile-matrix th,
+body.dark .mobile-matrix .col-nombre{
+    background:rgba(15,27,45,.05)!important;
+}
+body.dark .mobile-matrix th.col-nombre{
+    background:rgba(15,27,45,.05)!important;
+}
+body.dark .ranking-row{
+    border-color:#26364c!important
+    }
 @media(max-width:760px){.menu-flotante{top:8px;right:8px}.menu-btn{width:42px;height:38px;font-size:22px}.menu-panel{width:220px}}
-
-
 /* FIX19: botones admin de mantenimiento */
 .admin-maintenance{border:1px solid #f59e0b;background:rgba(245,158,11,.10);border-radius:14px;padding:14px;margin-top:14px}
 .admin-maintenance h3{margin-top:0}
@@ -445,16 +473,12 @@ body.dark .admin-maintenance{background:rgba(245,158,11,.12);border-color:#b4530
 .btn-loading{position:relative;box-shadow:0 0 0 3px rgba(13,71,161,.12) inset}
 .btn-loading::after{content:"";display:inline-block;width:12px;height:12px;margin-left:8px;border:2px solid rgba(255,255,255,.65);border-top-color:transparent;border-radius:50%;animation:girarBtn .8s linear infinite;vertical-align:-2px}
 @keyframes girarBtn{to{transform:rotate(360deg)}}
-
 .backup-status{background:rgba(13,71,161,.08);border:1px solid #bfdbfe;border-radius:12px;padding:10px;margin:10px 0;font-weight:bold}
 .backup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:10px}
 .backup-card{background:var(--card);border:1px solid var(--borde);border-radius:12px;padding:12px}
 .backup-card h4{margin:0 0 8px}
 body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;color:#dbeafe}
-
-
 /* FIX24: Compartir WhatsApp y Open Graph */
-
 .partido-dificil-box{
   margin-top:14px;
   background:linear-gradient(135deg,#fff7ed,#fffbeb);
@@ -471,19 +495,13 @@ body.dark .backup-status{background:rgba(96,165,250,.10);border-color:#1d4ed8;co
 body.dark .partido-dificil-box{background:linear-gradient(135deg,#2a1c08,#332706)!important;border-color:#f59e0b!important;color:#fff!important}
 body.dark .partido-dificil-title,body.dark .partido-dificil-meta{color:#fde68a!important}
 body.dark .partido-dificil-empty{background:var(--card)!important;color:var(--texto)!important;border-color:var(--borde)!important}
-
 .share-box{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
 .share-btn{background:#25D366!important;color:#fff!important;border:0;box-shadow:0 3px 10px rgba(37,211,102,.25)}
 .share-btn:hover{filter:brightness(.96)}
 .share-note{font-size:12px;color:#667085}
 body.dark .share-note{color:#c9d4e6}
-
-
 .boleto-num{display:inline-block;margin-left:4px;padding:2px 7px;border-radius:999px;background:#e3f2fd;color:#0d47a1;font-size:12px;font-weight:800;vertical-align:middle}
 body.dark .boleto-num{background:#263b57;color:#dbeafe}
-
-
-
 /* FIX33: Tabla Liga móvil - encabezado congelado y modo oscuro uniforme */
 @media(max-width:760px){
   .tabla-liga-mobile{
@@ -498,7 +516,7 @@ body.dark .boleto-num{background:#263b57;color:#dbeafe}
     z-index:90!important;
     box-shadow:0 4px 10px rgba(0,0,0,.22);
     border-radius:0;
-  }
+ }
   .liga-compact-head div{
     min-height:34px;
     display:flex;
@@ -508,7 +526,6 @@ body.dark .boleto-num{background:#263b57;color:#dbeafe}
   .liga-compact-head .team-title{
     justify-content:flex-start;
   }
-
   body.dark .liga-compact-mobile{
     background:#0f1b2d!important;
     border-color:#31445f!important;
@@ -554,8 +571,6 @@ body.dark .boleto-num{background:#263b57;color:#dbeafe}
     color:#b7c4d8!important;
   }
 }
-
-
 /* FIX34: modo claro legible y contador visible en Quiniela móvil */
 body:not(.dark) header{
   background:linear-gradient(135deg,#0d47a1,#1565c0)!important;
@@ -628,8 +643,6 @@ body:not(.dark) .num{
     font-size:13px!important;
   }
 }
-
-
 /* FIX35: Ayuda de usuario */
 .menu-click{cursor:pointer}
 .menu-click b{color:var(--azul)}
@@ -741,8 +754,6 @@ body.dark .ayuda-tabla div:nth-child(odd){background:#132b4a;color:#4da3ff}
   .ayuda-header h2{font-size:22px}
   .ayuda-tabla{grid-template-columns:58px 1fr}
 }
-
-
 /* FIX36: Pie de página con estadísticas automáticas */
 .footer-quiniela{
   max-width:1350px;
@@ -789,7 +800,6 @@ body.dark .footer-stat{
   border-color:var(--borde)!important;
   color:var(--texto)!important;
 }
-    
     .noticias-box{
     background:#d97706;
     border:2px solid #ddd;
@@ -801,21 +811,18 @@ body.dark .footer-stat{
     overflow-y:auto;
     box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
-
 .noticias-titulo{
     font-weight:bold;
     color:white;
     margin-bottom:8px;
     font-size:18px;
 }
-
 .noticias-fecha{
     color:;
     font-size:12px;
     margin-top:8px;
 }
-    
-    .modal-msg{
+   .modal-msg{
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.65);
@@ -824,7 +831,6 @@ body.dark .footer-stat{
     align-items:center;
     z-index:99999;
 }
-
 .modal-msg-contenido{
     background:#ffffff;
     width:min(420px,90%);
@@ -834,15 +840,12 @@ body.dark .footer-stat{
     box-shadow:0 20px 40px rgba(0,0,0,.35);
     color:#1f2937;
 }
-
-
 .modal-msg h2{
     margin:0 0 15px;
     color:#d97706;      /* Naranja */
     font-size:30px;
     font-weight:700;
 }
-
 #modalTexto{
     color:#111827;      /* Negro */
     font-size:18px;
@@ -850,8 +853,6 @@ body.dark .footer-stat{
     margin-bottom:24px;
     line-height:1.5;
 }
-
-    
     /* Pronóstico seleccionado */
 select.pronostico-ok{
     background:#16a34a !important;
@@ -872,7 +873,6 @@ select.pronostico-ok option{
     color:#000;
     background:#fff;
 }
-    
     /* Pronóstico faltante */
 select.pronostico-error{
     background:#dc2626 !important;
@@ -880,7 +880,6 @@ select.pronostico-error{
     border:2px solid #991b1b !important;
     font-weight:bold;
 }
-    
     .fecha-partido{
     margin:8px 0;
     padding:8px;
@@ -888,20 +887,17 @@ select.pronostico-error{
     background:#eef3fb;
     border:1px solid #d5e2f5;
 }
-
 .fecha-dia{
     color:#1565c0;
     font-size:13px;
     font-weight:700;
 }
-
 .fecha-hora{
     margin-top:4px;
     color:#f59e0b;
     font-size:16px;
     font-weight:800;
 }
-    
     .match-date{
     margin:10px 0;
     padding:10px;
@@ -910,48 +906,39 @@ select.pronostico-error{
     border:none;
     text-align:center;
 }
-
 .match-date div:first-child{
     color:#90caf9;
     font-size:15px;
     font-weight:700;
 }
-
 .match-date div:last-child{
     color:#ffd54f;
     font-size:18px;
     font-weight:800;
     margin-top:4px;
 }
-    
     .descargas-titulo{
     font-size:15px;
     font-weight:bold;
     margin-bottom:8px;
 }
-
 .descargas-botones{
     display:flex;
     justify-content:center;
     gap:8px;
 }
-
 .btn-descarga{
     padding:6px 14px;
     border-radius:8px;
     font-size:13px;
     cursor:pointer;
 }
-    
-    
-    /* ===========================
+/* ===========================
    CHAT DE LA JORNADA
 =========================== */
-
 .chat-card{
     margin:15px 0;
 }
-
 .chat-estadisticas{
     display:flex;
     gap:15px;
@@ -959,7 +946,6 @@ select.pronostico-error{
     margin:10px 0 15px;
     font-weight:bold;
 }
-
 .chat-lista{
     height:550px;
     overflow-y:auto;
@@ -968,7 +954,6 @@ select.pronostico-error{
     padding:12px;
     background:var(--card);
 }
-
 .chat-emojis{
     display:grid;
     grid-template-columns:repeat(5,1fr);
@@ -990,12 +975,10 @@ select.pronostico-error{
     transition:all .18s ease;
     user-select:none;
 }
-
 .chat-emojis span:hover{
     transform:translateY(-3px) scale(1.12);
     background:#263548;
 }
-
 .chat-emojis span:active{
     transform:scale(1.35);
 }
@@ -1003,435 +986,258 @@ select.pronostico-error{
     display:flex;
     gap:8px;
 }
-
 .chat-input input{
     flex:1;
 }
-
 .chat-input button{
     min-width:90px;
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     @keyframes emojiPop{
-
 0%{
 transform:scale(.6);
 opacity:0;
 }
-
 60%{
 transform:scale(1.20);
 }
-
 100%{
 transform:scale(1);
 opacity:1;
 }
-
 }
-
 .chat-emoji-solo{
-
 animation:emojiPop .25s ease-out;
-
 }
-    
-    
     @keyframes emojiHeart{
-
 0%{
 transform:scale(1);
 }
-
 20%{
 transform:scale(1.30);
 }
-
 40%{
 transform:scale(.95);
 }
-
 60%{
 transform:scale(1.25);
 }
-
 100%{
 transform:scale(1);
 }
-
 }
-
 .chat-emoji-heart{
-
 animation:emojiHeart .65s ease;
-
 }
-    
     /* 😀 FELIZ */
 @keyframes emojiHappy{
-
 0%,100%{transform:translateY(0);}
 30%{transform:translateY(-10px);}
 60%{transform:translateY(0);}
-
 }
-
 .chat-emoji-happy{
 animation:emojiHappy .45s ease;
 }
-
-
 /* 😂 RISA */
-
 @keyframes emojiLaugh{
-
 0%,100%{transform:translateY(0);}
 20%{transform:translateY(-10px);}
 40%{transform:translateY(0);}
 60%{transform:translateY(-8px);}
 80%{transform:translateY(0);}
-
 }
-
 .chat-emoji-laugh{
 animation:emojiLaugh .55s ease;
 }
-
-
 /* ⚽ BALÓN */
-
 @keyframes emojiBall{
-
 0%{transform:translateY(0);}
 25%{transform:translateY(-18px);}
 50%{transform:translateY(0);}
 75%{transform:translateY(-8px);}
 100%{transform:translateY(0);}
-
 }
-
 .chat-emoji-ball{
 animation:emojiBall .65s ease-out;
 }
-
-
 /* 🏆 TROFEO */
-
 @keyframes emojiCup{
-
 0%,100%{
 filter:brightness(1);
 transform:scale(1);
 }
-
 50%{
 filter:brightness(1.8);
 transform:scale(1.15);
 }
-
 }
-
 .chat-emoji-cup{
 animation:emojiCup .7s ease;
 }
-
-
 /* 🟥 ROJA */
-
 @keyframes emojiRed{
-
 0%{
 transform:translateY(-35px) rotate(-12deg);
 opacity:0;
 }
-
 100%{
 transform:translateY(0) rotate(0);
 opacity:1;
 }
-
 }
 
 .chat-emoji-red{
 animation:emojiRed .45s ease;
 }
-
-
 /* 🟨 AMARILLA */
-
 @keyframes emojiYellow{
-
 0%{
 transform:rotate(-18deg);
 }
-
 50%{
 transform:rotate(18deg);
 }
-
 100%{
 transform:rotate(0);
 }
-
 }
-
 .chat-emoji-yellow{
 animation:emojiYellow .45s ease;
 }
-
-
 /* 🔥 FUEGO */
-
 @keyframes emojiFire{
-
 0%,100%{
 transform:scale(1);
 filter:brightness(1);
 }
-
 50%{
 transform:scale(1.18);
 filter:brightness(1.6);
 }
-
 }
-
 .chat-emoji-fire{
 animation:emojiFire .5s ease;
 }
-
-
 /* 👍 PULGAR */
-
 @keyframes emojiThumb{
-
 0%,100%{
 transform:scale(1);
 }
-
 50%{
 transform:scale(1.25);
 }
-
 }
-
 .chat-emoji-thumb{
 animation:emojiThumb .4s ease;
 }
-
-
 /* 👏 APLAUSO */
-
 @keyframes emojiClap{
-
 0%,100%{
 transform:scale(1);
 }
-
 25%{
 transform:scale(1.20);
 }
-
 50%{
 transform:scale(1);
 }
-
 75%{
 transform:scale(1.20);
 }
-
 }
-
 .chat-emoji-clap{
 animation:emojiClap .55s ease;
 }
-    
-    
-    
   @keyframes emojiBall{
-
 0%{
 transform:translateY(0);
 }
-
 25%{
 transform:translateY(-18px);
 }
-
 50%{
 transform:translateY(0);
 }
-
 75%{
 transform:translateY(-8px);
 }
-
 100%{
 transform:translateY(0);
 }
-
 }
-
 .chat-emoji-ball{
-
 animation:emojiBall .65s ease-out;
-
 }  
-    
-    
  .chat-menciones{
-
     display:none;
-
     position:absolute;
-
     left:12px;
     right:12px;
     bottom:58px;
-
     background:#1f2937;
-
     border:1px solid #374151;
-
     border-radius:14px;
-
     box-shadow:
         0 10px 30px rgba(0,0,0,.35);
-
     overflow:hidden;
-
     max-height:280px;
-
     overflow-y:auto;
-
     z-index:9999;
-
     animation:chatMenciones .15s ease;
 }
-
 @keyframes chatMenciones{
-
     from{
-
         opacity:0;
         transform:translateY(8px);
-
     }
-
     to{
-
         opacity:1;
         transform:translateY(0);
-
     }
-
 }
-
 .chat-mencion{
-
     display:flex;
-
     align-items:center;
-
     gap:10px;
-
     padding:12px 14px;
-
     cursor:pointer;
-
     transition:.15s;
-
     border-bottom:1px solid rgba(255,255,255,.05);
-
 }
-
 .chat-mencion:last-child{
-
     border-bottom:none;
-
 }
-
 .chat-mencion:hover{
-
     background:#334155;
-
 }
-
 .chat-mencion-icono{
-
     width:32px;
     height:32px;
-
     border-radius:50%;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     font-size:16px;
-
     flex:none;
-
 }
-
 .chat-mencion-nombre{
-
     font-weight:600;
-
     color:#fff;
-
 }
-
 .chat-mencion-sub{
-
     font-size:12px;
-
     color:#94a3b8;
-
 } 
-    
-    
    body.skin-independencia::before{
-
     content:"";
-
     position:fixed;
-
     inset:0;
-
     background:url("img/bandera-patria.webp") center center/cover no-repeat;
-
     opacity:.5;
-
     z-index:-1;
-
     pointer-events:none;
-
 }
-    
-    
     body.skin-independencia header{
-
     border-bottom:7px solid transparent;
-
     border-image:linear-gradient(
         to right,
         #006847 0%,
@@ -1441,9 +1247,7 @@ animation:emojiBall .65s ease-out;
         #ce1126 66%,
         #ce1126 100%
     ) 1;
-
 }
-    
       .aviso-deposito {
     text-align: center;
     animation: avisoDeposito 3s ease-in-out infinite;
@@ -1453,50 +1257,38 @@ animation:emojiBall .65s ease-out;
     margin-top: 15px;
     animation: avisoDeposito 3s ease-in-out infinite;
 }
-
 @keyframes avisoDeposito {
     0%, 100% {
         color: #ff0000;
     }
-
     50% {
         color: #ffffff;
     }
 }
-    
-    
-    
   * {
     box-sizing: border-box;
 }
-
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: var(--fondo);
     color: var(--texto);
 }
-
 /* FONDO DE LA PRESENTACIÓN */
 #fondo-quiniela {
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
-
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-
     z-index: -1;
     pointer-events: none;
 }
-    
-    
    /* =========================================
    TARJETAS TRANSPARENTES - FONDO
    ========================================= */
-
 body.dark .card,
 body.dark .box,
 body.dark .partido-card,
@@ -1513,52 +1305,75 @@ body.dark .pronostico-card,
 body.dark .resumen .box,
 body.dark .jornadas-titulo,
 body.dark #quiniela > .card {
-
-    background: rgba(15, 27, 45, 0.20) !important;
-
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
-    /* =========================================
-   TABLA GENERAL TRANSPARENTE
-   ========================================= */
-
-body.dark .liga-compact-mobile {
     background: rgba(15, 27, 45, 0.20) !important;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
-
+   body.dark .liga-compact-mobile {
+    background: rgba(15, 27, 45, 0.20) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
 body.dark .liga-compact-row {
     background: rgba(15, 27, 45, 0.20) !important;
     border-top-color: rgba(255,255,255,.12) !important;
 }
-
 body.dark .liga-compact-row:nth-child(even) {
     background: rgba(15, 27, 45, 0.20) !important;
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   /* TRANSPARENCIA SOLO EN LOS PRONÓSTICOS */
+body.dark #quiniela .pronostico-card {
+    background: rgba(15, 27, 45, 0.20) !important;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+  /* TRANSPARENCIA SOLO EN LOS PRONÓSTICOS */
+@media(max-width:760px){
+    body.dark .vista-movil .pronostico-card{
+        background:rgba(15,27,45,.20) !important;
+        backdrop-filter:blur(3px);
+        -webkit-backdrop-filter:blur(3px);
+    }
+}  
+    /* FONDO TRANSPARENTE DE P1-P9 */
+body .vista-movil .pronostico-card{
+    background:rgba(15,27,45,.20) !important;
+    backdrop-filter:blur(3px) !important;
+    -webkit-backdrop-filter:blur(3px) !important;
+}
+   /* TRANSPARENCIA REAL DE LAS TARJETAS P1-P9 */
+body.dark .vista-movil .pronostico-card{
+    background:rgba(15,27,45,.20) !important;
+    backdrop-filter:blur(3px) !important;
+    -webkit-backdrop-filter:blur(3px) !important;
+}
+body:not(.dark) .vista-movil .pronostico-card{
+    background:rgba(15,27,45,.20) !important;
+    backdrop-filter:blur(3px) !important;
+    -webkit-backdrop-filter:blur(3px) !important;
+} 
+    /* TRANSPARENCIA SOLO EN LAS TARJETAS DE PARTIDOS */
+body.dark #quiniela .pronostico-card {
+    background: rgba(15, 27, 45, 0.20) !important;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+    /* TRANSPARENCIA SOLO TABLA DE BOLETOS */
+body.dark .tabla-wrap,
+body.dark .tabla-boleto,
+body.dark .tabla-boleto thead,
+body.dark .tabla-boleto tbody,
+body.dark .tabla-boleto tr {
+    background: rgba(15,27,45,.20) !important;
+}
+    body.dark .mobile-matrix td{
+    background:rgba(15,27,45,.20)!important;
+}
 </style>
 </head>
 <body>
-    
     <div id="fondo-quiniela"></div>
 <div class="menu-flotante">
-    
   <button class="menu-btn" onclick="toggleMenuOpciones()" title="Opciones">☰</button>
   <div id="menuOpciones" class="menu-panel">
     <div class="menu-title">Opciones</div>
@@ -1577,12 +1392,9 @@ body.dark .liga-compact-row:nth-child(even) {
     <span>📲 Instalar aplicación</span>
     <b>Instalar</b>
 </div>
-
   </div>
 </div>
-
   <header>
-      
        <div id="btnInstalarPWA"
      onclick="instalarPWA()"
      title="Instalar aplicación"
@@ -1596,16 +1408,10 @@ body.dark .liga-compact-row:nth-child(even) {
         z-index:1000;">
     📲
 </div>
-      
-      
   <div class="header-logo">
     <img src="logo.png" alt="Logo Quiniela Liga MX">
-      
-     
-      
     <div>
       <h1 style="margin-left:-18px;">Quiniela Liga MX</h1>
-
       <div style="
         margin-left:-18px;
         color:#ffd54f;
@@ -1614,10 +1420,7 @@ body.dark .liga-compact-row:nth-child(even) {
         margin-top:4px;">
         Torneo Apertura 2026
       </div>
-        
-      
-
-      <div class="header-sub" id="subtitulo" style="margin-left:-18px;">
+  <div class="header-sub" id="subtitulo" style="margin-left:-18px;">
         Cargando...
       </div>
     </div>
@@ -1636,109 +1439,71 @@ body.dark .liga-compact-row:nth-child(even) {
   <button class="activo" onclick="tab('quiniela',this)">📝 Quiniela</button><button onclick="tab('clasificacion',this)">🏆 Clasificación</button><button onclick="tab('partidos',this)">⚽ Partidos</button><button onclick="tab('tablaLiga',this)">📊 Tabla general</button><button onclick="tab('fama',this)">👑 Fama</button><button onclick="tab('salon',this)">🏛️ Salón</button><button onclick="tab('admin',this)">🔒 Admin</button>
  </div>
  <div id="msg" class="mensaje"></div>
-
    <div class="card jornadas-titulo" style="text-align: center;"><b>Jornadas</b></div>
-    
     <div id="selectorJornadas" class="selector-jornadas"></div>
-     
      <div class="small" style="color: white; text-align: center;">Solo la jornada activa y abierta permite registrar boletos.</div>
-     
      <div class="auto-cierre-info">🔒 Cierre jornada: 10 min. antes del 1er partido.</div>
-     
-       
      <div class="medium" style="color: white; text-align: center;"> </div>
-    
      <div class="medium aviso-deposito">
     Depositos: 4189 1433 3829 7644 Jesus Vazquez, manda comprobante al WhatsApp 6566703156.
 </div>
     </div>
  <section id="quiniela" class="seccion activa"><div class="card">
-     
       <div class="noticias-box">
-
     <div class="noticias-titulo">
         📰 Noticias Oficiales
     </div>
-
     <div id="textoNoticias">
         No hay noticias por el momento.
     </div>
-
 </div>
-     
      <h2 style="text-align: center;">Registrar boleto</h2>
-     
-    
      <p class="small;"style="text-align: center;">Un celular puede registrar varios boletos. Cada boleto solo se puede editar desde el celular donde se capturó, mientras la jornada esté abierta.</p>
-     
    <div id="salaJornada" class="card chat-card" style="display:none;"> 
-    
-
    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-
     <h2 style="margin:0;">💬 Tribuna</h2>
-
     <button
         class="btn-secondary"
         onclick="Chat.toggle()">
         ▲
     </button>
-
 </div>
-     
    <div id="chatContenido">   
-         
          <div style="
 display:flex;
 justify-content:flex-end;
 margin-bottom:10px;
 ">
-
 <button
     class="btn-secondary"
     onclick="Chat.abrirMiColor()">
     🎨 Mi color
 </button>
-
 </div>
-
     <div class="chat-estadisticas">
-        
-        
         <span>👥 <span id="chatParticipantes">0</span></span>
         <span>🟢 <span id="chatEnLinea">0</span></span>
         <span>💬 <span id="chatMensajes">0</span></span>
     </div>
-
     <div id="chatLista" class="chat-lista">
-        
-        
         <div style="text-align:center;color:#777;padding:40px 0;">
             Aún no hay mensajes.
         </div>
     </div>
-         
-         
 <div id="chatEmojis" class="chat-emojis">
-
    <span onclick="Chat.agregarEmoji('😀')">😀</span>
 <span onclick="Chat.agregarEmoji('😂')">😂</span>
 <span onclick="Chat.agregarEmoji('❤️')">❤️</span>
 <span onclick="Chat.agregarEmoji('👍')">👍</span>
-
 <span onclick="Chat.agregarEmoji('⚽')">⚽</span>
 <span onclick="Chat.agregarEmoji('🏆')">🏆</span>
 <span onclick="Chat.agregarEmoji('🟥')">🟥</span>
 <span onclick="Chat.agregarEmoji('🟨')">🟨</span>
-
 <span onclick="Chat.agregarEmoji('🔥')">🔥</span>
 <span onclick="Chat.agregarEmoji('👏')">👏</span>
 </div>
-
   <div class="chat-input" style="position:relative;">
-      
       <div id="chatMenciones" class="chat-menciones"></div>
-      
      <div
     id="chatRespuesta"
     style="
@@ -1748,35 +1513,23 @@ margin-bottom:10px;
         margin-bottom:10px;
     ">
 </div>
-      
       <div id="chatEditor">
-
-    
-
     <div id="chatFila" style="display:flex;gap:8px;align-items:flex-end;">
-
         <input
             id="chatTexto"
             placeholder="Escribe un mensaje..."
             maxlength="350"
             style="flex:1;"
         >
-
         <button id="btnChatEnviar" class="btn-primary">
             Enviar
         </button>
-
     </div>
-
 </div>
 </div>
-
 </div>
-       
        </div>
-     
      </div><div class="tabla-wrap quiniela-desktop"><table id="tablaQuiniela"></table></div>
-     
      <div id="vistaMovilQuiniela" class="vista-movil"></div></section>
  <section id="clasificacion" class="seccion"><div class="card"><h2>Clasificación en vivo</h2><p class="small">Se ordena por más aciertos. Los empates comparten lugar.</p><div class="share-box"><button class="share-btn" onclick="compartirClasificacionWhatsApp()">📲 Compartir por WhatsApp</button><span class="share-note">Comparte jornada, top de boletos y enlace de la quiniela.</span></div><div id="partidoDificil"></div></div><div id="clasificacionMovil" class="clasificacion-movil"></div><div class="tabla-wrap"><table id="tablaClasificacion"></table></div></section>
  <section id="partidos" class="seccion"><div class="card"><h2>Partidos de la jornada</h2><div id="listaPartidos" class="partidos-grid"></div></div></section>
@@ -1784,7 +1537,6 @@ margin-bottom:10px;
  <section id="fama" class="seccion"><div class="card"><h2>👑 Trono de la fama</h2><p class="small">Ganadores por jornada. Si hay empate, se reparte premio y fama.</p><div id="famaLista"></div></div></section>
  <section id="salon" class="seccion"><div class="card"><h2>🏛️ Salón de la Fama histórico</h2><p class="small">Se guarda por temporada antes de reiniciar torneo. Usa apodo visible, teléfono opcional enmascarado, usuario_id y dispositivo para no confundir personas con el mismo nombre.</p><div id="salonLista"></div></div></section>
  <section id="admin" class="seccion"><div id="login" class="card" style="max-width:430px"><h2>Administrador</h2><label>Usuario</label><input id="adminUser" value="admin"><br><br><label>Contraseña</label><input id="adminPass" type="password" placeholder="Contraseña"><br><br><button class="btn-primary" onclick="loginAdmin()">Entrar</button></div><div id="panelAdmin" style="display:none"><div class="card"><h2>Panel admin</h2><div class="acciones" style="justify-content:flex-start;margin-top:8px"><button class="btn-red" onclick="logoutAdmin()">Cerrar admin</button><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / nuevo torneo</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Respaldo manual</button></div><p class="small" style="margin-top:8px">Recalcular no borra nada. Borrar todo limpia jornadas, partidos, boletos, pronósticos, pagos, fama y auditoría; conserva equipos y escudos.</p></div><div class="subtabs">
-     
      <button class="activo" onclick="adminSub('admJornadas',this)">🗓️ Jornadas</button>
      <button onclick="adminSub('admResultados',this)">⚽ Resultados</button>
      <button onclick="adminSub('admPagos',this)">💰 Pagos</button>
@@ -1794,7 +1546,6 @@ margin-bottom:10px;
      <button onclick="adminSub('admRespaldos',this)">💾 Respaldos</button>
      <button onclick="adminSub('admMantenimiento',this)">⚠️ Mantenimiento</button>
      </div>
-     
      <div id="admJornadas" class="admin-sub activa">
          <div class="card">
              <h3>Crear / activar jornada</h3>
@@ -1822,8 +1573,6 @@ margin-bottom:10px;
              <div id="jornadasLista"></div>
          </div>
      </div
-         
-         
          ><div id="admResultados" class="admin-sub">
      <div class="card">
          <h3>Capturar resultados</h3>
@@ -1834,8 +1583,6 @@ margin-bottom:10px;
          <button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Recalcular tabla general</button>
      </div>
      </div>
-     
-     
      <div id="admPagos" class="admin-sub">
          <div class="card">
              <h3>Pagos</h3>
@@ -1844,20 +1591,14 @@ margin-bottom:10px;
              </div>
          </div>
      </div>
-     
      <div id="admNoticias" class="admin-sub">
     <div class="card">
-
         <h3>📰 Noticias oficiales</h3>
-
         <input id="noticiaTitulo" placeholder="Título">
-
         <textarea id="noticiaMensaje"
                   rows="6"
                   placeholder="Escribe aquí la noticia..."></textarea>
-
         <br><br>
-
         <button class="btn-primary"
                 onclick="guardarNoticia()">
             Publicar
@@ -1865,44 +1606,24 @@ margin-bottom:10px;
         <hr>
         <h3>Noticias publicadas</h3>
         <div id="listaNoticiasAdmin"></div>
-
-
     </div>
 </div>
-
-     
      <div id="admAuditoria" class="admin-sub"><div class="card"><h3>Auditoría privada</h3><div id="listaAuditoria">
-    
-     
      </div></div></div>
      <div id="admDiagnostico" class="admin-sub">
-
     <div class="card">
-
  <button
             class="btn-primary"
-            onclick="location.href='admin/presentaciones.html'">
-
+onclick="location.href='admin/presentaciones.html'">
             🎬 🖼️ 📅 👀 Administrar Presentaciones
-
         </button>
-
         <br><br>
-
-
-
         <h3>🔔 Diagnóstico de Notificaciones</h3>
-
         <div id="diagNotificaciones">
-
             Cargando diagnóstico...
-
         </div>
-
     </div>
-
 </div>
-     
      <div id="admRespaldos" class="admin-sub"><div class="card"><h3>💾 Respaldos</h3><p class="small">El respaldo automático semanal se guarda en Supabase y se reescribe sobre el mismo registro. El respaldo manual también se reescribe para no llenar almacenamiento.</p><div id="estadoRespaldos" class="backup-status">Cargando estado de respaldos...</div><div class="backup-grid"><div class="backup-card"><h4>Automático semanal</h4><p class="small">Se crea al abrir la página cuando ya pasó el lunes a las 8:00 a.m. y aún no existe respaldo de esta semana.</p><button class="btn-primary" onclick="forzarRespaldoAutomatico()">🔄 Forzar automático</button><button class="btn-gray" onclick="descargarRespaldo('AUTO_SEMANAL')">⬇️ Descargar automático</button><button class="btn-yellow" onclick="restaurarRespaldo('AUTO_SEMANAL')">📂 Restaurar automático</button></div><div class="backup-card"><h4>Manual</h4><p class="small">Úsalo antes de hacer cambios grandes o pruebas.</p><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear manual ahora</button><button class="btn-gray" onclick="descargarRespaldo('MANUAL')">⬇️ Descargar manual</button><button class="btn-yellow" onclick="restaurarRespaldo('MANUAL')">📂 Restaurar manual</button></div></div></div></div>
 <div id="admMantenimiento" class="admin-sub"><div class="card admin-maintenance"><h3>⚠️ Mantenimiento del torneo</h3><p class="small">Estas opciones solo son para administrador. Recalcular no borra nada. Reiniciar torneo borra jornadas, boletos, pronósticos, pagos, partidos, fama y auditoría, pero conserva equipos y escudos.</p><div class="acciones"><button class="btn-primary" onclick="forzarRecalculoTabla()">🔄 Forzar actualización tabla general</button><button class="btn-green" onclick="crearRespaldoManual()">💾 Crear respaldo manual</button><button class="btn-red" onclick="reiniciarTorneo()">🧹 Borrar todo / iniciar nuevo torneo</button></div></div></div>
 </div>
@@ -1913,39 +1634,29 @@ margin-bottom:10px;
     </div>
 </div>
      </section>
-</div>
-
-
 <footer class="footer-quiniela">
   <div class="footer-title">🏆 Quiniela Liga MX</div>
-
   <div>
     Sistema de pronósticos deportivos,<br>
     clasificación en vivo, liguilla y salón de la fama.
   </div>
-
   <div class="footer-stats">
     <div class="footer-stat">👥 Personas<br><b id="ftPersonas">0</b></div>
     <div class="footer-stat">🎟️ Boletos<br><b id="ftBoletos">0</b></div>
     <div class="footer-stat">📅 Jornadas<br><b id="ftJornadas">0</b></div>
   </div>
-
   <div>
     © 2026 Jesús Vázquez<br>
     Ciudad Juárez, Chihuahua, México
   </div>
-
   <div>Todos los derechos reservados.</div>
-
   <div class="footer-version">
     Versión  • v2.1.56
   </div>
 </footer>
-
 <div id="ayudaQuinielaModal" class="ayuda-modal" onclick="cerrarAyudaQuiniela(event)">
   <div class="ayuda-contenido" onclick="event.stopPropagation()">
     <button class="ayuda-cerrar" onclick="cerrarAyudaQuiniela()">×</button>
-
     <div class="ayuda-header">
       <div class="ayuda-icono">🏆</div>
       <div>
@@ -1953,7 +1664,6 @@ margin-bottom:10px;
         <p>Guía rápida para registrar tu boleto, revisar resultados y entender la tabla.</p>
       </div>
     </div>
-
     <div class="ayuda-seccion">
       <h3>🎟️ ¿Cómo participo?</h3>
       <ol>
@@ -1963,13 +1673,11 @@ margin-bottom:10px;
         <li>Realiza el pago correspondiente con el organizador.</li>
       </ol>
     </div>
-
     <div class="ayuda-seccion ayuda-destacado">
       <h3>💰 Costo del boleto</h3>
       <p>El costo del boleto se publica en cada jornada y puede variar según la dinámica del torneo.</p>
       <p>Consulta siempre el recuadro <b>“Apuesta”</b> que aparece en la parte superior de la quiniela.</p>
     </div>
-
     <div class="ayuda-seccion">
       <h3>⚽ Pronósticos</h3>
       <div class="ayuda-tabla">
@@ -1978,19 +1686,16 @@ margin-bottom:10px;
         <div><b>V</b></div><div>Gana el equipo visitante</div>
       </div>
     </div>
-
     <div class="ayuda-seccion">
       <h3>⏰ Cierre de registros</h3>
       <p>La quiniela se cierra automáticamente <b>10 minutos antes del primer partido</b> de la jornada.</p>
       <p>Después del cierre ya no se pueden registrar ni modificar boletos.</p>
     </div>
-
     <div class="ayuda-seccion">
       <h3>🏅 ¿Cómo se gana?</h3>
       <p>Cada acierto suma un punto. Al finalizar la jornada, gana quien tenga más aciertos.</p>
       <p>Si hay empate, los participantes empatados comparten lugar según la regla establecida por el organizador.</p>
     </div>
-
     <div class="ayuda-seccion">
       <h3>📊 Tabla general de equipos</h3>
       <p>Esta tabla ayuda a analizar cómo viene cada equipo antes de hacer tus pronósticos.</p>
@@ -2005,31 +1710,25 @@ margin-bottom:10px;
         <div><b>PTS</b></div><div>Puntos</div>
       </div>
     </div>
-
     <div class="ayuda-seccion">
       <h3>👑 Trono de la Fama</h3>
       <p>Muestra los ganadores de cada jornada.</p>
     </div>
-
     <div class="ayuda-seccion">
       <h3>🏛️ Salón de la Fama</h3>
       <p>Guarda el historial de temporadas, campeones, boletos perfectos y mejores participantes.</p>
     </div>
-
     <div class="ayuda-seccion ayuda-consejo">
       <h3>📱 Consejo</h3>
       <p>Antes de guardar tu boleto, revisa que los 9 partidos tengan pronóstico. Una vez cerrada la jornada, ya no se podrá modificar.</p>
     </div>
   </div>
 </div>
-
 <script>
 const SUPABASE_URL="https://ytedqizoetrafbgufslp.supabase.co";
 const SUPABASE_KEY="sb_publishable_zbOWRVkCHQ4ezSa7yDEdHw_734fnkxH";
     async function cargarFondoPresentacion(){
-
     const ahora = new Date().toISOString();
-
 const { data, error } = await db
     .from("presentaciones")
     .select("id, evento, jornada_id, fondo, inicio, fin")
@@ -2038,169 +1737,102 @@ const { data, error } = await db
     .order("inicio", { ascending: false })
     .limit(1)
     .maybeSingle();
-
     if(error){
         console.error("❌ Error cargando fondo:", error);
         return;
     }
-
     if(!data || !data.fondo){
         console.log("ℹ️ No hay fondo seleccionado");
         return;
     }
 console.log("📦 Presentación encontrada:", data);
     console.log("🖼️ Fondo seleccionado:", data.fondo);
-
     const url =
     "https://raw.githubusercontent.com/" +
     "jesusvazquezesp-art/Quiniela-Liga-Mx/" +
     "main/presentaciones/fondos/" +
     data.fondo +
     ".webp";
-
 console.log("🌄 URL del fondo:", url);
-        
         const fondoElemento = document.getElementById("fondo-quiniela");
-
 if(fondoElemento){
     fondoElemento.style.backgroundImage = `url("${url}")`;
 }
-    
  }
-    
-    
 const ADMIN_SESSION_KEY="quiniela_copamx_admin_activo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let esAdmin=false,jornada=null,jornadas=[],partidos=[],usuarios=[],pronosticos=[],pagos=[],auditoria=[],fama=[],tablaLiga=[],equipos=[],respaldos=[],salonFama=[];
-    
-    
-    window.addEventListener("beforeinstallprompt", (e)=>{
-
+window.addEventListener("beforeinstallprompt", (e)=>{
     e.preventDefault();
-
     deferredPrompt = e;
-
     const fila = document.getElementById("filaInstalarApp");
-        
-
     if(fila){
         fila.style.display = "flex";
-        
-        document.getElementById("btnInstalarPWA").style.display = "block";
+document.getElementById("btnInstalarPWA").style.display = "block";
     }
-
 });
-
 async function instalarPWA(){
-
     if(!deferredPrompt) return;
-
     deferredPrompt.prompt();
-
     const resultado = await deferredPrompt.userChoice;
-
     deferredPrompt = null;
-
-    document.getElementById("filaInstalarApp").style.display="none";
-
-    console.log("Instalación:",resultado.outcome);
-
+document.getElementById("filaInstalarApp").style.display="none";
+console.log("Instalación:",resultado.outcome);
 }
-
 window.addEventListener("appinstalled",()=>{
-
     deferredPrompt=null;
-
     const fila=document.getElementById("filaInstalarApp");
-
     if(fila){
         fila.style.display="none";
     }
-
     console.log("PWA instalada");
-
 });
-    
-    
-    
 let editandoId=null, editandoJornadaId=null, jornadaVistaId=null;
 const MINUTOS_CIERRE_AUTOMATICO = 10;
 let revisandoCierreAutomatico = false;
 const NUM_LIGUILLA=18;
 const $=id=>document.getElementById(id);
-
-    
    function msg(texto,tipo='info'){
-
     const titulos={
         ok:'✅ Correcto',
         error:'⚠️ Atención',
         info:'ℹ️ Información'
     };
-
     const titulo = document.getElementById('modalTitulo');
-
     titulo.textContent = titulos[tipo] || 'Mensaje';
-
     titulo.style.color =
         tipo === 'error' ? '#dc2626' :
         tipo === 'ok'    ? '#16a34a' :
                            '#2563eb';
-
-    document.getElementById('modalTexto').textContent = texto;
-
-    document.getElementById('modalMensaje').style.display = 'flex';
+document.getElementById('modalTexto').textContent = texto;
+document.getElementById('modalMensaje').style.display = 'flex';
 }
-
 function cerrarModalMensaje(){
-    document.getElementById('modalMensaje').style.display='none';
+document.getElementById('modalMensaje').style.display='none';
 }
-    
-    
-    
 function money(n){return '$'+Number(n||0).toLocaleString('es-MX')}
 function deviceId(){let id=localStorage.getItem('quiniela_copamx_device');if(!id){id='dev_'+Date.now()+'_'+Math.random().toString(36).slice(2);localStorage.setItem('quiniela_copamx_device',id)}return id}
-    
-    
     async function guardarTokenFCM(token){
-
     try{
-
         const { error } = await db
-            .from("notificaciones_dispositivos")
+        .from("notificaciones_dispositivos")
             .upsert({
-
                 dispositivo_id: deviceId(),
-
                 token_fcm: token,
-
                 plataforma: navigator.platform,
-
                 navegador: navigator.userAgent,
-
                 ultimo_acceso: new Date().toISOString(),
-
                 activo: true
-
             });
-
         if(error){
             console.error("Error guardando token:", error);
             return;
         }
-
         console.log("✅ Token FCM guardado.");
-
     }catch(e){
-
         console.error(e);
-
     }
-
 }
-    
-    
-    
 function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]||c))}
 function normEquipo(n){return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
 function equipoInfo(nombre){return equipos.find(e=>normEquipo(e.nombre)===normEquipo(nombre))||null}
@@ -2211,81 +1843,49 @@ function equiposSeleccionadosAdmin(){return [...document.querySelectorAll('.equi
 function actualizarSelectsPartidos(){let usados=equiposSeleccionadosAdmin();document.querySelectorAll('.equipo-select').forEach(sel=>{[...sel.options].forEach(op=>{if(!op.value){op.disabled=false;return}op.disabled=usados.includes(op.value)&&op.value!==sel.value})});let total=new Set(usados).size;let box=$('contadorEquiposUsados');if(box){box.textContent=`Equipos utilizados: ${total}/18`;box.className='equipos-usados '+(total===18?'equipos-ok':'equipos-bad')}}
 function validarEquiposJornada(regs){let usados=[];for(const r of regs){usados.push(r.local,r.visitante)}let rep=usados.filter((x,i)=>usados.indexOf(x)!==i);if(rep.length)throw new Error('Hay equipos repetidos: '+[...new Set(rep)].join(', '));if(usados.length!==18||new Set(usados).size!==18)throw new Error('Deben usarse exactamente 18 equipos sin repetir.')}
 function tab(id,b){document.querySelectorAll('.seccion').forEach(x=>x.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('activo'));b.classList.add('activo');if(id==='admin'&&esAdmin)cargarPrivado()}
-    
     async function diagnosticoNotificaciones(){
-
     const div = document.getElementById("diagNotificaciones");
-
     let html = "";
-
     // Permiso
     html += `<p><b>Permiso:</b> ${Notification.permission}</p>`;
-
     // Service Worker
     if("serviceWorker" in navigator){
-
         try{
-
             const reg = await navigator.serviceWorker.ready;
-
             html += `<p><b>Service Worker:</b> ✅ Activo</p>`;
             html += `<p><b>Scope:</b> ${reg.scope}</p>`;
             html += `<p><b>Script:</b> ${reg.active?.scriptURL}</p>`;
-
             const sub = await reg.pushManager.getSubscription();
-
             html += `<p><b>Push Subscription:</b> ${
                 sub ? "✅ Registrada" : "❌ No existe"
             }</p>`;
-
         }catch(e){
-
             html += `<p><b>Service Worker:</b> ❌ ${e.message}</p>`;
-
         }
-
     }else{
-
         html += `<p><b>Service Worker:</b> ❌ No soportado</p>`;
-
     }
-
     // Token
     const token = localStorage.getItem("fcm_token");
-
     html += `<p><b>Token FCM:</b> ${
         token ? "✅ Guardado" : "❌ No encontrado"
     }</p>`;
-        
         html += `<p><b>Origen:</b><br>${location.origin}</p>`;
 html += `<p><b>URL:</b><br>${location.href}</p>`;
-        
-        
-
     div.innerHTML = html;
-
 }
-    
-    
 function adminSub(id,b){
-
     document.querySelectorAll('.admin-sub')
-        .forEach(x=>x.classList.remove('activa'));
-
+.forEach(x=>x.classList.remove('activa'));
     $(id).classList.add('activa');
-
     document.querySelectorAll('.subtabs button')
-        .forEach(x=>x.classList.remove('activo'));
-
+.forEach(x=>x.classList.remove('activo'));
     b.classList.add('activo');
-
     if(esAdmin)
         cargarPrivado();
-
     if(id==="admDiagnostico"){
         diagnosticoNotificaciones();
     }
-
 }
 function dtLocal(v){if(!v)return'';const d=new Date(v);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`}
 function toISO(v){return v?new Date(v).toISOString():null}
@@ -2300,19 +1900,16 @@ function fechaCortaPartido(v){
   if(!v) return '-';
   const d = new Date(v);
   if(isNaN(d)) return '-';
-
   return d.toLocaleDateString('es-MX',{
     weekday:'short',
     day:'2-digit',
     month:'short'
   });
 }
-
 function fechaHora(v){
   if(!v) return '-';
   const d = new Date(v);
   if(isNaN(d)) return '-';
-
   return d.toLocaleTimeString('es-MX',{
     hour:'2-digit',
     minute:'2-digit',
@@ -2342,7 +1939,6 @@ function textoFalta(ms){
   const h=Math.floor((totalSeg%86400)/3600);
   const m=Math.floor((totalSeg%3600)/60);
   const s=totalSeg%60;
-
   // Normalmente la quiniela se llena hasta 7 días antes:
   // ahí sí mostramos segundos para que el cierre se sienta vivo.
   if(d>=7) return `${d}d ${h}h ${m}m`;
@@ -2367,7 +1963,6 @@ function estadoPartido(p){
   if(clave==='vivo')return ['<span class="led"></span>EN VIVO','estado-live'];
   return ['⏳ Esperando resultado oficial','estado-warn'];
 }
-
 function estadoPartidoHTML(p){
   const clave=estadoClavePartido(p);
   let contenido='';
@@ -2390,13 +1985,11 @@ function estadoPartidoHTML(p){
   }
   return '<span class="'+clase+' contador-box">'+contenido+'</span>';
 }
-
 function flujoPartidoHTML(p){
   const c=estadoClavePartido(p);
   const item=(clave,txt)=>`<span class="${c===clave?'activo':''}">${txt}</span>`;
   return `<div class="estado-flow">${item('previo','⏱️ Antes')}${item('vivo','🔴 Vivo')}${item('espera','⏳ Espera')}${item('finalizado','✅ Final')}</div>`;
 }
-
 function bloqueada(){return !jornada || !jornada.activa || !!jornada.bloqueada || !!jornada.archivada}
 function usuariosJornada(){
   if(!jornada) return [];
@@ -2404,7 +1997,6 @@ function usuariosJornada(){
   pagos.filter(x=>x.jornada_id===jornada.id).forEach(x=>ids.add(x.usuario_id));
   return usuarios.filter(u=>ids.has(u.id));
 }
-
 function nombreBaseBoleto(nombre){
   return String(nombre||'').trim().replace(/\s+#\d+$/,'').trim();
 }
@@ -2448,53 +2040,27 @@ function confirmarBoletoDuplicado(nombre){
 ¿Deseas crear otro boleto como ${base} #${siguiente}?`);
 }
 function pr(usuarioId,partidoId){return pronosticos.find(x=>x.usuario_id===usuarioId && x.partido_id===partidoId)}
-    
 function pago(usuarioId){return pagos.find(x=>x.usuario_id===usuarioId && x.jornada_id===jornada?.id)}
-                                           
-                                           
-                                           
 function dueño(u){
 return !!u && u.dispositivo_id===deviceId()
 }
-   /*                                       
-function tieneBoletoJornada(){
-
-    if(!Chat?.usuario || !jornada) return false;
-
-    return pronosticos.some(p =>
-        p.jornada_id === jornada.id &&
-        p.usuario_id === Chat.usuario.id
-    );
-
-}
-*/
-                                           
 function puedeVerTribuna(){
-
     if(!jornada) return false;
-
     const misUsuarios = usuarios.filter(u =>
         u.dispositivo_id === deviceId()
     );
-
     if(!misUsuarios.length) return false;
-
     const miUsuario = misUsuarios.find(u =>
         pronosticos.some(p => p.usuario_id === u.id)
     );
-
     if(!miUsuario) return false;
-
     // Jornada abierta
     if(!jornada.bloqueada){
         return true;
     }
-
     // Jornada cerrada
     const pa = pago(miUsuario.id);
-
     return !!(pa && pa.pagado);
-
 }
 function aciertos(usuarioId){
   let a=0,c=0;
@@ -2507,42 +2073,33 @@ function aciertos(usuarioId){
   });
   return {a,c};
 }
-                                           
 function obtenerLideresQuiniela(){
-
   const lista = usuariosJornada()
     .map(u => ({
       ...u,
       ...aciertos(u.id)
     }));
-
   if(!lista.length){
     return [];
   }
-
   const max = Math.max(
     ...lista.map(u => u.a),
     0
   );
-
   if(max <= 0){
     return [];
   }
-
   return lista
     .filter(u => u.a === max)
     .map(u =>
       `👑 ${nombreBoleto(u, lista)} · ${u.a} aciertos`
     );
 }                                          
-
-
 function primerPartidoJornada(lista){
   return (lista||[])
     .filter(p=>p.fecha_partido && !isNaN(new Date(p.fecha_partido)))
     .sort((a,b)=>new Date(a.fecha_partido)-new Date(b.fecha_partido))[0] || null;
 }
-
 function proximaJornadaDespues(jActual){
   if(!jActual) return null;
   const n=Number(jActual.numero||0);
@@ -2550,8 +2107,6 @@ function proximaJornadaDespues(jActual){
     .filter(j=>Number(j.numero||0)>n && !j.archivada)
     .sort((a,b)=>Number(a.numero||0)-Number(b.numero||0))[0] || null;
 }
-
-
 async function guardarNoticia(){
  const titulo=document.getElementById('noticiaTitulo')?.value.trim();
  const mensaje=document.getElementById('noticiaMensaje')?.value.trim();
@@ -2568,8 +2123,6 @@ async function guardarNoticia(){
     if(typeof listarNoticiasAdmin==='function') await listarNoticiasAdmin();
  msg('Noticia publicada correctamente.');
 }
-
-
 async function listarNoticiasAdmin(){
  const {data,error}=await db.from('noticias').select('*').order('fecha_publicacion',{ascending:false});
  if(error)return;
@@ -2596,30 +2149,23 @@ async function eliminarNoticia(id){
  await cargarNoticias(); await listarNoticiasAdmin();
 }
 async function cargarNoticias(){
-
     const { data, error } = await db
         .from("noticias")
         .select("*")
         .eq("activa", true)
         .order("fecha_publicacion", { ascending: false })
         .limit(1);
-
     if(error){
         console.error(error);
         return;
     }
-
     const cont = document.getElementById("textoNoticias");
-
     if(!cont) return;
-
     if(!data || data.length === 0){
         cont.innerHTML = "No hay noticias por el momento.";
         return;
     }
-
     const n = data[0];
-
     cont.innerHTML = `
         <b>${n.titulo}</b><br><br>
         ${n.mensaje.replace(/\n/g,"<br>")}
@@ -2627,25 +2173,16 @@ async function cargarNoticias(){
             ${new Date(n.fecha_publicacion).toLocaleString("es-MX")}
         </div>
     `;
-    
     mostrarAlertaNoticia(n.titulo, n.mensaje);
 }     
-    
-    
-    //----------------------------------------------------
+//----------------------------------------------------
 // ALERTA EN PANTALLA
 //----------------------------------------------------
-
 function mostrarAlertaNoticia(titulo, mensaje){
-
     let aviso = document.getElementById("alerta-noticia");
-
     if(!aviso){
-
         aviso = document.createElement("div");
-
         aviso.id = "alerta-noticia";
-
         aviso.style.position = "fixed";
         aviso.style.top = "20px";
         aviso.style.left = "50%";
@@ -2660,18 +2197,13 @@ function mostrarAlertaNoticia(titulo, mensaje){
         aviso.style.zIndex = "999999";
         aviso.style.fontFamily = "Arial,sans-serif";
         aviso.style.textAlign = "left";
-
         document.body.appendChild(aviso);
-
     }
-
     aviso.innerHTML = `
 <div style="display:flex;justify-content:space-between;align-items:center">
-
 <div style="font-size:20px;font-weight:bold;">
 🔔 ${titulo}
 </div>
-
 <button
 onclick="this.parentNode.parentNode.style.display='none'"
 style="
@@ -2682,101 +2214,66 @@ font-size:24px;
 cursor:pointer;">
 ×
 </button>
-
 </div>
-
 <div style="margin-top:12px;font-size:16px;">
 ${mensaje}
 </div>
 `;
-
     aviso.style.display = "block";
-    
     aviso.style.cursor = "pointer";
-
 aviso.onclick = ()=>{
-
     const panel = document.getElementById("noticias");
-
     if(panel){
-
         panel.scrollIntoView({
             behavior:"smooth",
             block:"start"
         });
-
     }
-
 };
-
     if(navigator.vibrate){
         navigator.vibrate([250,120,250]);
     }
-
     clearTimeout(aviso.timer);
-
     aviso.timer = setTimeout(()=>{
-
         aviso.style.display = "none";
-
     },10000);
-
 }
-    
-   
-    
     async function publicarNoticia(titulo, mensaje) {
-
     const { error } = await db
         .from("noticias")
         .insert([{ titulo, mensaje }]);
-
     if (error) throw error;
-
 }
-    
-                                           
-                                           
 async function audSistema(accion,detalle,jornadaId=null,antes={},despues={}){
   try{
     await db.from('auditoria').insert({
-      accion,detalle,usuario_id:null,jornada_id:jornadaId,
-      antes,despues,dispositivo_id:deviceId(),actor:'sistema'
+  accion,detalle,usuario_id:null,jornada_id:jornadaId,
+  antes,despues,dispositivo_id:deviceId(),actor:'sistema'
     });
   }catch(e){console.warn('Auditoría sistema:',e)}
 }
-
 async function revisarCierreAutomatico(){
   if(revisandoCierreAutomatico) return false;
   revisandoCierreAutomatico=true;
   try{
     const activa = jornadas.find(j=>j.activa && !j.bloqueada && !j.archivada);
     if(!activa) return false;
-
     const ps = await db.from('partidos').select('*').eq('jornada_id',activa.id).order('fecha_partido',{ascending:true});
     if(ps.error) throw ps.error;
     const primero = primerPartidoJornada(ps.data||[]);
     if(!primero) return false;
-
     const cierreMs = new Date(primero.fecha_partido).getTime() - (MINUTOS_CIERRE_AUTOMATICO*60*1000);
     const ahoraMs = Date.now();
     if(ahoraMs < cierreMs) return false;
-
    const siguiente = proximaJornadaDespues(activa);
-
-
 // 💾 RESPALDO AUTOMÁTICO DE CIERRE
 await guardarRespaldoCierreJornada(activa);
-
-
 // 🔒 CERRAR JORNADA
 await db.from('jornadas').update({
     activa:false,
     bloqueada:true
 }).eq('id',activa.id);
-      
     await audSistema('AUTO_CIERRE_JORNADA',`Sistema cerró ${activa.nombre} ${MINUTOS_CIERRE_AUTOMATICO} minutos antes del primer partido`,activa.id,{jornada:activa,primer_partido:primero},{bloqueada:true,activa:false});
-
     if(siguiente){
       await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');
       await db.from('jornadas').update({activa:true,bloqueada:false,archivada:false}).eq('id',siguiente.id);
@@ -2794,49 +2291,34 @@ await db.from('jornadas').update({
     revisandoCierreAutomatico=false;
   }
 }
-    
     async function guardarRespaldoCierreJornada(jornadaCierre){
-
     const existente = await db
         .from('respaldos')
         .select('*')
         .eq('tipo','AUTO_SEMANAL')
         .maybeSingle();
-
     if(existente.error)
         throw existente.error;
-
-
     // Ya se respaldó esta jornada
     if(
-        existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
+existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
     ){
-
         console.log(
             `💾 La jornada ${jornadaCierre.nombre} ya tiene respaldo de cierre.`
         );
-
         return existente.data;
-
     }
-
-
     const datos = await obtenerDatosRespaldo();
-
     datos.meta.tipo = 'AUTO_SEMANAL';
     datos.meta.jornada_cierre_id = jornadaCierre.id;
     datos.meta.jornada_cierre_nombre = jornadaCierre.nombre;
     datos.meta.fecha_cierre_respaldo = new Date().toISOString();
-
-
     const payload = {
         tipo: 'AUTO_SEMANAL',
         fecha: new Date().toISOString(),
         semana: semanaKeyRespaldo(),
         datos
     };
-
-
     const r = await db
         .from('respaldos')
         .upsert(
@@ -2845,14 +2327,10 @@ await db.from('jornadas').update({
         )
         .select()
         .single();
-
-
     if(r.error)
         throw new Error(
             'No pude guardar respaldo de cierre: '+r.error.message
         );
-
-
     await audSistema(
         'RESPALDO_CIERRE_JORNADA',
         `Respaldo automático de cierre de ${jornadaCierre.nombre}`,
@@ -2864,16 +2342,11 @@ await db.from('jornadas').update({
             jornada:jornadaCierre.nombre
         }
     );
-
-
     console.log(
         `💾 Respaldo de cierre creado: ${jornadaCierre.nombre}`
     );
-
-
     return r.data;
 }
-
 async function aud(accion,detalle,usuario_id=null,antes={},despues={}){try{await db.from('auditoria').insert({accion,detalle,usuario_id,jornada_id:jornada?.id||null,antes,despues,dispositivo_id:deviceId(),actor:esAdmin?'admin':'usuario'})}catch(e){console.warn(e)}}
 async function cargar(){
  const [jorRes,eRes,salonRes]=await Promise.all([
@@ -2891,22 +2364,19 @@ async function cargar(){
  jornada = (jornadaVistaId ? jornadas.find(j=>j.id===jornadaVistaId) : null) || jornadas.find(j=>j.activa) || null;
  if(jornada){
   const [p,u,pr,pa,f,t]=await Promise.all([
-   db.from('partidos').select('*').eq('jornada_id',jornada.id).order('numero_partido'),
-   db.from('usuarios').select('*').eq('activo',true).order('fecha_registro'),
-   db.from('pronosticos').select('*').eq('jornada_id',jornada.id),
-   db.from('pagos').select('*').eq('jornada_id',jornada.id),
-   db.from('fama').select('*').order('fecha',{ascending:false}),
-   db.from('tabla_liga_mx').select('*').order('posicion')
+  db.from('partidos').select('*').eq('jornada_id',jornada.id).order('numero_partido'),
+  db.from('usuarios').select('*').eq('activo',true).order('fecha_registro'),
+  db.from('pronosticos').select('*').eq('jornada_id',jornada.id),
+  db.from('pagos').select('*').eq('jornada_id',jornada.id),
+  db.from('fama').select('*').order('fecha',{ascending:false}),
+  db.from('tabla_liga_mx').select('*').order('posicion')
   ]);
   if(p.error||u.error||pr.error||pa.error)throw (p.error||u.error||pr.error||pa.error);
   partidos=p.data||[];usuarios=u.data||[];pronosticos=pr.data||[];pagos=pa.data||[];fama=f.data||[];tablaLiga=t.data||[];
  }else{partidos=[];usuarios=[];pronosticos=[];pagos=[]}
  dibujar();actualizarEstadisticasFooter();
 }
-    
-   
 function dibujar(){
-
     dibSelectorJornadas();
     dibResumen();
     dibQuiniela();
@@ -2915,30 +2385,20 @@ function dibujar(){
     dibTablaLiga();
     dibFama();
     dibSalonFama();
-    
-    
-
     if(esAdmin){
         dibAdmin();
         cargarPrivado(false);
     }
-
 }
-    
-    
 function dibSelectorJornadas(){
   const cont=$('selectorJornadas'); if(!cont) return;
   let html='';
-
   jornadas.forEach(j=>{
     html+=`<button class="${jornada?.id===j.id?'activo':''} ${Number(j.numero)===NUM_LIGUILLA?'liguilla-tag':''}" onclick="verJornada('${j.id}')">${Number(j.numero)===NUM_LIGUILLA?'🏆 Liguilla':esc(j.nombre||('J'+j.numero))}${j.activa?' ✅':''}</button>`;
   });
-
   cont.innerHTML=html||'<span class="small">Aún no hay jornadas creadas</span>';
-
   // 🎯 Centrar automáticamente la jornada seleccionada
   const activa = cont.querySelector('button.activo');
-
   if(activa){
     activa.scrollIntoView({
       behavior: 'instant',
@@ -2947,53 +2407,34 @@ function dibSelectorJornadas(){
     });
   }
 }
-
 async function verJornada(id){
-
     jornadaVistaId = id;
-
     await cargar();
-    
-   
     if(typeof Chat!=="undefined"){
-
         Chat.usuario = await Chat.obtenerUsuario();
-
         Chat.mensajes = [];
         Chat.reacciones = [];
-
         await Chat.cargarMensajes();
         await Chat.cargarReacciones();
-
         Chat.mostrar();
-
         Chat.escucharMensajes();
-
         actualizarTribuna();
-
     }
-
 }
-    
     function actualizarTribuna(){
     const sala = document.getElementById("salaJornada");
-
     if(sala){
         sala.style.display = puedeVerTribuna()
             ? "block"
             : "none";
     }
 }
-    
-    
 function dibResumen(){let us=usuariosJornada(),pag=pagos.filter(x=>x.pagado).length,costo=jornada?.costo||20;$('subtitulo').textContent=jornada?`${jornada.nombre} · ${bloqueada()?'CERRADA':'ABIERTA'}`:'Sin jornada activa';$('rJornada').textContent=jornada?.nombre||'-';$('rCosto').textContent=money(costo);$('rBoletos').textContent=us.length;$('rPagados').textContent=pag;$('rBolsa').textContent=money(pag*costo);$('rEstado').textContent=bloqueada()?'Cerrada':'Abierta'}
 function headerPartido(p){const e=estadoPartido(p);return `<div><strong>P${p.numero_partido}</strong></div>${equipoHtml(p.local)}<div class="vs">VS</div>${equipoHtml(p.visitante)}
-    
     <div class="fecha-partido">
     <div class="fecha-dia">📅 ${fechaDia(p.fecha_partido)}</div>
     <div class="fecha-hora">🕒 ${fechaHora(p.fecha_partido)}</div>
 </div>
-    
     ${estadoPartidoHTML(p)}${p.resultado?`<div class="small"><b>${p.goles_local}-${p.goles_visitante}</b> Resultado ${p.resultado}</div>`:''}`}
 function clase(x,p){if(!x)return'pendiente';if(!p.resultado)return'pendiente';return x.pronostico===p.resultado?'acierto':'fallo'}
 function dibQuiniela(){
@@ -3010,28 +2451,22 @@ function dibQuiniela(){
     h+=acciones.length?`<div class="acciones">${acciones.join('')}</div>`:'-';
     h+=`</td></tr>`});
  h += '</tbody>';
-
 if(bloqueada()){
     h += `
     <tr>
         <td colspan="12" style="text-align:center;padding:15px;">
-
             <div class="descargas-titulo">Descargar tabla</div>
-
             <div class="descargas-botones">
                 <button class="btn-descarga" onclick="descargarExcel()">
                     Excel
                 </button>
-
                 <button class="btn-descarga" onclick="descargarPDF()">
                     PDF
                 </button>
             </div>
-
         </td>
     </tr>`;
 }
-
 $('tablaQuiniela').innerHTML = h;
   actualizarColorPronosticos();
   dibQuinielaMovil(lista);
@@ -3040,101 +2475,76 @@ function dibQuinielaMovil(lista){
   const cont=$('vistaMovilQuiniela'); if(!cont) return;
   if(!jornada){cont.innerHTML='<div class="boleto-form-card">No hay jornada activa.</div>';return}
   let html='';
-
   if(!bloqueada() && partidos.length===9){
-
     html += `
     <div class="boleto-form-card">
        <h2 style="text-align: center;">Nuevo boleto</h2>
-
         <input id="mNuevoNombre" placeholder="Nombre / boleto">
         <input id="mNuevoTelefono" placeholder="Teléfono opcional">
-
         <div class="small;"style="text-align: center;" id="mModo">Nuevo boleto</div>
     `;
-
     partidos.forEach(p=>{
-
         html += `
         <div class="pronostico-card">
-
             <div class="titulo-p">P${p.numero_partido}</div>
-
             ${equipoHtml(p.local)}
-
             <div class="vs">VS</div>
-
             ${equipoHtml(p.visitante)}
-
             <div class="match-date">
                 <div>📅 ${fechaSolo(p.fecha_partido)}</div>
                 <div>🕒 ${horaSolo(p.fecha_partido)}</div>
             </div>
-  
  <div class="match-status">
     ${estadoPartidoHTML(p)}
 </div>
-
-               <select id="mSel_${p.id}" style="text-align: center;">
+                <select style="text-align: center;">
                 <option value="">Elegir pronóstico</option>
                 <option value="L">Gana local</option>
                 <option value="E">Empate</option>
                 <option value="V">Gana visita</option>
             </select>
-
         </div>`;
     });
-
     html += `
         <div class="mobile-actions">
             <button class="btn-primary"
-                    onclick="guardarBoletoMovil()"
+            onclick="guardarBoletoMovil()"
                     id="mBtnGuardar">
                 Guardar boleto
             </button>
-
-            <button class="btn-gray"
-                    onclick="limpiarMovil()">
+        <button class="btn-gray"
+                onclick="limpiarMovil()">
                 Limpiar
             </button>
         </div>
-
     </div>`;
-
 }else{
-
     html += `
     <div class="boleto-form-card">
         <b>Quiniela cerrada.</b>
     </div>`;
 }
-
   let lugar=0,pos=0,ant=null;
   const lugares={};
   lista.forEach(u=>{pos++; if(ant===null||u.a<ant)lugar=pos; ant=u.a; lugares[u.id]=lugar;});
-
   if(lista.length){
     html+=`<div class="mobile-help"><b>Vista rápida:</b> arriba están los 9 partidos alineados; abajo cada boleto solo muestra L / E / V. Verde = acierto, gris = fallo, amarillo = pendiente. Desliza a la derecha para ver todos los partidos.</div>`;
-  
   if(bloqueada()){
     html += `
     <div class="descargas-tabla">
         <div class="descargas-titulo">Descargar tabla</div>
-
         <div class="descargas-botones">
             <button class="btn-descarga" onclick="descargarExcel()">Excel</button>
             <button class="btn-descarga" onclick="descargarPDF()">PDF</button>
         </div>
     </div>`;
 }
-  
     html+=`<div class="mobile-matrix-wrap"><table class="mobile-matrix"><thead><tr><th class="col-nombre">Boleto</th>`;
     partidos.forEach(p=>{
       const marcador = p.resultado ? `${p.goles_local??''}-${p.goles_visitante??''}` : '-';
       html+=`<th><div class="mh-partido"><div class="pnum">P${p.numero_partido}</div><div>${esc(p.local)}</div><div>vs</div><div>${esc(p.visitante)}</div><div class="res">${marcador}</div></div></th>`;
     });
     html+=`<th><div class="mh-partido"><div class="pnum">Pts</div><div>Lugar</div></div></th></tr></thead><tbody>`;
-
     lista.forEach(u=>{
       const lugarTxt = lugares[u.id]===1?'🥇':lugares[u.id]===2?'🥈':lugares[u.id]===3?'🥉':lugares[u.id]+'°';
       html+=`<tr><td class="col-nombre"><div class="m-row-name">${lugarTxt} ${esc(nombreBoleto(u,lista))}</div><div class="m-row-meta">${dueño(u)?'📱 Este celular':'Solo lectura'} · ${u.a}/${u.c}</div>`;
@@ -3161,7 +2571,6 @@ function copiarMovilADesktop(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return;
 function copiarDesktopAMovil(){ if(!$('mNuevoNombre')||!$('nuevoNombre'))return; $('mNuevoNombre').value=$('nuevoNombre').value; $('mNuevoTelefono').value=$('nuevoTelefono').value; partidos.forEach(p=>{let ms=$('mSel_'+p.id), ds=$('sel_'+p.id); if(ms&&ds) ms.value=ds.value}); if($('mModo')&&$('modo'))$('mModo').textContent=$('modo').textContent; if($('mBtnGuardar')&&$('btnGuardar'))$('mBtnGuardar').textContent=$('btnGuardar').textContent; }
 function guardarBoletoMovil(){copiarMovilADesktop();guardarBoleto()}
 function limpiarMovil(){limpiar();copiarDesktopAMovil()}
-
 function datosPartidoMenosEsperado(){
   const boletos=usuariosJornada();
   if(!boletos.length) return null;
@@ -3177,7 +2586,7 @@ function datosPartidoMenosEsperado(){
     });
     if(total>0){
       const porcentaje=acertaron/total;
-      candidatos.push({p,total,acertaron,porcentaje});
+  candidatos.push({p,total,acertaron,porcentaje});
     }
   });
   if(!candidatos.length) return null;
@@ -3207,7 +2616,6 @@ function dibPartidoMenosEsperado(){
     <div class="partido-dificil-meta">Solo <b>${d.acertaron}</b> de <b>${d.total}</b> boletos acertaron · ${esc(textoResultadoLEV(p.resultado))}</div>
   </div>`;
 }
-
 function dibClasificacion(){
   let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)})).sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
   let h='<thead><tr><th>Lugar</th><th class="nombre">Boleto</th><th>Aciertos</th><th>Calificados</th></tr></thead><tbody>';
@@ -3237,7 +2645,6 @@ function dibPartidos(){
     month:'short'
   });
 }
-
 function horaSolo(v){
   if(!v) return '-';
   const d = new Date(v);
@@ -3247,7 +2654,6 @@ function horaSolo(v){
     hour12:true
   });
 }
-        
 function cardPartidoNormal(p){
   let e=estadoPartido(p);
   return `<div class="partido-card match-card">
@@ -3259,12 +2665,10 @@ function cardPartidoNormal(p){
       <div class="match-score ${claseScorePartido(p,'visita')}">${scorePartido(p,'visita')}</div>
       ${equipoMini(p.visitante,'visita')}
     </div>
-    
    <div class="match-date">
     <div>📅 ${fechaSolo(p.fecha_partido)}</div>
     <div>🕒 ${horaSolo(p.fecha_partido)}</div>
 </div>
-    
     ${p.estadio?`<div class="small" style="text-align:center">${esc(p.estadio)}</div>`:''}
     <div class="match-status">${estadoPartidoHTML(p)}</div>
     ${flujoPartidoHTML(p)}
@@ -3356,7 +2760,7 @@ function etiquetaHistUsuario(u,jornadaId,usuariosAll,pronosticosAll){
 function addAgg(mapa,key,obj,campo,inc){if(!key)return;if(!mapa[key])mapa[key]={...obj,[campo]:0};mapa[key][campo]+=inc}
 async function obtenerDatosTorneoCompleto(){
   const [jr,ur,pr,par,pa,fr,cf]=await Promise.all([
-    db.from('jornadas').select('*'),db.from('usuarios').select('*'),db.from('pronosticos').select('*'),db.from('partidos').select('*'),db.from('pagos').select('*'),db.from('fama').select('*'),db.from('configuracion').select('*').limit(1).maybeSingle()
+db.from('jornadas').select('*'),db.from('usuarios').select('*'),db.from('pronosticos').select('*'),db.from('partidos').select('*'),db.from('pagos').select('*'),db.from('fama').select('*'),db.from('configuracion').select('*').limit(1).maybeSingle()
   ]);
   for(const r of [jr,ur,pr,par,pa,fr]) if(r.error) throw r.error;
   return {jornadas:jr.data||[],usuarios:ur.data||[],pronosticos:pr.data||[],partidos:par.data||[],pagos:pa.data||[],fama:fr.data||[],config:cf.data||{}};
@@ -3395,7 +2799,6 @@ async function archivarSalonFamaAntesDeReiniciar(temporada){
   await aud('SALON_FAMA_ARCHIVADO',`Se archivó ${payload.temporada} antes de reiniciar torneo`,null,{},payload.resumen);
   return r.data;
 }
-
 async function guardarBoleto(){
   if(!jornada||bloqueada())return msg('La jornada está cerrada o no hay jornada activa','error');
   let nombre=nombreBaseBoleto($('nuevoNombre').value.trim()),tel=$('nuevoTelefono').value.trim();
@@ -3403,18 +2806,14 @@ async function guardarBoleto(){
   if(!confirmarBoletoDuplicado(nombre)) return;
   let picks=[];
   for(const p of partidos){
-
     let sel = $('sel_'+p.id);
 let mSel = $('mSel_'+p.id);
     let v = sel.value;
-
     // Quitar rojo por si ya estaba
     sel.classList.remove("pronostico-error");
-
     if(!v){
         sel?.classList.add("pronostico-error");
 mSel?.classList.add("pronostico-error");
-
 if (mSel && window.innerWidth < 768) {
     mSel.focus();
 } else {
@@ -3423,7 +2822,6 @@ if (mSel && window.innerWidth < 768) {
         msg('Falta pronóstico del partido '+p.numero_partido,'error');
         return;
     }
-
     picks.push({p,v});
 }
   try{
@@ -3434,7 +2832,7 @@ if (mSel && window.innerWidth < 768) {
       if(!esAdmin&&!dueño(u))throw new Error('Este boleto solo se edita desde el celular donde se capturó');
       antes={usuario:u,pronosticos:pronosticos.filter(x=>x.usuario_id===uid)};
       await db.from('usuarios').update({nombre,telefono:tel,ultima_actividad:new Date().toISOString()}).eq('id',uid);
-      nombreVisible=nombreBoleto({...u,nombre});
+  nombreVisible=nombreBoleto({...u,nombre});
     }else{
       let r=await db.from('usuarios')
       .insert({
@@ -3445,38 +2843,29 @@ if (mSel && window.innerWidth < 768) {
       })
       .select()
       .single();
-        
       if(r.error)throw r.error;
-        
       uid=r.data.id;
-        
         await db
     .from("notificaciones_dispositivos")
     .update({
         usuario_id: uid
     })
     .eq("dispositivo_id", deviceId());
-        
-        
-        
       await db.from('pagos').insert({
           usuario_id:uid,
           jornada_id:jornada.id,
           monto:jornada.costo||20,
           pagado:false
       });
-        
       nombreVisible=nombreBoleto(r.data,[...usuariosJornada(),r.data]);
     }
-    
-    
     for(const x of picks){
       let old=pr(uid,x.p.id);
       if(old)await db.from('pronosticos').update({pronostico:x.v,fecha_registro:new Date().toISOString()}).eq('id',old.id);
       else await db.from('pronosticos').insert({usuario_id:uid,jornada_id:jornada.id,partido_id:x.p.id,pronostico:x.v});
     }
     await aud(
-        uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',
+uid===editandoId?'EDITAR_BOLETO':'CREAR_BOLETO',
         `${nombreVisible} guardó boleto`,
         uid,
         antes,{
@@ -3488,19 +2877,13 @@ if (mSel && window.innerWidth < 768) {
             }))
         }
     );
-    
     if (!editandoId) {
-
     const total = usuariosJornada().length + 1;
-
     await publicarNoticia(
         "📝 Nuevo pronóstico registrado",
         `${nombreVisible} acaba de registrar su pronóstico. ¡Ya somos ${total} en esta jornada!`
     );
-
 }
-    
-    
     limpiar();
     await cargar();
     actualizarTribuna();
@@ -3658,46 +3041,29 @@ async function borrarJornada(id){try{if(!esAdmin)return msg('Solo administrador'
 }catch(e){msg('Error al borrar: '+e.message,'error')}}
 async function activarJornada(id){if(!esAdmin)return msg('Solo administrador','error');jornadaVistaId=id;await db.from('jornadas').update({activa:false}).neq('id','00000000-0000-0000-0000-000000000000');await db.from('jornadas').update({activa:true}).eq('id',id);await aud('ACTIVAR_JORNADA','Admin activó jornada');await cargar();msg('Jornada activada','ok')}
 async function toggleJornada(id,cerrar){if(!esAdmin)return msg('Solo administrador','error');await db.from('jornadas').update({bloqueada:cerrar}).eq('id',id);await aud(cerrar?'CERRAR_QUINIELA':'ABRIR_QUINIELA',cerrar?'Admin cerró quiniela':'Admin abrió quiniela');await cargar();msg(cerrar?'Quiniela cerrada':'Quiniela abierta','ok')}
-
 async function guardarResultados(){
-
     try{
-
         if(!esAdmin)
             return msg('Solo administrador','error');
-
         let antes = JSON.parse(JSON.stringify(partidos));
-
         // Indica si realmente se capturó algún resultado nuevo
         let huboResultadoNuevo = false;
-
-
         for(const p of partidos){
-
             let gl = $('gl_'+p.id).value,
                 gv = $('gv_'+p.id).value;
-
             if(gl === '' || gv === '')
                 continue;
-
-
             // ---------------------------------------------
             // ¿Este partido ya tenía resultado?
             // ---------------------------------------------
-
             const yaTeniaResultado =
                 p.resultado !== null &&
                 p.resultado !== undefined &&
                 p.resultado !== '';
-
-
             let r = resFrom(gl,gv);
-
-
             // ---------------------------------------------
             // Guardar resultado
             // ---------------------------------------------
-
             const { error } = await db
                 .from('partidos')
                 .update({
@@ -3707,135 +3073,85 @@ async function guardarResultados(){
                     finalizado:true
                 })
                 .eq('id',p.id);
-
             if(error)
                 throw error;
-
-
             // ---------------------------------------------
             // Determinar ganador
             // ---------------------------------------------
-
             let ganador = "🤝 Empate";
-
             if(+gl > +gv){
-
                 ganador = "🏠 Ganó el local";
-
             }else if(+gl < +gv){
-
                 ganador = "🚌 Ganó la visita";
-
             }
-
-
             // ---------------------------------------------
             // SOLO NOTIFICAR SI ES RESULTADO NUEVO
             // ---------------------------------------------
-
             if(!yaTeniaResultado){
-
                 huboResultadoNuevo = true;
-
                 console.log("📣 NUEVO RESULTADO — VOY A INSERTAR NOTICIA");
-
                 console.log({
                     titulo: "⚽ Resultado oficial",
                     mensaje:
                         `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
                 });
-
-
                 const { error: errorNoticia } = await db
                     .from("noticias")
                     .insert({
                         titulo: "⚽ Resultado oficial",
                         mensaje:
 `${p.local} ${gl} - ${gv} ${p.visitante}
-
 ${ganador}`,
                         activa: true
-                    });
-
+                });
                 if(errorNoticia)
                     throw errorNoticia;
-
             }else{
-
                 console.log(
                     `ℹ️ ${p.local} vs ${p.visitante} ya tenía resultado. No se vuelve a notificar.`
                 );
-
             }
-
         }
-
-
         // ---------------------------------------------
         // ACTUALIZAR ACIERTOS
         // ---------------------------------------------
-
         await actualizarAciertos();
-
-
         // ---------------------------------------------
         // RECARGAR DATOS
         // IMPORTANTE:
         // ahora partidos contiene los resultados nuevos
         // ---------------------------------------------
-
         await cargar();
-
-
         // ---------------------------------------------
         // RECALCULAR TABLA
         // ---------------------------------------------
-
         await recalcularTablaLiga();
-
-
         // ---------------------------------------------
         // OBTENER LÍDERES
         // Ahora sí usamos datos actualizados
         // ---------------------------------------------
-
         if(huboResultadoNuevo){
-
             const lideres = obtenerLideresQuiniela();
-
             console.log("👑 LÍDERES ACTUALES:");
             console.log(lideres);
-
-
             if(lideres.length){
-
                 const { error: errorLider } = await db
                     .from("noticias")
                     .insert({
-
                         titulo:
                             lideres.length === 1
                                 ? "👑 Líder de la quiniela"
-                                : "👑 Líderes de la quiniela",
-
+                            : "👑 Líderes de la quiniela",
                         mensaje: lideres.join("\n"),
-
                         activa: true
-
                     });
-
                 if(errorLider)
                     throw errorLider;
-
             }
-
         }
-
-
         // ---------------------------------------------
         // AUDITORÍA
         // ---------------------------------------------
-
         await aud(
             'CAPTURAR_RESULTADOS',
             'Admin guardó resultados',
@@ -3843,39 +3159,21 @@ ${ganador}`,
             antes,
             {}
         );
-
-
         // ---------------------------------------------
         // RECARGAR UNA VEZ MÁS PARA MOSTRAR TODO
         // ---------------------------------------------
-
         await cargar();
-
-
         msg('Resultados guardados','ok');
-
-
     }catch(e){
-
         console.error("❌ ERROR EN guardarResultados:", e);
-
         msg('Error: '+e.message,'error');
-
     }
-
 }
-
-
-
-
 async function actualizarAciertos(){let ps=await db.from('partidos').select('*').eq('jornada_id',jornada.id);let prs=await db.from('pronosticos').select('*').eq('jornada_id',jornada.id);for(const x of prs.data||[]){let p=(ps.data||[]).find(y=>y.id===x.partido_id);if(p&&p.resultado)await db.from('pronosticos').update({acierto:x.pronostico===p.resultado}).eq('id',x.id)}}
 async function cambiarPago(uid,val){
-
     if(!esAdmin)
         return msg('Solo administrador','error');
-
     let pa = pago(uid);
-
     if(pa){
         await db.from('pagos')
         .update({
@@ -3884,9 +3182,7 @@ async function cambiarPago(uid,val){
             observaciones: $('obs_'+uid)?.value || pa.observaciones || ''
         })
         .eq('id', pa.id);
-
     }else{
-
         await db.from('pagos')
         .insert({
             usuario_id: uid,
@@ -3895,21 +3191,15 @@ async function cambiarPago(uid,val){
             pagado: val,
             fecha_pago: val ? new Date().toISOString() : null
         });
-
     }
-
     await aud(
         val ? 'MARCAR_PAGADO' : 'QUITAR_PAGO',
         'Admin modificó pago',
         uid
     );
-
     await cargar();
-
     actualizarTribuna();
-
     msg('Pago actualizado','ok');
-
 }
 async function recalcularTablaLiga(){
   // Recalcula desde cero para evitar que se quede información vieja cuando se borran resultados o jornadas.
@@ -3937,7 +3227,6 @@ async function recalcularTablaLiga(){
     if(ins.error) throw ins.error;
   }
 }
-
 async function forzarRecalculoTabla(){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -3947,7 +3236,6 @@ async function forzarRecalculoTabla(){
     msg('Tabla general recalculada desde cero','ok');
   }catch(e){msg('Error al recalcular tabla: '+e.message,'error')}
 }
-
 async function reiniciarTorneo(){
   try{
     if(!esAdmin)return msg('Solo administrador','error');
@@ -3974,14 +3262,10 @@ async function reiniciarTorneo(){
   }catch(e){msg('Error al reiniciar torneo: '+e.message,'error')}
 }
 async function cerrarYFama(){try{if(!esAdmin)return msg('Solo administrador','error');let lista=usuariosJornada().map(u=>({...u,...aciertos(u.id)}));let max=Math.max(...lista.map(x=>x.a),0);let gan=lista.filter(x=>x.a===max&&max>0);if(!gan.length)return msg('Aún no hay ganadores','error');let bolsa=pagos.filter(x=>x.pagado).length*(jornada.costo||20),premio=bolsa/gan.length;for(const g of gan){await db.from('fama').insert({jornada_id:jornada.id,usuario_id:g.id,nombre:nombreBoleto(g,lista),aciertos:g.a,premio})}
-
 await db.from('jornadas').update({
 chat_bloqueado:true,
-
 }).eq('id',jornada.id);
-
 await aud('TRONO_FAMA',`Ganadores: ${gan.map(x=>nombreBoleto(x,lista)).join(', ')}`);await cargar();msg('Ganadores enviados al trono de la fama','ok')}catch(e){msg('Error: '+e.message,'error')}}
-
 const TABLAS_RESPALDO=['jornadas','partidos','usuarios','pronosticos','pagos','auditoria','fama','tabla_liga_mx','salon_fama'];
 function inicioSemanaRespaldo(){
   const d=new Date();
@@ -4123,8 +3407,6 @@ function aplicarModoOscuro(){
   const c=document.getElementById('modoOscuroCheck');
   if(c)c.checked=activo;
 }
-
-
 /* =================== FIX24: COMPARTIR CLASIFICACIÓN WHATSAPP =================== */
 const URL_PUBLICA_QUINIELA = 'https://jesusvazquezesp-art.github.io/Quiniela-Liga-Mx/';
 function medallaLugar(lugar){
@@ -4137,9 +3419,6 @@ function listaClasificacionCompartir(limite=10){
   const lista=usuariosJornada()
 .map(u=>({...u,...aciertos(u.id)}))
 .sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
-
-
-
 let lugar=0,pos=0,ant=null;
   return lista.slice(0,limite).map(u=>{
     pos++;
@@ -4148,10 +3427,6 @@ let lugar=0,pos=0,ant=null;
     return `${medallaLugar(lugar)} ${nombreBoleto(u,lista)} — ${u.a}/${u.c} pts`;
   });
 }
-    
-    
-    
-    
 function resumenPartidosCompartir(){
   const finalizados=partidos.filter(p=>p.resultado);
   if(!finalizados.length)return '';
@@ -4168,7 +3443,6 @@ function textoPartidoMenosEsperadoCompartir(){
   const marcador=(p.goles_local!=null&&p.goles_visitante!=null)?`${p.goles_local}-${p.goles_visitante}`:textoResultadoLEV(p.resultado);
   return `\n\n🎯 Partido menos esperado:\n${p.local} ${marcador} ${p.visitante}\nSolo ${d.acertaron} de ${d.total} acertaron`;
 }
-
 async function compartirClasificacionWhatsApp(){
   try{
     const lineas=listaClasificacionCompartir(10);
@@ -4181,15 +3455,12 @@ async function compartirClasificacionWhatsApp(){
     window.open(url,'_blank');
   }catch(e){msg('No se pudo generar el mensaje de WhatsApp: '+e.message,'error')}
 }
-
-
 /* =================== FIX23: ESTADO VISUAL EN BOTONES =================== */
 let ultimoBotonAccion=null;
 document.addEventListener('click',function(e){
   const b=e.target.closest('button');
   if(b) ultimoBotonAccion=b;
 },true);
-
 function textoBotonTerminado(textoTrabajo){
   if(textoTrabajo.includes('respaldo')) return '✅ Respaldo listo';
   if(textoTrabajo.includes('Restaurando')) return '✅ Restaurado';
@@ -4205,7 +3476,6 @@ function textoBotonTerminado(textoTrabajo){
   if(textoTrabajo.includes('pagos')||textoTrabajo.includes('pago')) return '✅ Pago actualizado';
   return '✅ Listo';
 }
-
 async function ejecutarConEstadoBoton(textoTrabajo, tarea){
   const btn=ultimoBotonAccion;
   const usarBtn=btn && btn.tagName==='BUTTON' && !btn.disabled;
@@ -4244,7 +3514,6 @@ async function ejecutarConEstadoBoton(textoTrabajo, tarea){
     throw e;
   }
 }
-
 function aplicarEstadosABotones(){
   const envolver=(nombre,texto)=>{
     const fn=window[nombre];
@@ -4273,79 +3542,50 @@ function aplicarEstadosABotones(){
   envolver('compartirClasificacionWhatsApp','⏳ Generando mensaje...');
 }
 aplicarEstadosABotones();
-
 document.addEventListener('click',function(e){const box=document.querySelector('.menu-flotante');const m=document.getElementById('menuOpciones');if(box&&m&&!box.contains(e.target))m.classList.remove('abierto')});
-
  /* =====================================================
    CHAT DE LA JORNADA
 ===================================================== */
-
 const Chat = {
-
     mensajes: [],
     reacciones: [],
      colores: {},
     mencionesPendientes: [],
     respuestaActual: null,
     canal: null,
-
    async iniciar(){
-       
-       
-
         console.log("💬 Chat iniciado");
-
         this.txt = document.getElementById("chatTexto");
-       
        console.log("TXT:", this.txt);
-       
-       
-       
         this.lista = document.getElementById("chatLista");
         this.contador = document.getElementById("chatMensajes");
-       
        this.participantes = document.getElementById("chatParticipantes");
 this.enLinea = document.getElementById("chatEnLinea");
-       
         this.btn = document.getElementById("btnChatEnviar");
 this.emojis = document.getElementById("chatEmojis");
-
-        
-
         this.btn.addEventListener("click",()=>this.enviar());
-
         this.txt.addEventListener("keydown",(e)=>{
             if(e.key==="Enter"){
                 e.preventDefault();
                 this.enviar();
             }
         });
-        
-     
-       
-       
        this.txt.addEventListener("input",()=>{
-
     const lista = document.getElementById("chatMenciones");
     const texto = this.txt.value.trim();
-
     if(!texto.includes("@")){
         lista.style.display = "none";
         lista.innerHTML = "";
         return;
     }
-
     const at = texto.lastIndexOf("@");
     const despues = texto.slice(at + 1).trim();
-
     if(!despues){
         lista.style.display = "block";
     }else{
         lista.style.display = "block";
     }
-
     let html = "";
-
     if("todos".includes(despues.toLowerCase())){
     html += `
     <div class="chat-mencion" data-nombre="todos">
@@ -4372,24 +3612,18 @@ this.emojis = document.getElementById("chatEmojis");
             `;
         }
     });
-
     lista.innerHTML = html;
-
     lista.querySelectorAll(".chat-mencion").forEach(item=>{
         item.onclick = ()=>{
             const nombre = item.dataset.nombre;
-            
             const usuario = usuariosJornada().find(u => u.nombre === nombre);
-
 if(usuario){
     this.mencionesPendientes.push({
         nombre: usuario.nombre,
         dispositivo_id: usuario.dispositivo_id
     });
 }
-
 console.log("📌 Menciones pendientes:", this.mencionesPendientes);
-            
             const inicio = this.txt.value.lastIndexOf("@");
             this.txt.value = this.txt.value.substring(0, inicio) + "@" + nombre + " ";
             lista.style.display = "none";
@@ -4397,111 +3631,63 @@ console.log("📌 Menciones pendientes:", this.mencionesPendientes);
             this.txt.focus();
         };
     });
-
 });
-       
-       
-
 this.usuario = await this.obtenerUsuario();
-       
        if(!this.usuario){
-
     console.error("❌ No se pudo obtener el usuario del chat.");
-
     return;
-
 }
        await this.cargarColores();
-
 await Promise.all([
     this.cargarMensajes(),
     this.cargarReacciones()
 ]);
-
 this.mostrar();
-
 const sala = document.getElementById("salaJornada");
-
 if(sala){
     sala.style.display = puedeVerTribuna()
         ? "block"
         : "none";
 }
-       
        await this.conectarPresence();
-
 this.escucharMensajes();
-
        const oculto = localStorage.getItem("chatOculto");
-
 if(oculto==="1"){
-
     const c = document.getElementById("chatContenido");
-
     if(c){
         c.style.display="none";
     }
-
 }
-
     },
-
     toggle(){
-
     const c = document.getElementById("chatContenido");
-
     if(!c) return;
-
     if(c.style.display==="none"){
-
         c.style.display="block";
         localStorage.setItem("chatOculto","0");
-
     }else{
-
         c.style.display="none";
         localStorage.setItem("chatOculto","1");
-
     }
-
 },
-    
     async enviar(){
-        
-         if(jornada.chat_bloqueado){
+     if(jornada.chat_bloqueado){
     msg("La Tribuna de esta jornada ya fue cerrada.");
     return;
 }
-
-    const texto = this.txt.value.trim();
-
+const texto = this.txt.value.trim();
     if(!texto) return;
-        
-        
-
 console.log("TEXTO:", texto);
-
 const mencionarTodos = texto.includes("@todos");
-
 console.log("¿TODOS?:", mencionarTodos);
-
 const menciones = texto.match(/@[^\s]+/g) || [];
-
 console.log("MENCIONES:", menciones);
-        
-        
-
     if(!this.usuario){
         msg("Primero debes registrar un boleto para participar en el chat.");
         return;
     }
-        
         const respuestaA = this.respuestaActual?.id || null;
-
 console.log("↩️ Respondiendo a:", respuestaA);
-        
-        
-
     const { error } = await db
 .from("chat_mensajes")
 .insert({
@@ -4513,49 +3699,27 @@ console.log("↩️ Respondiendo a:", respuestaA);
     menciones: this.mencionesPendientes.map(m => m.dispositivo_id),
     respuesta_a: this.respuestaActual?.id || null
 })
-        
         this.mencionesPendientes = [];
-        
-        
     if(error){
         console.error("💬 Error al guardar:", error);
         msg("No pude enviar el mensaje.");
         return;
     }
-
    this.txt.value="";
-    
     console.log("LIMPIANDO RESPUESTA");
-    
     this.respuestaActual = null;
-    
-    
     console.log("Respuesta actual:", this.respuestaActual);
-
 const panel = document.getElementById("chatRespuesta");
 panel.style.display = "none";
 panel.innerHTML = "";
-    
-    console.log("Panel ocultado");
-    
+console.log("Panel ocultado");
     console.log("💬 Mensaje enviado");
-    
     const editor = document.getElementById("chatEditor");
 const fila = document.getElementById("chatFila");
-
 editor.appendChild(panel);
-    
-    
-
     console.log("💬 Mensaje enviado");
-
 },
-    
-    
-    
- 
    async obtenerUsuario(){
-
     // Buscar el boleto de esta jornada
     const { data: usuario, error } = await db
         .from("usuarios")
@@ -4565,30 +3729,24 @@ editor.appendChild(panel);
         .in("id", pronosticos.map(p=>p.usuario_id))
         .limit(1)
         .maybeSingle();
-
     if(error){
         console.error("💬 Error obteniendo usuario:", error);
         return null;
     }
-       
        console.log("USUARIOS:");
 console.log(usuarios);
-
     if(!usuario){
         console.log("💬 Este dispositivo aún no tiene un boleto registrado.");
         return null;
     }
-
     // Buscar perfil del chat
     let { data: perfil } = await db
         .from("chat_usuarios")
         .select("*")
         .eq("dispositivo_id", usuario.dispositivo_id)
         .maybeSingle();
-
     // Si no existe, crearlo automáticamente
     if(!perfil){
-
         const { data: nuevo, error: errNuevo } = await db
     .from("chat_usuarios")
     .insert({
@@ -4597,67 +3755,43 @@ console.log(usuarios);
     })
     .select()
     .single();
-
 if(errNuevo){
     console.error("Error creando perfil del chat:", errNuevo);
     return null;
 }
-
 perfil = nuevo;
     }
-
     usuario.color_chat = perfil.color_chat;
-
     console.log("💬 Usuario del chat:", usuario);
-
     return usuario;
-
 },
-    
-    
     async cargarColores(){
-
     const { data, error } = await db
         .from("chat_usuarios")
         .select("dispositivo_id,color_chat");
-
     if(error){
         console.error("💬 Error cargando colores:", error);
         return;
     }
-
     this.colores = {};
-
     (data || []).forEach(u=>{
-
         this.colores[u.dispositivo_id] =
             u.color_chat || "#3b82f6";
-
     });
-
     console.log("🎨 Colores cargados:", this.colores);
-
 },
-    
-    
     async cargarMensajes(){
         console.log("📢 Cargando chat de jornada:", jornada.id, jornada.nombre);
-
     const { data, error } = await db
     .from("chat_mensajes")
     .select("*")
-   
 .eq("jornada_id", jornada.id)
-        
     .order("fecha", { ascending: true })
     .limit(30);
-
     if(error){
-        
         console.error("💬 Error cargando mensajes:", error);
         return;
     }
-
     this.mensajes = (data || []).map(function(m){
     return {
         id: m.id,
@@ -4668,65 +3802,40 @@ perfil = nuevo;
         color: Chat.colores[m.dispositivo_id] || "#3b82f6"
     };
 });
-
     this.mostrar();
-
     console.log("💬 Historial cargado:", this.mensajes.length);
-
 },
-    
-    
    async conectarPresence(){
-
     const jornadaId = jornada.id;
-
     this.presencia = db.channel("presencia-"+jornadaId,{
-
         config:{
             presence:{
                 key:this.usuario.id
             }
         }
-
     });
-
     this.presencia
     .on("presence", { event:"sync" }, ()=>{
-
         const estado = this.presencia.presenceState();
-
         this.enLinea.textContent =
             Object.keys(estado).length;
-
     });
-
     await this.presencia.subscribe(async (estado)=>{
-
         if(estado==="SUBSCRIBED"){
-
             await this.presencia.track({
                 usuario:this.usuario.nombre,
                 dispositivo:this.usuario.dispositivo_id
             });
-
         }
-
     });
-
 },
-        
-        
         escucharMensajes(){
-        
         if(this.canal){
     db.removeChannel(this.canal);
     this.canal = null;
 }
-
     const jornadaId = jornada.id;
-
 this.canal = db.channel("chat-"+jornadaId)
-        
     .on(
         "postgres_changes",
         {
@@ -4736,22 +3845,14 @@ this.canal = db.channel("chat-"+jornadaId)
             filter: "jornada_id=eq."+jornadaId
         },
         async (payload)=>{
-
     await this.cargarColores();
-
     const m = payload.new;
-        
         console.log("💬 Color recibido:", m.color_chat);
 console.table(m);
-            
-            
             const texto = (m.mensaje || "").trim();
 const menciones = [...texto.matchAll(/@([a-zA-Z0-9_ÁÉÍÓÚáéíóúÑñ]+)/g)].map(x=>x[1]);
 const mencionaTodos = menciones.some(x => x.toLowerCase() === "todos");
 const mencionaActual = menciones.some(x => x.toLowerCase() === (this.usuario?.nombre || "").toLowerCase());
-
-            
-
            this.mensajes.push({
     id: m.id,
     nombre: m.nombre,
@@ -4761,111 +3862,83 @@ const mencionaActual = menciones.some(x => x.toLowerCase() === (this.usuario?.no
     color: Chat.colores[m.dispositivo_id] || "#3b82f6",
     respuesta_a: m.respuesta_a
 });
-
             this.mostrar();
-
             console.log("💬 Nuevo mensaje:",m.nombre);
-
         }
     )
     this.canal.subscribe((estado)=>{
     console.log("💬 Estado Realtime:", estado);
 });
-
 },
-                                     
-                                     
-        
  abrirReacciones(div,id){
-
     document.querySelectorAll(".chat-reacciones-menu").forEach(e=>e.remove());
-
     const menu=document.createElement("div");
-
     menu.className="chat-reacciones-menu";
-
   menu.innerHTML=`
 <span onclick="Chat.guardarReaccion('${id}','😀')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😀</span>
-
 <span onclick="Chat.guardarReaccion('${id}','😂')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😂</span>
-
 <span onclick="Chat.guardarReaccion('${id}','❤️')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">❤️</span>
-
 <span onclick="Chat.guardarReaccion('${id}','😡')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😡</span>
-
 <span onclick="Chat.guardarReaccion('${id}','😭')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">😭</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🔥')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🔥</span>
-
 <span onclick="Chat.guardarReaccion('${id}','👏')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">👏</span>
-
 <span onclick="Chat.guardarReaccion('${id}','👍')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">👍</span>
-
 <span onclick="Chat.guardarReaccion('${id}','⚽')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">⚽</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🥅')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🥅</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🟥')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🟥</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🟨')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🟨</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🏆')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🏆</span>
-
-
 <span onclick="Chat.guardarReaccion('${id}','📣')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">📣</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🎉')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🎉</span>
-
 <span onclick="Chat.guardarReaccion('${id}','🍺')" style="font-size:32px;
 width:42px;
 height:42px;
 display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;">🍺</span>
-
 <div class="chat-responder" style="
 grid-column:1 / -1;
 text-align:center;
@@ -4881,15 +3954,9 @@ border-radius:8px;
 💬 Responder
 </div>
 `;
-     
-     
-
     menu.style.position="absolute";
-     
     menu.style.background="#fff";
-     
     menu.style.boxShadow="0 4px 12px rgba(0,0,0,.30)";
-     
     menu.style.zIndex="9999";
     menu.style.gridTemplateColumns="repeat(4,1fr)";
     menu.style.borderRadius="18px";
@@ -4897,37 +3964,21 @@ border-radius:8px;
     menu.style.display="grid";
     menu.style.gridTemplateColumns="repeat(4,1fr)";
     menu.style.gap="12px";
-
     const r=div.getBoundingClientRect();
-
     menu.style.left=(window.scrollX+r.left)+"px";
     menu.style.top=(window.scrollY+r.top-55)+"px";
-
     document.body.appendChild(menu);
-     
      const btnResponder = menu.querySelector(".chat-responder");
-
 btnResponder.onclick = () => {
-
     const mensaje = this.mensajes.find(m => m.id === id);
-
     this.respuestaActual = mensaje;
-    
     const panel = document.getElementById("chatRespuesta");
-    
-    
     const editor = document.getElementById("chatEditor");
 const fila = document.getElementById("chatFila");
-    
-    
-
 panel.style.display = "block";
-    
     editor.style.display = "flex";
 editor.style.flexDirection = "column";
-    
     editor.insertBefore(panel, fila);
-
 panel.innerHTML = `
 <div style="
 display:flex;
@@ -4941,16 +3992,13 @@ border-left:4px solid #2563eb;
 border-radius:8px;
 padding:10px 12px;
 ">
-
     <div style="flex:1;overflow:hidden;">
-
         <div style="
         color:#2563eb;
         font-weight:bold;
         font-size:12px;">
             ↩️ Respondiendo
         </div>
-
         <div style="
         color:#555;
         font-size:13px;
@@ -4959,9 +4007,7 @@ padding:10px 12px;
         text-overflow:ellipsis;">
             ${mensaje.texto}
         </div>
-
     </div>
-
     <button
         id="chatCancelarRespuesta"
         style="
@@ -4972,46 +4018,25 @@ padding:10px 12px;
         cursor:pointer;">
         ✕
     </button>
-
 </div>
 `;
-    
     document.getElementById("chatCancelarRespuesta").onclick = () => {
-
     this.respuestaActual = null;
-
     panel.style.display = "none";
-
     panel.innerHTML = "";
-
 };
-    
-    
-
     console.log("💬 Respuesta seleccionada:", this.respuestaActual);
-
     menu.remove();
-
 };
-        
         setTimeout(()=>{
-
     document.addEventListener("click",function cerrar(e){
-
         if(menu.contains(e.target)) return;
-
         menu.remove();
-
         document.removeEventListener("click",cerrar);
-
     });
-
 },100);
-
 },
-    
     async cargarReacciones(){
-
     const { data, error } = await db
        .from("chat_reacciones")
 .select(`
@@ -5021,33 +4046,24 @@ padding:10px 12px;
     )
 `)
 .eq("chat_mensajes.jornada_id", jornada.id);
-
     if(error){
         console.error(error);
         return;
     }
-
     this.reacciones = data || [];
-
 },
-    
-
    async guardarReaccion(mensajeId,emoji){
-
     const { data, error } = await db
     .from("chat_reacciones")
     .select("id,emoji")
     .eq("mensaje_id", mensajeId)
     .eq("usuario_id", this.usuario.id)
     .maybeSingle();
-
     if(error){
         console.error(error);
         return;
     }
-
     if(!data){
-
         await db
             .from("chat_reacciones")
             .insert({
@@ -5055,35 +4071,24 @@ padding:10px 12px;
                 usuario_id: this.usuario.id,
                 emoji: emoji
             });
-
     }else if(data.emoji===emoji){
-
         await db
             .from("chat_reacciones")
             .delete()
             .eq("id", data.id);
-
     }else{
-
         await db
             .from("chat_reacciones")
             .update({
                 emoji: emoji
             })
             .eq("id", data.id);
-
     }
-
     document.querySelectorAll(".chat-reacciones-menu").forEach(e=>e.remove());
-
     await this.cargarReacciones();
-
     this.mostrar();
-
 },
-    
    abrirMiColor(){
-
  const colores=[
 "#2563eb", // Azul
 "#16a34a", // Verde
@@ -5097,7 +4102,6 @@ padding:10px 12px;
 "#ea580c", // Naranja oscuro
 "#65a30d", // Lima
 "#4338ca", // Índigo
-
 "#0284c7",
 "#059669",
 "#be123c",
@@ -5108,7 +4112,6 @@ padding:10px 12px;
 "#b45309",
 "#166534",
 "#1d4ed8",
-
 "#e11d48",
 "#7e22ce",
 "#155e75",
@@ -5117,7 +4120,6 @@ padding:10px 12px;
 "#9f1239",
 "#581c87",
 "#9a3412",
-
 "#312e81",
 "#164e63",
 "#713f12",
@@ -5126,7 +4128,6 @@ padding:10px 12px;
 "#1e3a8a"
 ];
     document.getElementById("modalTitulo").textContent="🎨 Elige tu color";
-
     let html=`
     <div style="
         display:grid;
@@ -5135,25 +4136,17 @@ padding:10px 12px;
         padding:10px;
     ">
     `;
-       
        console.log("Mi color:", this.usuario.color_chat);
 console.log("Colores:", Chat.colores);
-       
-      
     const usados = Object.values(Chat.colores);
-       
        console.table(Chat.colores);
-      
     colores.forEach(c=>{
-
     const ocupado =
         usados.includes(c) &&
         c !== this.usuario.color_chat;
-
     html += `
     <div
         ${ocupado ? "" : `onclick="Chat.seleccionarColor('${c}')"`}
-
         style="
             width:48px;
             height:48px;
@@ -5167,7 +4160,6 @@ transform:${c===this.usuario.color_chat ? "scale(1.15)" : "scale(1)"};
             opacity:${ocupado?0.35:1};
             position:relative;
         ">
-
         ${
             ocupado
             ? `<div style="
@@ -5180,212 +4172,131 @@ transform:${c===this.usuario.color_chat ? "scale(1.15)" : "scale(1)"};
                 ">🔒</div>`
             : ""
         }
-
     </div>
     `;
-
 });
-
     html+=`</div>`;
-
     document.getElementById("modalTexto").innerHTML=html;
-
     document.getElementById("modalMensaje").style.display="flex";
-
 },
-    
-    
-    
     async seleccionarColor(color){
-
     const { error } = await db
         .from("chat_usuarios")
         .update({
             color_chat: color
         })
         .eq("dispositivo_id", this.usuario.dispositivo_id);
-
     if(error){
         console.error(error);
         msg("No pude guardar el color.","error");
         return;
     }
-
     this.usuario.color_chat = color;
         this.colores[this.usuario.dispositivo_id] = color;
-
     document.getElementById("modalMensaje").style.display="none";
-
     msg("Color actualizado.","ok");
-
 },
-    
     agregarEmoji(emoji){
-
     const txt = this.txt;
-
     const inicio = txt.selectionStart;
-
     const fin = txt.selectionEnd;
-
     txt.value =
         txt.value.substring(0,inicio) +
         emoji +
         txt.value.substring(fin);
-
     txt.focus();
-
     txt.selectionStart = txt.selectionEnd =
         inicio + emoji.length;
-
 },
-    
    obtenerInsignias(usuarioId){
-       
-       
        let insignias = "";
-
 const ultimas = [...fama]
     .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))
     .slice(0,2);
-
 ultimas.forEach(f=>{
-
     if(f.usuario_id===usuarioId){
-
         const j = jornadas.find(x=>x.id===f.jornada_id);
-
         if(j){
             insignias += `👑J${j.numero} `;
         }
-
     }
-
 });
-       
-       
-
     let lista = usuariosJornada()
         .map(u => ({...u, ...aciertos(u.id)}))
         .sort((a,b)=>b.a-a.a||a.nombre.localeCompare(b.nombre));
-
     let lugar = 0;
     let pos = 0;
     let ant = null;
-
     for(const u of lista){
-
         pos++;
-
         if(ant===null || u.a<ant){
             lugar=pos;
         }
-
         ant=u.a;
-
         if(u.id!==usuarioId) continue;
-
         if(lugar===1) return insignias + "🥇 ";
 if(lugar===2) return insignias + "🥈 ";
 if(lugar===3) return insignias + "🥉 ";
-
 return insignias;
     }
-
     return "";
-
 },
-    
    animacionEmoji(texto){
-
     texto = texto.trim();
-
     switch(texto){
-
         case "❤️":
             return "chat-emoji-heart";
-
         case "⚽":
             return "chat-emoji-ball";
-
         case "🏆":
             return "chat-emoji-cup";
-
         case "🟥":
             return "chat-emoji-red";
-
         case "🟨":
             return "chat-emoji-yellow";
-
         case "🔥":
             return "chat-emoji-fire";
-
         case "👍":
             return "chat-emoji-thumb";
-
         case "👏":
             return "chat-emoji-clap";
-
         case "😂":
             return "chat-emoji-laugh";
-
         case "😀":
             return "chat-emoji-happy";
-
         default:
             return "chat-emoji-solo";
-
     }
-
 },
-    
     mostrar(){
-
         if(this.mensajes.length===0){
-
             this.lista.innerHTML=`
                 <div style="text-align:center;color:#777;padding:40px 0;">
                     Aún no hay mensajes.
                 </div>
             `;
-
             this.contador.textContent="0";
-
             return;
-
         }
-
         this.lista.innerHTML="";
-
         this.mensajes.forEach(m=>{
-
             const div=document.createElement("div");
             div.dataset.id = m.id;
        const mio = m.usuario_id === this.usuario?.id;
-
 const texto = m.texto.trim();
-
 const soloEmoji =
     /^(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)$/u.test(texto);
-        
-        
      //   console.log("Emoji:", m.texto, "=>", soloEmoji);
-        
-        
-        
             div.style.marginBottom="12px";
 div.style.padding = soloEmoji ? "2px 10px" : "10px";
 div.style.borderRadius="10px";
 div.style.maxWidth="82%";
 div.style.wordBreak="break-word";
-
 if(soloEmoji){
-
     div.style.background = "transparent";
     div.style.border = "none";
     div.style.boxShadow = "none";
     div.style.maxWidth = "100%";
-
     if(mio){
         div.style.marginLeft = "auto";
         div.style.textAlign = "right";
@@ -5393,29 +4304,19 @@ if(soloEmoji){
         div.style.marginRight = "auto";
         div.style.textAlign = "left";
     }
-
 }else if(mio){
-
     div.style.marginLeft = "auto";
     div.style.background = "#2563eb";
     div.style.border = "1px solid #3b82f6";
-
 }else{
-
     div.style.marginRight = "auto";
     div.style.background = "#1e293b";
     div.style.border = "1px solid #334155";
-
 }
-            
             let htmlRespuesta = "";
-
 if (m.respuesta_a) {
-
     const original = this.mensajes.find(x => x.id === m.respuesta_a);
-
     if (original) {
-
         htmlRespuesta = `
             <div style="
                 background:rgba(255,255,255,.12);
@@ -5439,24 +4340,15 @@ if (m.respuesta_a) {
                 </div>
             </div>
         `;
-
     }
-
 }
-            
-            
-
             const hora = new Date(m.fecha).toLocaleTimeString("es-MX",{
     hour:"numeric",
     minute:"2-digit"
 });
         div.onclick = () => this.abrirReacciones(div, m.id);
 //barra de emojis
-        //
-        //
-        //
 div.innerHTML=`
-
 <div style="
 font-weight:bold;
 margin-bottom:${soloEmoji ? "0px" : "4px"};
@@ -5465,9 +4357,7 @@ text-align:${soloEmoji ? "right" : "left"};
 ">
 ${this.obtenerInsignias(m.usuario_id)}${m.nombre}
 </div>
-
 ${htmlRespuesta}
-
 <div
 class="${soloEmoji ? this.animacionEmoji(m.texto) : ""}"
 style="
@@ -5481,65 +4371,43 @@ text-align:${soloEmoji ? (mio ? "right" : "left") : "left"};
 ">
 ${m.texto}
 </div>
-
-
-
 <div style="
 display:flex;
 justify-content:${mio ? "flex-end" : "space-between"};
 align-items:center;
 margin-top:6px;
 ">
-
 <div style="
 font-size:11px;
 opacity:.75;
 ">
 ${hora}
 </div>
-
-
-
 </div>
 `;            
-        
         const reacciones = this.reacciones.filter(r => r.mensaje_id === m.id);
-
 if(reacciones.length){
-
     const barra = document.createElement("div");
-
 barra.style.display = "flex";
 barra.style.flexWrap = "wrap";
 barra.style.gap = "6px";
 barra.style.marginTop = "8px";
-
 const conteo = {};
-
 reacciones.forEach(r=>{
     conteo[r.emoji] = (conteo[r.emoji] || 0) + 1;
 });
-
 Object.entries(conteo).forEach(([emoji,total])=>{
-
     const chip = document.createElement("div");
-
    chip.style.display = "inline-flex";
 chip.style.alignItems = "center";
 chip.style.justifyContent = "center";
 chip.style.gap = "6px";
-
 chip.style.padding = "5px 10px";
 chip.style.borderRadius = "999px";
-
 chip.style.background = "#2f3b4f";
 chip.style.border = "1px solid #475569";
-
 chip.style.fontWeight = "700";
 chip.style.lineHeight = "1";
-    
-    
-
 chip.innerHTML = `
 <span style="font-size:22px;">${emoji}</span>
 <span style="
@@ -5549,44 +4417,28 @@ min-width:12px;
 text-align:center;
 ">${total}</span>
 `;
-
     barra.appendChild(chip);
-
 });
-
 div.appendChild(barra);
-
 }
-        
-        
-        
         this.lista.appendChild(div);
-
         });
-
         requestAnimationFrame(() => {
     this.lista.scrollTop = this.lista.scrollHeight;
 });
-
         this.contador.textContent=this.mensajes.length;
-        
         const participantes = new Set(
     this.mensajes.map(m => m.usuario_id)
 ).size;
-
 this.participantes.textContent = participantes;
-
     }
-
 };
-    
 async function init(){
       try{
           await cargarFondoPresentacion();
           aplicarModoOscuro();
           esAdmin=localStorage.getItem(ADMIN_SESSION_KEY)==='1';aplicarEstadoAdmin();await cargar();await cargarNoticias();Chat.iniciar();let ultimoAuto=0;setInterval(async()=>{const ahora=Date.now();if(ahora-ultimoAuto>=30000){ultimoAuto=ahora;const cambio=await revisarCierreAutomatico();if(cambio){await cargar();return}}dibResumen();dibPartidos()},1000)}catch(e){msg('Error al cargar: '+e.message,'error');console.error(e)}}
 document.addEventListener('DOMContentLoaded',init);
-
 function abrirAyudaQuiniela(){
   const m=document.getElementById('ayudaQuinielaModal');
   if(m)m.classList.add('abierto');
@@ -5601,63 +4453,41 @@ function cerrarAyudaQuiniela(ev){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')cerrarAyudaQuiniela();
 });
-    
     function pintar(){
-
     sel.classList.remove("pronostico-error");
-
     if(sel.value){
-        sel.classList.add("pronostico-ok");
+    sel.classList.add("pronostico-ok");
     }else{
         sel.classList.remove("pronostico-ok");
     }
-
 }
-
 function actualizarColorPronosticos(){
-
     document.querySelectorAll("select[id^='sel_'], select[id^='mSel_']").forEach(sel=>{
-
         function pintar(){
-
             if(sel.value){
-
                 sel.classList.remove("pronostico-error");
                 sel.classList.add("pronostico-ok");
-
             }else{
-
                 sel.classList.remove("pronostico-ok");
-
             }
-
         }
-
         pintar();
-
         sel.removeEventListener("change", pintar);
         sel.addEventListener("change", pintar);
-
     });
-
 }
-    
 async function actualizarEstadisticasFooter(){
   try{
     const [uRes,jRes]=await Promise.all([
       db.from('usuarios').select('id,nombre,telefono,activo'),
       db.from('jornadas').select('id')
     ]);
-
     const usuariosFooter = (!uRes.error && uRes.data) ? uRes.data.filter(u=>u.activo!==false) : (usuarios||[]);
     const jornadasFooter = (!jRes.error && jRes.data) ? jRes.data : (jornadas||[]);
-
     const personasSet=new Set();
-
     usuariosFooter.forEach(u=>{
       const tel=String(u.telefono||'').replace(/\D/g,'').trim();
       const nombre=String(u.nombre||'').trim().toLowerCase();
-
       if(tel){
         personasSet.add('tel:'+tel);
       }else if(nombre){
@@ -5666,52 +4496,38 @@ async function actualizarEstadisticasFooter(){
         personasSet.add('id:'+u.id);
       }
     });
-
     const p=document.getElementById('ftPersonas');
     const b=document.getElementById('ftBoletos');
     const j=document.getElementById('ftJornadas');
-
     if(p) p.textContent=personasSet.size;
     if(b) b.textContent=usuariosFooter.length;
     if(j) j.textContent=jornadasFooter.length;
-
   }catch(e){
     console.warn('Estadísticas footer:',e);
   }
 }
-    
    function descargarExcel(){
-
     const tablaOriginal = document.getElementById("tablaQuiniela");
-
     // Clonar la tabla para no modificar la pantalla
     const tabla = tablaOriginal.cloneNode(true);
-
     // Eliminar la fila de captura (la primera del tbody)
     const tbody = tabla.querySelector("tbody");
     if(tbody && tbody.rows.length){
         tbody.deleteRow(0);
     }
-
     const libro = XLSX.utils.table_to_book(tabla,{
         sheet:"Jornada"
     });
-
     XLSX.writeFile(libro,`Quiniela_${jornada.nombre}.xlsx`);
-
 }
 function descargarPDF(){
-
     const { jsPDF } = window.jspdf;
-
     const doc = new jsPDF({
         orientation:'landscape',
         unit:'mm',
         format:'a4'
     });
-
     doc.text(`Quiniela - ${jornada.nombre}`,14,12);
-
     doc.autoTable({
         html:'#tablaQuiniela',
         startY:18,
@@ -5726,21 +4542,17 @@ function descargarPDF(){
     });
 
     doc.save(`Quiniela_${jornada.nombre}.pdf`);
-
 }
-
 </script>
     <div id="modalMensaje" class="modal-msg" style="display:none;">
     <div class="modal-msg-contenido">
         <h2 id="modalTitulo">Mensaje</h2>
         <div id="modalTexto"></div>
-
         <button class="btn-primary" onclick="cerrarModalMensaje()">
             Aceptar
         </button>
     </div>
 </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
@@ -5748,21 +4560,11 @@ function descargarPDF(){
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
         try {
-
     const registroPrincipal =
         await navigator.serviceWorker.register("service-worker.js");
-
     console.log("✅ Service Worker principal:", registroPrincipal.scope);
-/*
-    const registroFirebase =
-        await navigator.serviceWorker.register("firebase-messaging-sw.js");
-
-    console.log("✅ Firebase Messaging SW:", registroFirebase.scope);
-*/
 } catch (error) {
-
     console.error("Error al registrar Service Workers:", error);
-
 }
     });
 }
@@ -5775,8 +4577,6 @@ import {
     onMessage
 } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-messaging.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-analytics.js";
-        
-        
 const firebaseConfig = {
   apiKey: "AIzaSyCiszOT3kJITj2CBOUkMgloNNLevH5RYEo",
   authDomain: "quiniela-liga-mx-2.firebaseapp.com",
@@ -5785,22 +4585,15 @@ const firebaseConfig = {
   messagingSenderId: "325502110908",
   appId: "1:325502110908:web:012b12571b5d85ac5354b9"
 };
-        
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-        
         console.log("Firebase conectado");
-        
 const messaging = getMessaging(app);
-        
         async function guardarTokenFCM(token){
-
     const tokenGuardado = localStorage.getItem("fcm_token");
-
     if(tokenGuardado === token){
         console.log("🔔 Token sin cambios. Verificando Supabase...");
     }
-
     const { error } = await db
         .from("notificaciones_dispositivos")
         .upsert({
@@ -5815,154 +4608,71 @@ typeof usuarioActual !== "undefined"
     ultimo_acceso: new Date().toISOString(),
     activo: true
 });
-
     if(error){
         console.error("Error guardando token:", error);
         return;
     }
-
     localStorage.setItem("fcm_token", token);
-
     if(tokenGuardado === token){
         console.log("✅ Token verificado en Supabase.");
     }else{
         console.log("✅ Token FCM guardado en Supabase.");
     }
-
 }
-        
         try {
-
     const permiso = await Notification.requestPermission();
-
     console.log("Permiso:", permiso);
-
     if (permiso === "granted") {
-
         const registroSW = await navigator.serviceWorker.ready;
-
 const token = await getToken(messaging, {
     vapidKey: "BJNOW3ZmLT3nFipVaOrlx9PebQmErYRKVKCIiJquLLdj-HDTBvmizj6ZQ045TQwAfDLjZegeq9-ijCYv2m9eoBs",
     serviceWorkerRegistration: registroSW
 });
-
         console.log("🔔 Token FCM:", token);
-
         if (token) {
             await guardarTokenFCM(token);
         }
-
     } else {
-
         console.log("❌ Permiso denegado.");
-
     }
-
 } catch (e) {
-
     console.error("Error FCM:", e);
-
 }
-/*
-Notification.requestPermission().then(async (permission) => {
-
-    console.log("Permiso:", permission);
-
-    if (permission !== "granted") {
-        console.log("El usuario no aceptó las notificaciones.");
-        return;
-    }
-
-    console.log("Notificaciones permitidas.");
-    
-    const token = await getToken(messaging, {
-    vapidKey: "BKIpycS5NL49FEORrHiJpbPQMOiKOFSSLfPtjbnduGb9j1-SxV3JFuoS8PZGqN9G-MKFn3QZyVI0B8IABjSi82E"
-});
-
-console.log("TOKEN FCM:");
-console.log(token);
-    
-
-});
- */       
-        //----------------------------------------------------
-// MENSAJES EN PRIMER PLANO
-//----------------------------------------------------
-/*
-onMessage(messaging, (payload) => {
-
-    console.log("📲 Push recibida:", payload);
-
-    new Notification(
-        payload.notification.title,
-        {
-            body: payload.notification.body,
-            icon: "/icons/icon-192.png"
-        }
-    );
-
-});
-        
-*/
 console.log("Firebase conectado");
-        
 //----------------------------------------------------
 // INSTALAR PWA
 //----------------------------------------------------
-
 let deferredPrompt = null;
-
 window.addEventListener("beforeinstallprompt", (e) => {
-
     e.preventDefault();
-
     deferredPrompt = e;
-
     const btn = document.getElementById("btnInstalarApp");
     if(btn){
         btn.style.display = "inline-block";
     }
-
     console.log("✅ La aplicación puede instalarse");
 });
-
 window.addEventListener("appinstalled", () => {
-
     installPrompt = null;
-
     const btn = document.getElementById("btnInstalarApp");
     if(btn){
         btn.style.display = "none";
     }
-
     console.log("✅ Aplicación instalada");
 });
-
 async function instalarPWA(){
-
     if(!installPrompt) return;
-
     installPrompt.prompt();
-
     const resultado = await installPrompt.userChoice;
-
     console.log(resultado.outcome);
-
     installPrompt = null;
-
     document.getElementById("btnInstalarApp").style.display = "none";
 }  
-        
-        
         const hoy = new Date();
-
 if (hoy.getMonth() === 8) {
     document.body.classList.add("skin-independencia");
 }
-
 </script>
-    
-    
 </script>
 </body>
 </html>
