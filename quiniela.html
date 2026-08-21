@@ -2303,9 +2303,7 @@ await db.from('jornadas').update({
     if(
 existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
     ){
-      //  console.log(
-            `💾 La jornada ${jornadaCierre.nombre} ya tiene respaldo de cierre.`
-        );
+      //  console.log( `💾 La jornada ${jornadaCierre.nombre} ya tiene respaldo de cierre.`        );
         return existente.data;
     }
     const datos = await obtenerDatosRespaldo();
@@ -2342,9 +2340,7 @@ existente.data?.datos?.meta?.jornada_cierre_id === jornadaCierre.id
             jornada:jornadaCierre.nombre
         }
     );
-    //console.log(
-        `💾 Respaldo de cierre creado: ${jornadaCierre.nombre}`
-    );
+    //console.log(        `💾 Respaldo de cierre creado: ${jornadaCierre.nombre}`    );
     return r.data;
 }
 async function aud(accion,detalle,usuario_id=null,antes={},despues={}){try{await db.from('auditoria').insert({accion,detalle,usuario_id,jornada_id:jornada?.id||null,antes,despues,dispositivo_id:deviceId(),actor:esAdmin?'admin':'usuario'})}catch(e){console.warn(e)}}
