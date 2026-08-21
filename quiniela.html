@@ -3087,10 +3087,10 @@ async function guardarResultados(){
                 huboResultadoNuevo = true;
               //  console.log("📣 NUEVO RESULTADO — VOY A INSERTAR NOTICIA");
               //  console.log({
-                    titulo: "⚽ Resultado oficial",
-                    mensaje:
-                        `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
-                });
+               //     titulo: "⚽ Resultado oficial",
+               //     mensaje:
+            //            `${p.local} ${gl} - ${gv} ${p.visitante}\n\n${ganador}`
+           //     });
                 const { error: errorNoticia } = await db
                     .from("noticias")
                     .insert({
@@ -4588,7 +4588,7 @@ const messaging = getMessaging(app);
         async function guardarTokenFCM(token){
     const tokenGuardado = localStorage.getItem("fcm_token");
     if(tokenGuardado === token){
-    //    console.log("🔔 Token sin cambios. Verificando Supabase...");
+        console.log("🔔 Token sin cambios. Verificando Supabase...");
     }
     const { error } = await db
         .from("notificaciones_dispositivos")
@@ -4629,7 +4629,7 @@ const token = await getToken(messaging, {
             await guardarTokenFCM(token);
         }
     } else {
-  //      console.log("❌ Permiso denegado.");
+        console.log("❌ Permiso denegado.");
     }
 } catch (e) {
     console.error("Error FCM:", e);
